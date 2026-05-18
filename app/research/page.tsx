@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 
 const ResearchScene = dynamic(() => import("@/components/ResearchScene"), { ssr: false });
 
-const ENDPOINT = "https://script.google.com/macros/s/AKfycbyixPd_UBfHC2OYmNReb1W5ECH8tdk5Z2khyLu-BLHeC8zrISKGSG_jOwS7zXqEcuQtEQ/exec";
+const ENDPOINT = "/api/research";
 
 type Answers = Record<string, string | string[] | null>;
 type Step =
@@ -93,9 +93,11 @@ export default function ResearchPage() {
   }, [step]);
 
   const submitForm = useCallback((extra?: Answers) => {
-    const fd = new FormData();
-    fd.append("data", JSON.stringify({ ...answers, ...extra, submissionId: subId.current }));
-    fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: fd }).catch(() => {});
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...answers, ...extra, submissionId: subId.current }),
+    }).catch(() => {});
   }, [answers]);
 
   // Submit when reaching thanks
