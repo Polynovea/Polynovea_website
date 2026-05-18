@@ -17,15 +17,20 @@ export async function POST(request: NextRequest) {
   // Always log — captured in Vercel function logs as a safety net
   console.log('[research] submission received', JSON.stringify({ ...payload, _ts: new Date().toISOString() }));
 
-  // Forward to Google Apps Script server-side (no CORS restrictions here)
+  // Forward to Google Apps Script server-side as JSON
+  // Apps Script reads this via e.postData.contents → JSON.parse()
   let sheetsOk = false;
   try {
-    const fd = new FormData();
-    fd.append("data", JSON.stringify(payload));
-    const res = await fetch(SHEETS_ENDPOINT, { method: "POST", body: fd });
-    sheetsOk = res.ok || res.status === 0; // Apps Script often returns 302 or opaque
+    const res = await fetch(SHEETS_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      redirect: "follow",
+    });
+    sheetsOk = res.ok;
     if (!sheetsOk) {
-      console.error('[research] sheets returned non-ok status', res.status);
+      const text = await res.text().catch(() => '');
+      console.error('[research] sheets returned non-ok status', res.status, text);
     }
   } catch (err) {
     console.error('[research] sheets fetch failed', err);
