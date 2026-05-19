@@ -18,27 +18,32 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
   }
 
+  // Store in Airtable's default Name field — custom fields don't exist yet
+  // Name = submission ID, Notes = full answers as readable text
+  const answers = [
+    `Timestamp: ${new Date().toISOString()}`,
+    `Q1 Initiation: ${payload.initiation_pattern ?? ''}`,
+    `Q2 Decision: ${payload.decision_unlock ?? ''}`,
+    `Q3 Discovery: ${payload.discovery_source ?? ''}`,
+    `Q4 First 5min: ${payload.first_5min_filter ?? ''}`,
+    `Q5 Social: ${payload.social_influence ?? ''}`,
+    `Q6 Music: ${payload.music_function ?? ''}`,
+    `Q7 Live: ${payload.live_performance_impact ?? ''}`,
+    `Q8 Spend: ${payload.spend_escalation_trigger ?? ''}`,
+    `Q9 Dwell: ${Array.isArray(payload.dwell_time_driver) ? (payload.dwell_time_driver as string[]).join(', ') : (payload.dwell_time_driver ?? '')}`,
+    `Q10 Story: ${payload.story_signal ?? ''}`,
+    `Q11 Recovery: ${payload.recovery_preference ?? ''}`,
+    `Q12 Loyalty: ${payload.loyalty_formation ?? ''}`,
+    `Q13 Validation: ${payload.validation_behavior ?? ''}`,
+    `Q14 Escalation: ${payload.escalation_catalyst ?? ''}`,
+    `Q15 Exit: ${payload.exit_trigger ?? ''}`,
+    `Q16 Memory: ${payload.memory_imprint ?? ''}`,
+    `Email: ${payload.email ?? ''}`,
+  ].join('\n');
+
   const fields: Record<string, string> = {
-    timestamp:                 new Date().toISOString(),
-    submission_id:             String(payload.submissionId             ?? ''),
-    initiation_pattern:        String(payload.initiation_pattern       ?? ''),
-    decision_unlock:           String(payload.decision_unlock          ?? ''),
-    discovery_source:          String(payload.discovery_source         ?? ''),
-    first_5min_filter:         String(payload.first_5min_filter        ?? ''),
-    social_influence:          String(payload.social_influence         ?? ''),
-    music_function:            String(payload.music_function           ?? ''),
-    live_performance_impact:   String(payload.live_performance_impact  ?? ''),
-    spend_escalation_trigger:  String(payload.spend_escalation_trigger ?? ''),
-    dwell_time_driver:         Array.isArray(payload.dwell_time_driver)
-                                 ? (payload.dwell_time_driver as string[]).join(', ')
-                                 : String(payload.dwell_time_driver ?? ''),
-    story_signal:              String(payload.story_signal             ?? ''),
-    recovery_preference:       String(payload.recovery_preference      ?? ''),
-    loyalty_formation:         String(payload.loyalty_formation        ?? ''),
-    validation_behavior:       String(payload.validation_behavior      ?? ''),
-    escalation_catalyst:       String(payload.escalation_catalyst      ?? ''),
-    exit_trigger:              String(payload.exit_trigger             ?? ''),
-    memory_imprint:            String(payload.memory_imprint           ?? ''),
+    Name:  String(payload.submissionId ?? new Date().toISOString()),
+    Notes: answers,
   };
 
   try {
