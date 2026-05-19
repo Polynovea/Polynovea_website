@@ -19,22 +19,88 @@ type Step =
 
 const STEPS: Step[] = [
   { type: "intro" },
-  { type: "single", key: "age_group",    q: "How old are you?",                                        options: ["18–21","22–25","26–30","30+"] },
-  { type: "text",   key: "city",         q: "Where do you usually go out?",                            placeholder: "City or area…" },
-  { type: "single", key: "frequency",    q: "How often do you go out in a month?",                     options: ["1–2 times","3–5 times","6+ times"] },
-  { type: "single", key: "when",         q: "When do you usually go out?",                             options: ["Weekdays","Weekends","Both"] },
-  { type: "single", key: "duration",     q: "How long do you typically stay?",                         options: ["1–2 hours","2–3 hours","3+ hours"] },
-  { type: "single", key: "company",      q: "Who do you usually go with?",                             options: ["Alone","Partner","2–4 people","5+ people"] },
-  { type: "single", key: "reason",       q: "What's your main reason for going out?",                  options: ["Food & drink","Work & chill","Entertainment","Socializing","Celebration"] },
-  { type: "single", key: "spend",        q: "What's your typical spend per outing?",                   options: ["Under ₹1,000","₹1,000–₹3,000","₹3,000–₹5,000","₹5,000+"] },
-  { type: "multi",  key: "spend_more",   q: "What makes you spend more?",                              hint: "Pick up to 3", limit: 3, options: ["People you're with","Quality of experience","Comfort & environment","Music & entertainment","Offers & pricing","Food quality","Occasion & mood"] },
-  { type: "multi",  key: "choose_place", q: "What makes you choose a place?",                          hint: "Pick up to 3", limit: 3, options: ["Location","Ambience & environment","Pricing","Crowd & people","Music & entertainment","Reviews & recommendations","Past experience"] },
-  { type: "single", key: "crowd_impact", q: "How much does the crowd affect your decision?",           options: ["A lot","Somewhat","Very little"] },
-  { type: "multi",  key: "music_matters",q: "When music is part of the experience, what matters most?",hint: "Pick up to 2", limit: 2, options: ["Familiar songs","Ability to talk comfortably","Background vibe","Energy & atmosphere","Live performance"] },
-  { type: "single", key: "energy_pref",  q: "What kind of energy do you prefer?",                     options: ["Mostly calm & comfortable","Balanced","High energy & exciting"] },
-  { type: "single", key: "music_stay",   q: "Does music make you stay longer?",                       options: ["Yes","Sometimes","No"] },
-  { type: "text",   key: "leave_or_stay",q: "What makes you leave early or stay longer?",             placeholder: "Tell us anything…", long: true, optional: true },
-  { type: "text",   key: "frustrations", q: "What frustrates you most when you're out?",              placeholder: "Be honest — we want to know.", long: true, optional: true },
+  {
+    type: "single", key: "initiation_pattern",
+    q: "How do most nights out usually begin for you?",
+    options: ["Someone else plans it and I join", "A spontaneous idea turns into a plan", "I usually already had the idea in mind", "I repeat the same places and routines"],
+  },
+  {
+    type: "single", key: "decision_unlock",
+    q: "What most often makes you decide to go out?",
+    options: ["The people involved", "My mood that day", "The place itself sounds interesting", "I just want a reason to get out"],
+  },
+  {
+    type: "single", key: "discovery_source",
+    q: "How did you discover the last place you genuinely liked?",
+    options: ["Someone directly recommended it", "Instagram, Reels, or social media", "Zomato, Swiggy, or Google", "I found it accidentally while out"],
+  },
+  {
+    type: "single", key: "first_5min_filter",
+    q: "You enter a new place. What most affects whether you stay?",
+    options: ["The crowd feels right", "The music immediately works", "The atmosphere and design feel right", "I trust the recommendation enough to give it time"],
+  },
+  {
+    type: "single", key: "social_influence",
+    q: "Your group wants another round but you weren't planning to continue. What usually happens?",
+    options: ["I continue because the group energy pulls me in", "I continue if the night already feels good", "I stick to what I originally wanted", "I'm usually the person extending the night"],
+  },
+  {
+    type: "single", key: "music_function",
+    q: "When the music is right, what does it usually do for you?",
+    options: ["It helps me stop thinking", "It pulls the group into the same energy", "It makes the night emotionally memorable", "I barely pay attention to it"],
+  },
+  {
+    type: "single", key: "live_performance_impact",
+    q: "What effect does live music or a live set usually have on you?",
+    options: ["It can completely change the night", "It matters only if the performer is genuinely good", "It rarely affects my decisions", "I actively look for places because of live music"],
+  },
+  {
+    type: "single", key: "spend_escalation_trigger",
+    q: "What most often causes you to spend more than planned?",
+    options: ["The night becomes too good to leave", "The group energy keeps building", "The place feels worth spending on", "I stop thinking about money in the moment"],
+  },
+  {
+    type: "multi", key: "dwell_time_driver",
+    q: "What most often makes you stay longer than expected?",
+    hint: "Pick up to 2", limit: 2,
+    options: ["The music or performance improves", "The conversation becomes deeper", "Nobody in the group wants to leave", "The place becomes extremely comfortable", "Something unexpected happens"],
+  },
+  {
+    type: "single", key: "story_signal",
+    q: "When you talk about a great night later, what do you usually mention first?",
+    options: ["The place itself", "The people I was with", "What actually happened during the night", "How the night felt emotionally"],
+  },
+  {
+    type: "single", key: "recovery_preference",
+    q: "What type of night usually feels most worth it afterward?",
+    options: ["High energy, loud, unforgettable", "Slow conversations and comfort", "Discovering something new", "Familiar places that always work"],
+  },
+  {
+    type: "single", key: "loyalty_formation",
+    q: "What most likely turns a place into a regular spot for you?",
+    options: ["Events or live experiences worth returning for", "Consistency — I know what I'll get", "My group starts treating it as our place", "The experience feels personally familiar"],
+  },
+  {
+    type: "single", key: "validation_behavior",
+    q: "Before trying somewhere new, what do you usually check first?",
+    options: ["Ratings and reviews", "Photos or videos", "Friends' opinions", "I usually don't check much"],
+  },
+  {
+    type: "single", key: "escalation_catalyst",
+    q: "What most often turns a normal plan into a bigger night than expected?",
+    options: ["More people arrive", "The music or atmosphere suddenly shifts", "Someone suggests continuing elsewhere", "The energy becomes difficult to walk away from"],
+  },
+  {
+    type: "single", key: "exit_trigger",
+    q: "What most reliably makes you want to leave a place early?",
+    options: ["The crowd or energy changes negatively", "Service becomes slow or frustrating", "The music or atmosphere stops working", "The group dynamic falls apart"],
+  },
+  {
+    type: "text", key: "memory_imprint",
+    q: "Describe one night out you still remember clearly.",
+    placeholder: "What made it stay with you?",
+    long: true, optional: true,
+  },
   { type: "thanks" },
 ];
 
@@ -78,7 +144,6 @@ export default function ResearchPage() {
     }, 190);
   }, [transitioning]);
 
-  // Animate in after step changes
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
@@ -100,7 +165,6 @@ export default function ResearchPage() {
     }).catch(() => {});
   }, [answers]);
 
-  // Submit when reaching thanks
   useEffect(() => {
     if (STEPS[step].type === "thanks" && !submitted) {
       setSubmitted(true);
@@ -110,7 +174,7 @@ export default function ResearchPage() {
   }, [step]);
 
   const advance = useCallback(() => go(1), [go]);
-  const back = useCallback(() => go(-1), [go]);
+  const back    = useCallback(() => go(-1), [go]);
 
   const pick = (key: string, val: string) => {
     pulseRef.current += 1;
@@ -132,11 +196,10 @@ export default function ResearchPage() {
   const s = STEPS[step];
   const showBack = step > 0 && s.type !== "thanks";
 
-  // ── Thankyou state ─────────────────────────────────────────────────────────
-  const [showEmail, setShowEmail] = useState(false);
-  const [email, setEmail] = useState("");
-  const [emailDone, setEmailDone] = useState(false);
-  const [declined, setDeclined] = useState(false);
+  const [showEmail, setShowEmail]   = useState(false);
+  const [email, setEmail]           = useState("");
+  const [emailDone, setEmailDone]   = useState(false);
+  const [declined, setDeclined]     = useState(false);
 
   const handleYes = () => { setShowEmail(true); setDeclined(false); };
   const handleNo  = () => { setDeclined(true); setShowEmail(false); };
@@ -157,7 +220,6 @@ export default function ResearchPage() {
           font-family: "Clash Display", sans-serif;
           overflow: hidden;
         }
-
         .rp-bar { position: relative; z-index: 20; height: 2px; background: rgba(255,255,255,0.06); flex-shrink: 0; }
         .rp-fill {
           height: 100%;
@@ -167,7 +229,6 @@ export default function ResearchPage() {
           transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
         }
         @keyframes rpShimmer { to { background-position: 200% center; } }
-
         .rp-back {
           position: absolute; z-index: 30; top: 18px; left: 22px;
           width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
@@ -175,12 +236,10 @@ export default function ResearchPage() {
           color: rgba(255,255,255,0.3); transition: color 0.18s;
         }
         .rp-back:hover { color: #E6D3A3; }
-
         .rp-vignette {
           position: absolute; inset: 0; pointer-events: none; z-index: 1;
           background: radial-gradient(ellipse 65% 55% at 50% 50%, transparent 35%, rgba(10,10,10,0.75) 100%);
         }
-
         .rp-area {
           flex: 1; position: relative; z-index: 10;
           display: flex; align-items: center; justify-content: center;
@@ -188,45 +247,26 @@ export default function ResearchPage() {
           min-height: calc(100vh - var(--nav-height) - 2px);
           padding: 48px 32px 72px;
         }
-
-        .rp-wrap {
-          width: 100%; max-width: 560px;
-          display: flex; flex-direction: column; gap: 0;
-        }
-
+        .rp-wrap { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 0; }
         .rp-brand {
           display: flex; align-items: center; gap: 10px;
           font-size: 14px; font-weight: 500; color: #F5F5F5;
           margin-bottom: 40px; letter-spacing: -0.01em;
         }
-
         .rp-label {
           font-size: 11px; font-weight: 600; letter-spacing: 0.22em;
           text-transform: uppercase; color: rgba(255,255,255,0.28);
           margin-bottom: 16px; display: block;
         }
-
         .rp-q {
-          font-size: clamp(26px, 4.5vw, 48px);
-          font-weight: 600; line-height: 1.1;
+          font-size: clamp(22px, 4vw, 44px);
+          font-weight: 600; line-height: 1.15;
           letter-spacing: -0.02em; color: #F5F5F5;
           margin: 0 0 32px;
         }
-
-        .rp-hint {
-          font-size: 12px; color: rgba(255,255,255,0.28);
-          letter-spacing: 0.04em; margin: -20px 0 20px;
-        }
-
-        .rp-sub {
-          font-size: 15px; font-weight: 400;
-          color: rgba(255,255,255,0.42); line-height: 1.65;
-          margin: -12px 0 32px; max-width: 400px;
-        }
-
-        /* ── Options ── */
+        .rp-hint { font-size: 12px; color: rgba(255,255,255,0.28); letter-spacing: 0.04em; margin: -20px 0 20px; }
+        .rp-sub { font-size: 15px; font-weight: 400; color: rgba(255,255,255,0.42); line-height: 1.65; margin: -12px 0 32px; max-width: 400px; }
         .rp-opts { display: flex; flex-direction: column; gap: 8px; }
-
         .rp-opt {
           display: flex; align-items: center;
           min-height: 52px; padding: 13px 20px;
@@ -239,16 +279,8 @@ export default function ResearchPage() {
           transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.15s;
           backdrop-filter: blur(6px);
         }
-        .rp-opt:hover {
-          border-color: rgba(255,255,255,0.2);
-          color: #F5F5F5; background: rgba(255,255,255,0.06);
-          transform: translateX(5px);
-        }
-        .rp-opt.selected {
-          border-color: #E6D3A3; color: #E6D3A3;
-          background: rgba(230,211,163,0.08); transform: translateX(5px);
-        }
-
+        .rp-opt:hover { border-color: rgba(255,255,255,0.2); color: #F5F5F5; background: rgba(255,255,255,0.06); transform: translateX(5px); }
+        .rp-opt.selected { border-color: #E6D3A3; color: #E6D3A3; background: rgba(230,211,163,0.08); transform: translateX(5px); }
         .rp-check {
           width: 18px; height: 18px; flex-shrink: 0;
           border: 1px solid rgba(255,255,255,0.2); border-radius: 3px;
@@ -259,8 +291,6 @@ export default function ResearchPage() {
         .rp-opt.multi-sel { border-color: #E6D3A3; color: #E6D3A3; background: rgba(230,211,163,0.08); }
         .rp-check svg { display: none; }
         .rp-opt.multi-sel .rp-check svg { display: block; }
-
-        /* ── Text input ── */
         .rp-text-wrap { width: 100%; }
         .rp-field {
           width: 100%; background: transparent; border: none;
@@ -272,10 +302,7 @@ export default function ResearchPage() {
         }
         .rp-field::placeholder { color: rgba(255,255,255,0.18); }
         .rp-field:focus { border-color: #E6D3A3; }
-
-        /* ── Buttons ── */
         .rp-btns { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 28px; }
-
         .rp-next {
           display: inline-flex; align-items: center; gap: 8px;
           font-family: "Clash Display", sans-serif; font-size: 14px; font-weight: 600;
@@ -286,7 +313,6 @@ export default function ResearchPage() {
         }
         .rp-next.on { opacity: 1; pointer-events: all; }
         .rp-next.on:hover { transform: translateX(3px); }
-
         .rp-skip {
           font-family: "Clash Display", sans-serif; font-size: 13px; font-weight: 400;
           color: rgba(255,255,255,0.28); background: none; border: none;
@@ -294,10 +320,7 @@ export default function ResearchPage() {
           transition: color 0.15s, border-color 0.15s;
         }
         .rp-skip:hover { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.28); }
-
-        /* ── Thankyou ── */
         .rp-ty-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
-
         .rp-ty-yes {
           font-family: "Clash Display", sans-serif; font-size: 14px; font-weight: 600;
           padding: 14px 28px; border-radius: 5px; border: none;
@@ -305,7 +328,6 @@ export default function ResearchPage() {
           transition: opacity 0.18s, transform 0.15s;
         }
         .rp-ty-yes:hover { opacity: 0.88; transform: translateX(2px); }
-
         .rp-ty-no {
           font-family: "Clash Display", sans-serif; font-size: 14px; font-weight: 400;
           padding: 14px 28px; border-radius: 5px;
@@ -314,7 +336,6 @@ export default function ResearchPage() {
           transition: all 0.18s;
         }
         .rp-ty-no:hover { border-color: rgba(255,255,255,0.25); color: #F5F5F5; }
-
         .rp-email-row {
           display: flex; gap: 10px; margin-top: 24px;
           border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 4px; max-width: 460px;
@@ -334,11 +355,7 @@ export default function ResearchPage() {
           transition: opacity 0.18s;
         }
         .rp-email-sub:hover { opacity: 0.88; }
-
-        .rp-ty-msg {
-          margin-top: 22px; font-size: 14px; font-weight: 400;
-          color: rgba(255,255,255,0.4); line-height: 1.65; max-width: 360px;
-        }
+        .rp-ty-msg { margin-top: 22px; font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.4); line-height: 1.65; max-width: 360px; }
         .rp-ty-back {
           margin-top: 36px; font-family: "Clash Display", sans-serif;
           font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.28);
@@ -346,7 +363,6 @@ export default function ResearchPage() {
           transition: color 0.18s, border-color 0.18s; display: inline-block;
         }
         .rp-ty-back:hover { color: #E6D3A3; border-color: rgba(230,211,163,0.4); }
-
         @media (max-width: 480px) {
           .rp-area { padding: 40px 20px 60px; }
           .rp-opt { min-height: 46px; font-size: 14px; }
@@ -374,22 +390,20 @@ export default function ResearchPage() {
         <div className="rp-area">
           <div ref={wrapRef} className="rp-wrap">
 
-            {/* ── Intro ─────────────────────────────────────────── */}
             {s.type === "intro" && (
               <>
                 <div className="rp-brand">
                   <svg width="18" height="18" viewBox="0 0 64 64"><path d="M32 4 L37 27 L60 32 L37 37 L32 60 L27 37 L4 32 L27 27 Z" fill="#E6D3A3"/></svg>
                   Polynovea Records
                 </div>
-                <h1 className="rp-q" style={{ fontSize: "clamp(28px,5vw,56px)" }}>Help us build better nights.</h1>
-                <p className="rp-sub">This takes about 3 minutes. Your answers shape what we build.</p>
+                <h1 className="rp-q" style={{ fontSize: "clamp(28px,5vw,56px)" }}>Help us understand what makes a great night.</h1>
+                <p className="rp-sub">16 questions. 4 minutes. Your answers shape how we build live experiences.</p>
                 <div className="rp-btns">
                   <button className="rp-next on" onClick={advance}>Let&apos;s begin →</button>
                 </div>
               </>
             )}
 
-            {/* ── Single ────────────────────────────────────────── */}
             {s.type === "single" && (
               <>
                 <span className="rp-label">{qlabel(step)}</span>
@@ -404,7 +418,6 @@ export default function ResearchPage() {
               </>
             )}
 
-            {/* ── Multi ─────────────────────────────────────────── */}
             {s.type === "multi" && (() => {
               const sel: string[] = Array.isArray(answers[s.key]) ? (answers[s.key] as string[]) : [];
               return (
@@ -429,7 +442,6 @@ export default function ResearchPage() {
               );
             })()}
 
-            {/* ── Text ──────────────────────────────────────────── */}
             {s.type === "text" && (() => {
               const val = (answers[s.key] as string) || "";
               const canGo = !!s.optional || val.trim().length > 0;
@@ -455,15 +467,14 @@ export default function ResearchPage() {
               );
             })()}
 
-            {/* ── Thanks ────────────────────────────────────────── */}
             {s.type === "thanks" && (
               <>
                 <div className="rp-brand">
                   <svg width="18" height="18" viewBox="0 0 64 64"><path d="M32 4 L37 27 L60 32 L37 37 L32 60 L27 37 L4 32 L27 27 Z" fill="#E6D3A3"/></svg>
                   Polynovea Records
                 </div>
-                <h2 className="rp-q" style={{ fontSize: "clamp(24px,4vw,44px)" }}>Thanks for helping us build better experiences.</h2>
-                <p className="rp-sub">Want early access to what we&apos;re building?</p>
+                <h2 className="rp-q" style={{ fontSize: "clamp(24px,4vw,44px)" }}>That&apos;s exactly what we needed.</h2>
+                <p className="rp-sub">Want early access to what we&apos;re building based on this?</p>
                 {!emailDone && !declined && (
                   <div className="rp-ty-btns">
                     <button className="rp-ty-yes" onClick={handleYes}>Yes, add me</button>
@@ -480,7 +491,7 @@ export default function ResearchPage() {
                   </div>
                 )}
                 {emailDone && <p className="rp-ty-msg">You&apos;re on the list. We&apos;ll be in touch.</p>}
-                {declined && <p className="rp-ty-msg">That&apos;s okay. Glad you shared your thoughts — it matters more than you&apos;d think.</p>}
+                {declined && <p className="rp-ty-msg">Appreciated. Every answer helps us build something real.</p>}
               </>
             )}
 

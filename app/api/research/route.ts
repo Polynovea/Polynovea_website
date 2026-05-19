@@ -1,63 +1,68 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
 
-const SHEETS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyixPd_UBfHC2OYmNReb1W5ECH8tdk5Z2khyLu-BLHeC8zrISKGSG_jOwS7zXqEcuQtEQ/exec";
-const NOTIFY_EMAIL = "subrojitroy@polynovearecords.in";
+const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
+const AIRTABLE_TOKEN   = process.env.AIRTABLE_TOKEN!;
+const AIRTABLE_TABLE   = "Submissions";
 
 export async function POST(request: NextRequest) {
   let payload: Record<string, unknown> = {};
 
   try {
-    const body = await request.json();
-    payload = body;
+    payload = await request.json();
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  // Always log — captured in Vercel function logs as a safety net
-  console.log('[research] submission received', JSON.stringify({ ...payload, _ts: new Date().toISOString() }));
+  if (!AIRTABLE_BASE_ID || !AIRTABLE_TOKEN) {
+    console.error('[research] Airtable env vars missing');
+    return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+  }
 
-  // Forward to Google Apps Script server-side as JSON
-  // Apps Script reads this via e.postData.contents → JSON.parse()
-  let sheetsOk = false;
+  const fields: Record<string, string> = {
+    timestamp:                 new Date().toISOString(),
+    submission_id:             String(payload.submissionId             ?? ''),
+    initiation_pattern:        String(payload.initiation_pattern       ?? ''),
+    decision_unlock:           String(payload.decision_unlock          ?? ''),
+    discovery_source:          String(payload.discovery_source         ?? ''),
+    first_5min_filter:         String(payload.first_5min_filter        ?? ''),
+    social_influence:          String(payload.social_influence         ?? ''),
+    music_function:            String(payload.music_function           ?? ''),
+    live_performance_impact:   String(payload.live_performance_impact  ?? ''),
+    spend_escalation_trigger:  String(payload.spend_escalation_trigger ?? ''),
+    dwell_time_driver:         Array.isArray(payload.dwell_time_driver)
+                                 ? (payload.dwell_time_driver as string[]).join(', ')
+                                 : String(payload.dwell_time_driver ?? ''),
+    story_signal:              String(payload.story_signal             ?? ''),
+    recovery_preference:       String(payload.recovery_preference      ?? ''),
+    loyalty_formation:         String(payload.loyalty_formation        ?? ''),
+    validation_behavior:       String(payload.validation_behavior      ?? ''),
+    escalation_catalyst:       String(payload.escalation_catalyst      ?? ''),
+    exit_trigger:              String(payload.exit_trigger             ?? ''),
+    memory_imprint:            String(payload.memory_imprint           ?? ''),
+  };
+
   try {
-    const res = await fetch(SHEETS_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      redirect: "follow",
-    });
-    sheetsOk = res.ok;
-    if (!sheetsOk) {
-      const text = await res.text().catch(() => '');
-      console.error('[research] sheets returned non-ok status', res.status, text);
+    const res = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE)}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+          'Content-Type':  'application/json',
+        },
+        body: JSON.stringify({ fields }),
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.text().catch(() => '');
+      console.error('[research] Airtable error', res.status, err);
+      return NextResponse.json({ error: 'Failed to save submission' }, { status: 500 });
     }
+
+    return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('[research] sheets fetch failed', err);
+    console.error('[research] Airtable fetch failed', err);
+    return NextResponse.json({ error: 'Network error' }, { status: 500 });
   }
-
-  // Email fallback when Sheets is unreachable and Gmail is configured
-  if (!sheetsOk && process.env.GMAIL_EMAIL && process.env.GMAIL_APP_PASSWORD) {
-    try {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: { user: process.env.GMAIL_EMAIL, pass: process.env.GMAIL_APP_PASSWORD },
-      });
-      const rows = Object.entries(payload)
-        .map(([k, v]) => `<tr><td style="padding:4px 12px;font-weight:600">${k}</td><td style="padding:4px 12px">${Array.isArray(v) ? v.join(', ') : String(v ?? '')}</td></tr>`)
-        .join('');
-      await transporter.sendMail({
-        from: process.env.GMAIL_EMAIL,
-        to: NOTIFY_EMAIL,
-        subject: `[Research backup] Submission ${payload.submissionId ?? ''}`,
-        html: `<p>Google Sheets was unreachable — submission captured via email.</p><table style="border-collapse:collapse">${rows}</table>`,
-      });
-      console.log('[research] backup email sent');
-    } catch (emailErr) {
-      console.error('[research] backup email failed', emailErr);
-    }
-  }
-
-  // Always return success to the client — data is captured in logs regardless
-  return NextResponse.json({ success: true, sheets: sheetsOk });
 }
