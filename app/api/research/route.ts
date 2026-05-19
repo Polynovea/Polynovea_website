@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
 const AIRTABLE_TOKEN   = process.env.AIRTABLE_TOKEN!;
-const AIRTABLE_TABLE   = "Submissions";
+const AIRTABLE_TABLE   = "Table 1";
 
 export async function POST(request: NextRequest) {
   let payload: Record<string, unknown> = {};
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
           'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
           'Content-Type':  'application/json',
         },
-        body: JSON.stringify({ fields }),
+        body: JSON.stringify({ fields, typecast: true }),
       }
     );
 
