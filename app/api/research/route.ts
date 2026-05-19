@@ -4,6 +4,14 @@ const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
 const AIRTABLE_TOKEN   = process.env.AIRTABLE_TOKEN!;
 const AIRTABLE_TABLE   = "Submissions";
 
+export async function GET() {
+  return NextResponse.json({
+    env_base_id:  AIRTABLE_BASE_ID  ? `set (${AIRTABLE_BASE_ID.slice(0,6)}...)` : 'MISSING',
+    env_token:    AIRTABLE_TOKEN    ? `set (${AIRTABLE_TOKEN.slice(0,8)}...)` : 'MISSING',
+    table:        AIRTABLE_TABLE,
+  });
+}
+
 export async function POST(request: NextRequest) {
   let payload: Record<string, unknown> = {};
 
