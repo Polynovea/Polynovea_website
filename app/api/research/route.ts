@@ -4,6 +4,15 @@ const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
 const AIRTABLE_TOKEN   = process.env.AIRTABLE_TOKEN!;
 const AIRTABLE_TABLE   = "Submissions";
 
+async function findRecordBySubmissionId(submissionId: string): Promise<string | null> {
+  const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE)}?filterByFormula=${encodeURIComponent(`{submission_id}="${submissionId}"`)}`;
+  const res = await fetch(url, {
+    headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` },
+  });
+  if (!res.ok) return null;
+  const data = await res.json() as { records: { id: string }[] };
+  return data.records?.[0]?.id ?? null;
+}
 
 export async function POST(request: NextRequest) {
   let payload: Record<string, unknown> = {};
@@ -15,12 +24,14 @@ export async function POST(request: NextRequest) {
   }
 
   if (!AIRTABLE_BASE_ID || !AIRTABLE_TOKEN) {
-    console.error('[research] Airtable env vars missing');
     return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
   }
 
+  const submissionId = String(payload.submissionId ?? '');
+  const isEmailUpdate = !!payload.email && Object.keys(payload).length <= 3; // submissionId + email only
+
   const fields: Record<string, string> = {
-    submission_id:            String(payload.submissionId             ?? ''),
+    submission_id:            submissionId,
     timestamp:                new Date().toISOString(),
     initiation_pattern:       String(payload.initiation_pattern       ?? ''),
     decision_unlock:          String(payload.decision_unlock          ?? ''),
@@ -44,6 +55,26 @@ export async function POST(request: NextRequest) {
   };
 
   try {
+    // If it's just an email update, find and patch the existing record
+    if (isEmailUpdate && submissionId) {
+      const recordId = await findRecordBySubmissionId(submissionId);
+      if (recordId) {
+        await fetch(
+          `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE)}/${recordId}`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+              'Content-Type':  'application/json',
+            },
+            body: JSON.stringify({ fields: { email: String(payload.email) } }),
+          }
+        );
+        return NextResponse.json({ success: true });
+      }
+    }
+
+    // Otherwise create a new record
     const res = await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE)}`,
       {
