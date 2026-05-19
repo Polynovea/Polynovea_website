@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
 const AIRTABLE_TOKEN   = process.env.AIRTABLE_TOKEN!;
-const AIRTABLE_TABLE   = "Table 1";
+const AIRTABLE_TABLE   = "Submissions";
 
 export async function POST(request: NextRequest) {
   let payload: Record<string, unknown> = {};
