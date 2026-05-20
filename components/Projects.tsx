@@ -39,7 +39,7 @@ const systemModules = [
     title: "Acquisition System",
     status: "In Progress",
     statusType: "progress",
-    desc: "Two-part system. Part 1 structures raw behavioural data into operational intelligence. Part 2 deploys the acquisition engine to identify and grow the right audience with precision.",
+    desc: "Multi-source behavioural signal extraction, structured through an ontology layer that maps how human behaviour operates inside commercial environments. Not what customers say — the mechanisms that drive what they do. Feeds a field execution system that tells you who to target, how to reach them, and what they respond to before a single show runs.",
   },
   {
     tag: "Module 03",

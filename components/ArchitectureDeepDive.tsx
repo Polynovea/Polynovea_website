@@ -41,9 +41,9 @@ const milestones = [
       },
       {
         title: "Module 2: Acquisition System",
-        what: "Capture behavioral data at scale.",
-        how: ["Deploy trackers", "Aggregate multi-source data", "Clean and normalize signals"],
-        output: "Clean datasets, signal library, data quality scores",
+        what: "Map the behavioural mechanics of commercial environments — not categories, not sentiment, but the operating mechanisms that determine why customers return, spend, and refer.",
+        how: ["Extract multi-source behavioural signals and structure them through an ontology layer", "Score venues across fitness dimensions and audience archetypes using Bayesian inference", "Convert intelligence into a field execution framework — 8-phase acquisition system deployed live at each venue"],
+        output: "Behavioural fitness profiles, audience archetype maps, competitor intelligence by behavioural similarity, and a proven acquisition playbook per venue",
       },
       {
         title: "Module 3: Optimization System",
