@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const AboutScene = dynamic(() => import('@/components/AboutScene'), { ssr: false });
+const AboutScene = dynamic(() => import('@/components/AboutScene'));
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);

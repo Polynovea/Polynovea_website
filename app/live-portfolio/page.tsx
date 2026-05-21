@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
-import LivePortfolioExpanded from "@/components/LivePortfolioExpanded";
+import dynamic from "next/dynamic";
 import Footer from "@/components/Footer";
+
+const LivePortfolioExpanded = dynamic(() => import("@/components/LivePortfolioExpanded"));
 
 export const metadata: Metadata = {
   title: "Live Portfolio — Events & Shows",

@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const ResearchScene = dynamic(() => import("@/components/ResearchScene"), { ssr: false });
+const ResearchScene = dynamic(() => import("@/components/ResearchScene"));
 
 const ENDPOINT = "/api/research";
 
