@@ -71,7 +71,13 @@ const organizationSchema = {
     email: "subrojitroy@polynovearecords.in",
     contactType: "customer service",
   },
-  sameAs: [],
+  sameAs: [
+    "https://www.instagram.com/polynovearecords/",
+    "https://www.instagram.com/polynovea.in/",
+    "https://x.com/PolynoveaRec",
+    "https://www.threads.com/@polynovearecords",
+    "https://www.youtube.com/@PolynoveaRecords",
+  ],
 };
 
 export default function RootLayout({
