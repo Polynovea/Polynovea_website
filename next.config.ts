@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://rsms.me",
               "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
               "img-src 'self' data: blob: https://i.ytimg.com https://img.youtube.com",
-              "connect-src 'self'",
+              "connect-src 'self' https://polynovea-admin-488b.vercel.app",
               "media-src 'self' https://www.youtube.com",
             ].join("; "),
           },

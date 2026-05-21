@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+
+// This file is intentionally a client component. Metadata is exported from the
+// server wrapper at app/blog/layout.tsx — see that file for SEO config.
 import Link from "next/link";
 
 interface BlogPost {
