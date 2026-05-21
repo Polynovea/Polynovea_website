@@ -1,177 +1,197 @@
 "use client";
 
-import { useRef, useMemo, useEffect } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-const NODE_COUNT = 120;
-const CONNECTION_DISTANCE = 1.8;
-
-function Nodes({ scrollY }: { scrollY: React.MutableRefObject<number> }) {
-  const meshRef = useRef<THREE.InstancedMesh>(null);
-  const mouseRef = useRef({ x: 0, y: 0 });
-  const timeRef = useRef(0);
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-
-  const positions = useMemo(() => {
-    const arr = new Float32Array(NODE_COUNT * 3);
-    for (let i = 0; i < NODE_COUNT; i++) {
-      arr[i * 3]     = (Math.random() - 0.5) * 10;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 6;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 4;
-    }
-    return arr;
-  }, []);
-
-  const velocities = useMemo(() => {
-    const arr = new Float32Array(NODE_COUNT * 3);
-    for (let i = 0; i < NODE_COUNT * 3; i++) arr[i] = (Math.random() - 0.5) * 0.002;
-    return arr;
-  }, []);
-
-  const current = useMemo(() => new Float32Array(positions), [positions]);
-
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      mouseRef.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouseRef.current.y = -(e.clientY / window.innerHeight - 0.5) * 2;
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
-  useFrame((_, delta) => {
-    if (!meshRef.current) return;
-    timeRef.current += delta;
-    // Gold tint increases with scroll
-    const scrollProgress = Math.min(scrollY.current / (window.innerHeight * 0.8), 1);
-
-    for (let i = 0; i < NODE_COUNT; i++) {
-      current[i * 3]     += velocities[i * 3];
-      current[i * 3 + 1] += velocities[i * 3 + 1];
-      current[i * 3 + 2] += velocities[i * 3 + 2];
-      if (Math.abs(current[i * 3])     > 5.5) velocities[i * 3]     *= -1;
-      if (Math.abs(current[i * 3 + 1]) > 3.5) velocities[i * 3 + 1] *= -1;
-      if (Math.abs(current[i * 3 + 2]) > 2.5) velocities[i * 3 + 2] *= -1;
-
-      const pulse = 0.04 + Math.sin(timeRef.current * 1.5 + i * 0.3) * 0.015;
-      dummy.position.set(
-        current[i * 3]     + mouseRef.current.x * 0.08,
-        current[i * 3 + 1] + mouseRef.current.y * 0.08,
-        current[i * 3 + 2]
-      );
-      dummy.scale.setScalar(pulse);
-      dummy.updateMatrix();
-      meshRef.current.setMatrixAt(i, dummy.matrix);
-
-      // Blend violet → gold as user scrolls
-      const violet = new THREE.Color("#7C3AED");
-      const gold   = new THREE.Color("#E6D3A3");
-      const c = violet.clone().lerp(gold, scrollProgress * 0.8);
-      c.multiplyScalar(0.8 + Math.sin(timeRef.current + i) * 0.2);
-      meshRef.current.setColorAt(i, c);
-    }
-    meshRef.current.instanceMatrix.needsUpdate = true;
-    if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
-  });
-
-  return (
-    <instancedMesh ref={meshRef} args={[undefined, undefined, NODE_COUNT]}>
-      <sphereGeometry args={[1, 6, 6]} />
-      <meshBasicMaterial color="#A78BFA" transparent opacity={1} vertexColors />
-    </instancedMesh>
-  );
-}
-
-function Connections() {
-  const linesRef = useRef<THREE.LineSegments>(null);
-  const timeRef  = useRef(0);
-
-  const linePositions = useMemo(() => {
-    const nodes: number[][] = [];
-    for (let i = 0; i < NODE_COUNT; i++) {
-      nodes.push([(Math.random() - 0.5) * 10, (Math.random() - 0.5) * 6, (Math.random() - 0.5) * 4]);
-    }
-    const lines: number[] = [];
-    for (let i = 0; i < NODE_COUNT; i++) {
-      for (let j = i + 1; j < NODE_COUNT; j++) {
-        const dx = nodes[i][0] - nodes[j][0];
-        const dy = nodes[i][1] - nodes[j][1];
-        const dz = nodes[i][2] - nodes[j][2];
-        if (Math.sqrt(dx*dx + dy*dy + dz*dz) < CONNECTION_DISTANCE) {
-          lines.push(...nodes[i], ...nodes[j]);
-        }
-      }
-    }
-    return new Float32Array(lines);
-  }, []);
-
-  useFrame((_, delta) => {
-    timeRef.current += delta;
-    if (linesRef.current) linesRef.current.rotation.y = Math.sin(timeRef.current * 0.05) * 0.03;
-  });
-
-  return (
-    <lineSegments ref={linesRef}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[linePositions, 3]} />
-      </bufferGeometry>
-      <lineBasicMaterial color="#7C3AED" transparent opacity={0.35} />
-    </lineSegments>
-  );
-}
-
-function CameraRig({ scrollY }: { scrollY: React.MutableRefObject<number> }) {
-  const { camera } = useThree();
-  const mouseRef = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      mouseRef.current.x = (e.clientX / window.innerWidth - 0.5) * 0.4;
-      mouseRef.current.y = -(e.clientY / window.innerHeight - 0.5) * 0.2;
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
-  useFrame(() => {
-    // Mouse parallax
-    camera.position.x += (mouseRef.current.x - camera.position.x) * 0.03;
-    camera.position.y += (mouseRef.current.y - camera.position.y) * 0.03;
-    // Scroll-linked pullback: z goes from 7 → 10 over one viewport height
-    const scrollProgress = Math.min(scrollY.current / window.innerHeight, 1);
-    const targetZ = 7 + scrollProgress * 3;
-    camera.position.z += (targetZ - camera.position.z) * 0.05;
-    camera.lookAt(0, 0, 0);
-  });
-
-  return null;
-}
-
 export default function HeroScene() {
-  const scrollY = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const particlesRef = useRef<THREE.Points | null>(null);
+  const mouseRef = useRef({ x: 0, y: 0 });
+  const targetMouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    const onScroll = () => { scrollY.current = window.scrollY; };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    if (!containerRef.current) return;
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.z = 3;
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance",
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setClearColor(0x000000, 0);
+    containerRef.current.appendChild(renderer.domElement);
+
+    sceneRef.current = scene;
+    cameraRef.current = camera;
+    rendererRef.current = renderer;
+
+    // Create particle system — cosmic visualization of Astrophysics, Art, Music, AI, Data
+    const particleCount = 800;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const velocities = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 10;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+
+      velocities[i * 3] = (Math.random() - 0.5) * 0.02;
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
+      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
+    }
+
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("velocity", new THREE.BufferAttribute(velocities, 3));
+
+    // Circle sprite texture so particles render as dots, not squares
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext("2d")!;
+    const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gradient.addColorStop(0, "rgba(255,255,255,1)");
+    gradient.addColorStop(0.4, "rgba(255,255,255,0.6)");
+    gradient.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(32, 32, 32, 0, Math.PI * 2);
+    ctx.fill();
+    const sprite = new THREE.CanvasTexture(canvas);
+
+    const material = new THREE.PointsMaterial({
+      size: 0.04,
+      color: new THREE.Color("#C4B5E8"),
+      map: sprite,
+      transparent: true,
+      opacity: 0.35,
+      sizeAttenuation: true,
+      depthWrite: false,
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+    particlesRef.current = particles;
+
+    // Mouse tracking for interaction
+    const onMouseMove = (e: MouseEvent) => {
+      targetMouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      targetMouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+
+    // Handle window resize
+    const onWindowResize = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
+
+    window.addEventListener("resize", onWindowResize);
+
+    // Animation loop
+    let animationId: number;
+    const animate = () => {
+      animationId = requestAnimationFrame(animate);
+
+      // Smooth mouse following
+      mouseRef.current.x += (targetMouseRef.current.x - mouseRef.current.x) * 0.05;
+      mouseRef.current.y += (targetMouseRef.current.y - mouseRef.current.y) * 0.05;
+
+      // Update particles
+      const positionArray = geometry.getAttribute("position") as THREE.BufferAttribute;
+      const velocityArray = geometry.getAttribute("velocity") as THREE.BufferAttribute;
+      const positions = positionArray.array as Float32Array;
+      const velocities = velocityArray.array as Float32Array;
+
+      for (let i = 0; i < particleCount; i++) {
+        // Update position
+        positions[i * 3] += velocities[i * 3];
+        positions[i * 3 + 1] += velocities[i * 3 + 1];
+        positions[i * 3 + 2] += velocities[i * 3 + 2];
+
+        // Mouse repulsion physics
+        const dx = positions[i * 3] - mouseRef.current.x * 5;
+        const dy = positions[i * 3 + 1] - mouseRef.current.y * 5;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 2) {
+          const force = (2 - distance) * 0.01;
+          velocities[i * 3] += (dx / distance) * force;
+          velocities[i * 3 + 1] += (dy / distance) * force;
+        }
+
+        // Bounce off boundaries
+        const boundary = 5;
+        if (positions[i * 3] > boundary) velocities[i * 3] *= -1;
+        if (positions[i * 3] < -boundary) velocities[i * 3] *= -1;
+        if (positions[i * 3 + 1] > boundary) velocities[i * 3 + 1] *= -1;
+        if (positions[i * 3 + 1] < -boundary) velocities[i * 3 + 1] *= -1;
+        if (positions[i * 3 + 2] > boundary) velocities[i * 3 + 2] *= -1;
+        if (positions[i * 3 + 2] < -boundary) velocities[i * 3 + 2] *= -1;
+
+        // Damping
+        velocities[i * 3] *= 0.995;
+        velocities[i * 3 + 1] *= 0.995;
+        velocities[i * 3 + 2] *= 0.995;
+      }
+
+      positionArray.needsUpdate = true;
+
+      // Subtle camera rotation
+      camera.position.x = Math.sin(Date.now() * 0.0001) * 0.5;
+      camera.position.y = Math.cos(Date.now() * 0.00008) * 0.3;
+      camera.lookAt(0, 0, 0);
+
+      // Rotate particles
+      particles.rotation.x += 0.0001;
+      particles.rotation.y += 0.00015;
+
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    // Cleanup
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("resize", onWindowResize);
+      renderer.dispose();
+      geometry.dispose();
+      material.dispose();
+      if (containerRef.current?.contains(renderer.domElement)) {
+        containerRef.current.removeChild(renderer.domElement);
+      }
+    };
   }, []);
 
   return (
-    <div className="hero-canvas">
-      <Canvas camera={{ position: [0, 0, 7], fov: 55 }} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
-        <CameraRig scrollY={scrollY} />
-        <Nodes scrollY={scrollY} />
-        <Connections />
-      </Canvas>
-      <style jsx>{`
-        .hero-canvas {
-          position: absolute;
-          inset: 0;
-          z-index: 0;
-          pointer-events: none;
-        }
-      `}</style>
-    </div>
+    <div
+      ref={containerRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 1,
+        pointerEvents: "none",
+      }}
+    />
   );
 }

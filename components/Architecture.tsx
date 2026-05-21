@@ -128,7 +128,7 @@ export default function Architecture() {
 
       <style jsx>{`
         .arch-section {
-          background: var(--bg-secondary);
+          background: rgba(18, 18, 18, 0.6);
         }
 
         .arch-grid {

@@ -138,7 +138,7 @@ export default function LivePortfolio() {
       </div>
 
       <style jsx>{`
-        .live-section { background: var(--bg-primary); }
+        .live-section { background: rgba(10, 10, 10, 0.5); }
         .live-header {
           display: flex;
           align-items: flex-end;

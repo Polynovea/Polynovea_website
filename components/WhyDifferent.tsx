@@ -67,7 +67,7 @@ export default function WhyDifferent() {
 
       <style jsx>{`
         .why-section {
-          background: var(--bg-primary);
+          background: rgba(10, 10, 10, 0.5);
         }
 
         .why-heading {

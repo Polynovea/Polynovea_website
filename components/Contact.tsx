@@ -110,7 +110,7 @@ export default function Contact() {
       </div>
 
       <style jsx>{`
-        .contact-section { background: var(--bg-primary); }
+        .contact-section { background: rgba(10, 10, 10, 0.5); }
         .contact-inner {
           display: grid;
           grid-template-columns: 1fr 1.2fr;

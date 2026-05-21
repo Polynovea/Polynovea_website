@@ -259,7 +259,7 @@ export default function Projects() {
 
       <style jsx>{`
         .projects-section {
-          background: var(--bg-secondary);
+          background: rgba(18, 18, 18, 0.5);
         }
         .projects-header {
           margin-bottom: var(--space-3xl);

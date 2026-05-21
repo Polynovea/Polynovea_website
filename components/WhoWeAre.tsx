@@ -66,7 +66,7 @@ export default function WhoWeAre() {
 
       <style jsx>{`
         .who-we-are-section {
-          background: var(--bg-primary);
+          background: rgba(10, 10, 10, 0.5);
           padding: 120px 0;
           border-bottom: 1px solid var(--border-muted);
         }

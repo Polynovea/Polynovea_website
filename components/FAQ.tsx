@@ -116,7 +116,7 @@ export default function FAQ() {
       </div>
 
       <style jsx>{`
-        .faq-section { background: var(--bg-secondary); }
+        .faq-section { background: rgba(18, 18, 18, 0.5); }
         .faq-header { text-align: center; margin-bottom: var(--space-2xl); }
         .faq-list {
           display: flex;
