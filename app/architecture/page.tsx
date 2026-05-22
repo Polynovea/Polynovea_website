@@ -7,12 +7,12 @@ export const metadata: Metadata = {
   title: "The System Architecture",
   description:
     "A deep dive into how Polynovea Records maps behavioral data from live music events into actionable intelligence for venues and artists in India.",
-  alternates: { canonical: "https://polynovearecords.in/architecture" },
+  alternates: { canonical: "https://www.polynovea.in/architecture" },
   openGraph: {
     title: "The System Architecture | Polynovea Records",
     description:
       "How we convert live event behavior into intelligence — the full system breakdown.",
-    url: "https://polynovearecords.in/architecture",
+    url: "https://www.polynovea.in/architecture",
   },
 };
 

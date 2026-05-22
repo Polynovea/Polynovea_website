@@ -7,12 +7,12 @@ export const metadata: Metadata = {
   title: "Projects — Independent Music Ecosystem",
   description:
     "Polynovea Records projects: music releases, live event production, artist development, and distribution initiatives for independent artists in India.",
-  alternates: { canonical: "https://polynovearecords.in/projects" },
+  alternates: { canonical: "https://www.polynovea.in/projects" },
   openGraph: {
     title: "Projects | Polynovea Records",
     description:
       "Music releases, live productions, and artist development projects by Polynovea Records.",
-    url: "https://polynovearecords.in/projects",
+    url: "https://www.polynovea.in/projects",
   },
 };
 

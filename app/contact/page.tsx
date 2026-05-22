@@ -4,7 +4,7 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const CONTACT_EMAIL = "subrojitroy@polynovearecords.in";
+const CONTACT_EMAIL = "subrojitroy@polynovea.in";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);

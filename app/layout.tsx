@@ -14,15 +14,15 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Polynovea Records | Independent Music Label India",
-    template: "%s | Polynovea Records",
+    default: "Polynovea | Behavioral Intelligence for Music",
+    template: "%s | Polynovea",
   },
   description:
-    "Polynovea Records is an independent music label in India building live music experiences, artist distribution, and behavioral intelligence systems for venues and artists.",
-  metadataBase: new URL("https://polynovearecords.in"),
+    "Polynovea is an independent music intelligence company in India building live music experiences, artist distribution, and behavioral intelligence systems for venues and artists.",
+  metadataBase: new URL("https://www.polynovea.in"),
   keywords: [
     "independent music label india",
-    "music distribution india",
+    "music intelligence india",
     "live music events mumbai",
     "artist development india",
     "independent artist distribution",
@@ -33,43 +33,63 @@ export const metadata: Metadata = {
     apple: "/icon.png",
   },
   openGraph: {
-    title: "Polynovea Records | Independent Music Label India",
+    title: "Polynovea | Behavioral Intelligence for Music",
     description:
-      "Independent music label in India. Live events, artist distribution, and behavioral intelligence for venues.",
-    siteName: "Polynovea Records",
-    url: "https://polynovearecords.in",
+      "Independent music intelligence company in India. Live events, artist distribution, and behavioral intelligence for venues.",
+    siteName: "Polynovea",
+    url: "https://www.polynovea.in",
     type: "website",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Polynovea Records" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Polynovea" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Polynovea Records | Independent Music Label India",
+    title: "Polynovea | Behavioral Intelligence for Music",
     description:
-      "Independent music label in India. Live events, artist distribution, and behavioral intelligence for venues.",
+      "Independent music intelligence company in India. Live events, artist distribution, and behavioral intelligence for venues.",
     images: ["/og-image.png"],
   },
   alternates: {
-    canonical: "https://polynovearecords.in",
+    canonical: "https://www.polynovea.in",
   },
 };
 
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": ["Organization", "MusicGroup"],
-  name: "Polynovea Records",
-  url: "https://polynovearecords.in",
-  logo: "https://polynovearecords.in/icon.png",
+  "@type": "Organization",
+  name: "Polynovea",
+  url: "https://www.polynovea.in",
+  logo: "https://www.polynovea.in/icon.png",
   description:
-    "Independent music label in India building live music experiences, artist distribution, and behavioral intelligence systems.",
-  foundingLocation: {
+    "Independent music intelligence company in India building live music experiences, artist distribution, and behavioral intelligence systems.",
+  foundingDate: "2023",
+  location: {
     "@type": "Place",
     name: "Navi Mumbai, Maharashtra, India",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Navi Mumbai",
+      addressRegion: "Maharashtra",
+      addressCountry: "IN",
+    },
   },
-  areaServed: ["Mumbai", "Navi Mumbai", "India"],
+  founder: {
+    "@type": "Person",
+    name: "Subrojit Roy",
+  },
   contactPoint: {
     "@type": "ContactPoint",
-    email: "subrojitroy@polynovearecords.in",
+    email: "subrojitroy@polynovea.in",
     contactType: "customer service",
+    areaServed: "IN",
+  },
+  areaServed: {
+    "@type": "AdministrativeArea",
+    name: "India",
+  },
+  subOrganization: {
+    "@type": "MusicGroup",
+    name: "Polynovea Records",
+    url: "https://www.polynovea.in",
   },
   sameAs: [
     "https://www.instagram.com/polynovearecords/",

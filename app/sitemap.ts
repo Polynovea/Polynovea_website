@@ -1,8 +1,28 @@
 import type { MetadataRoute } from "next";
 
-const BASE = "https://polynovearecords.in";
+const BASE = "https://www.polynovea.in";
+const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://polynovea-admin-488b.vercel.app/api/content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+async function getPublishedBlogPosts(): Promise<{ id: string; date: string }[]> {
+  try {
+    const res = await fetch(`${ADMIN_API}/blog-posts`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.data ?? []).filter((p: { status: string }) => p.status === "published");
+  } catch {
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const posts = await getPublishedBlogPosts();
+  const postUrls: MetadataRoute.Sitemap = posts.map((p) => ({
+    url: `${BASE}/blog/${p.id}`,
+    lastModified: p.date ? new Date(p.date) : new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
   return [
     {
       url: BASE,
@@ -52,5 +72,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    ...postUrls,
   ];
 }
