@@ -37,15 +37,15 @@ const systemModules = [
   {
     tag: "Module 02",
     title: "Acquisition System",
-    status: "In Progress",
-    statusType: "progress",
+    status: "Complete",
+    statusType: "complete",
     desc: "Multi-source behavioural signal extraction, structured through an ontology layer that maps how human behaviour operates inside commercial environments. Not what customers say — the mechanisms that drive what they do. Feeds a field execution system that tells you who to target, how to reach them, and what they respond to before a single show runs.",
   },
   {
     tag: "Module 03",
     title: "Optimisation System",
-    status: "Planned",
-    statusType: "planned",
+    status: "WiP",
+    statusType: "wip",
     desc: "Two-part system. Part 1 instruments the live environment — POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
   },
 ];
@@ -198,24 +198,52 @@ function ModuleCard({
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.06em;
-          padding: 3px 10px;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 4px 11px;
           border-radius: var(--radius-pill);
+          border: 1px solid;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
         .badge-dot {
-          width: 6px;
-          height: 6px;
+          width: 5px;
+          height: 5px;
           border-radius: 50%;
           flex-shrink: 0;
         }
-        .badge-active { background: rgba(34,197,94,0.12); color: #4ade80; }
-        .badge-active .badge-dot { background: #4ade80; }
-        .badge-progress { background: rgba(124,58,237,0.15); color: #a78bfa; }
-        .badge-progress .badge-dot { background: #a78bfa; }
-        .badge-planned { background: rgba(230,211,163,0.1); color: var(--accent-authority); }
-        .badge-planned .badge-dot { background: var(--accent-authority); }
+        .badge-active {
+          background: rgba(74,222,128,0.07);
+          border-color: rgba(74,222,128,0.28);
+          color: #4ade80;
+          box-shadow: 0 1px 12px rgba(74,222,128,0.1), inset 0 1px 0 rgba(255,255,255,0.07);
+        }
+        .badge-active .badge-dot {
+          background: #4ade80;
+          box-shadow: 0 0 6px rgba(74,222,128,0.9);
+        }
+        .badge-complete {
+          background: rgba(34,211,238,0.07);
+          border-color: rgba(34,211,238,0.28);
+          color: #22d3ee;
+          box-shadow: 0 1px 12px rgba(34,211,238,0.1), inset 0 1px 0 rgba(255,255,255,0.07);
+        }
+        .badge-complete .badge-dot {
+          background: #22d3ee;
+          box-shadow: 0 0 6px rgba(34,211,238,0.9);
+        }
+        .badge-wip {
+          background: rgba(251,191,36,0.07);
+          border-color: rgba(251,191,36,0.28);
+          color: #fbbf24;
+          box-shadow: 0 1px 12px rgba(251,191,36,0.1), inset 0 1px 0 rgba(255,255,255,0.07);
+        }
+        .badge-wip .badge-dot {
+          background: #fbbf24;
+          box-shadow: 0 0 6px rgba(251,191,36,0.9);
+        }
       `}</style>
     </div>
   );
