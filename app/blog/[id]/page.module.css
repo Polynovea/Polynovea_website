@@ -1,0 +1,68 @@
+.postMain {
+  background: var(--bg-primary);
+  min-height: 100vh;
+  padding-top: calc(var(--nav-height) + var(--space-2xl));
+  padding-bottom: var(--space-4xl);
+}
+.postContainer {
+  max-width: 720px;
+  margin-inline: auto;
+}
+.postBack a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+.postBack a:hover {
+  color: var(--accent-intelligence);
+}
+.postArticle {
+  margin-top: var(--space-2xl);
+}
+.postMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  margin-bottom: var(--space-md);
+}
+.postCategory {
+  color: var(--accent-intelligence);
+  font-weight: 600;
+}
+.postTitle {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+}
+.postExcerpt {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  border-left: 3px solid var(--accent-intelligence);
+  padding-left: var(--space-md);
+  margin-bottom: var(--space-2xl);
+}
+.postBody {
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.postBody h2,
+.postBody h3 {
+  color: var(--text-primary);
+  margin-top: var(--space-2xl);
+  margin-bottom: var(--space-md);
+}
+.postBody p {
+  margin-bottom: var(--space-md);
+  color: var(--text-secondary);
+}
+.postBody a {
+  color: var(--accent-intelligence);
+  text-decoration: underline;
+}
