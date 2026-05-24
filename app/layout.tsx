@@ -58,7 +58,7 @@ const organizationSchema = {
   "@type": "Organization",
   name: "Polynovea",
   url: "https://www.polynovea.in",
-  logo: "https://www.polynovea.in/icon.png",
+  logo: "https://www.polynovea.in/logo.png",
   description:
     "Independent music intelligence company in India building live music experiences, artist distribution, and behavioral intelligence systems.",
   foundingDate: "2023",
@@ -108,6 +108,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <head>
+        <link rel="image_src" href="https://www.polynovea.in/logo.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
