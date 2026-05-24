@@ -16,17 +16,16 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: [
           {
-            key: "Content-Security-Policy",
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com",
-              "style-src 'self' 'unsafe-inline' https://rsms.me",
-              "font-src 'self' https://rsms.me",
-              "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
-              "img-src 'self' data: blob: https://i.ytimg.com https://img.youtube.com",
-              "connect-src 'self' https://polynovea-admin-488b.vercel.app",
-              "media-src 'self' https://www.youtube.com",
-            ].join("; "),
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
           },
         ],
       },
