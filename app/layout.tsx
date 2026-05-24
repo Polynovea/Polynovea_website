@@ -18,14 +18,14 @@ export const metadata: Metadata = {
     template: "%s | Polynovea",
   },
   description:
-    "Polynovea is an independent music intelligence company in India building live music experiences, artist distribution, and behavioral intelligence systems for venues and artists.",
+    "Polynovea is a behavioral intelligence operation based in Navi Mumbai, India. We map human decision-making in commercial environments and convert it into repeatable frameworks, products, and automated systems.",
   metadataBase: new URL("https://www.polynovea.in"),
   keywords: [
+    "behavioral intelligence india",
     "independent music label india",
-    "music intelligence india",
     "live music events mumbai",
     "artist development india",
-    "independent artist distribution",
+    "behavioral data music venues",
     "music publishing india",
   ],
   icons: {
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Polynovea | Behavioral Intelligence for Music",
     description:
-      "Independent music intelligence company in India. Live events, artist distribution, and behavioral intelligence for venues.",
+      "Behavioral intelligence operation based in Navi Mumbai. Mapping human decision-making into frameworks, products, and systems — applied through Polynovea Records.",
     siteName: "Polynovea",
     url: "https://www.polynovea.in",
     type: "website",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Polynovea | Behavioral Intelligence for Music",
     description:
-      "Independent music intelligence company in India. Live events, artist distribution, and behavioral intelligence for venues.",
+      "Behavioral intelligence operation based in Navi Mumbai. Mapping human decision-making into frameworks, products, and systems — applied through Polynovea Records.",
     images: ["/og-image.png"],
   },
   alternates: {
@@ -60,7 +60,7 @@ const organizationSchema = {
   url: "https://www.polynovea.in",
   logo: "https://www.polynovea.in/logo.png",
   description:
-    "Independent music intelligence company in India building live music experiences, artist distribution, and behavioral intelligence systems.",
+    "Behavioral intelligence operation based in Navi Mumbai, India. We map human decision-making in commercial environments and convert it into repeatable frameworks, products, and automated systems.",
   foundingDate: "2023",
   location: {
     "@type": "Place",
