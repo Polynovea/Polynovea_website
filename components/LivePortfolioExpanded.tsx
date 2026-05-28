@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 const API_BASE = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://admin.polynovea.in/api/content";
@@ -443,6 +443,7 @@ function VenueCard({ venue, delay }: VenueCardProps) {
 }
 
 export default function LivePortfolioExpanded() {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const [liveEvents, setLiveEvents] = useState<LiveEvent[]>([]);
   const [pastShows, setPastShows] = useState<LiveEvent[]>([]);
   const [venuePartnerships, setVenuePartnerships] = useState<VenuePartnership[]>([]);
@@ -479,8 +480,25 @@ export default function LivePortfolioExpanded() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (loading) return;
+
+    const root = sectionRef.current;
+    if (!root) return;
+
+    const revealEls = Array.from(root.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (revealEls.length === 0) return;
+
+    requestAnimationFrame(() => {
+      revealEls.forEach((el) => {
+        if (el.classList.contains("is-revealed")) return;
+        el.classList.add("is-revealed");
+      });
+    });
+  }, [loading, liveEvents, pastShows, venuePartnerships]);
+
   return (
-    <section className="section live-portfolio-expanded">
+    <section ref={sectionRef} className="section live-portfolio-expanded">
       <div className="container">
         <div className="hero-section" data-reveal="true">
           <div className="hero-copy">
