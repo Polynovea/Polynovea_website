@@ -11,6 +11,7 @@ interface LiveEvent {
   id: string;
   title: string;
   date: string;
+  dateLabel: string | null;
   time: string;
   venue: string;
   city: string;
@@ -20,6 +21,8 @@ interface LiveEvent {
   desc: string;
   cta: string;
   href: string;
+  youtubeUrl?: string;
+  youtubeEmbedUrl?: string | null;
 }
 
 interface CmsLiveEvent {
@@ -90,10 +93,42 @@ interface MetricCardProps {
 
 
 function formatEventDate(date: string) {
+  if (!date) return null;
   const formatted = new Date(`${date}T00:00:00`);
+  if (Number.isNaN(formatted.getTime())) return null;
   const month = formatted.toLocaleString("en-US", { month: "short" }).toUpperCase();
   const day = String(formatted.getDate()).padStart(2, "0");
   return `${month} ${day}`;
+}
+
+function getYouTubeEmbedUrl(url?: string) {
+  if (!url) return null;
+
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+
+    if (host === "youtu.be") {
+      const videoId = parsed.pathname.split("/").filter(Boolean)[0];
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    }
+
+    if (host === "youtube.com" || host === "m.youtube.com") {
+      if (parsed.pathname === "/watch") {
+        const videoId = parsed.searchParams.get("v");
+        return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+      }
+
+      if (parsed.pathname.startsWith("/embed/")) {
+        const videoId = parsed.pathname.split("/embed/")[1]?.split("/")[0];
+        return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+      }
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
 }
 
 function normalizeStatusType(statusType?: string): PortfolioStatusType {
@@ -104,10 +139,14 @@ function normalizeStatusType(statusType?: string): PortfolioStatusType {
 }
 
 function normalizeEvent(event: CmsLiveEvent): LiveEvent {
+  const youtubeEmbedUrl = getYouTubeEmbedUrl(event.youtubeUrl);
+  const fallbackHref = event.href ?? event.youtubeUrl ?? "#";
+
   return {
     id: event.id,
     title: event.title,
     date: event.date,
+    dateLabel: formatEventDate(event.date),
     time: event.time,
     venue: event.venue,
     city: event.city,
@@ -116,7 +155,9 @@ function normalizeEvent(event: CmsLiveEvent): LiveEvent {
     statusType: normalizeStatusType(event.statusType),
     desc: event.description ?? "",
     cta: event.cta ?? "Learn More",
-    href: event.href ?? event.youtubeUrl ?? "#",
+    href: fallbackHref,
+    youtubeUrl: event.youtubeUrl,
+    youtubeEmbedUrl,
   };
 }
 
@@ -138,23 +179,37 @@ function EventCard({ event, delay }: EventCardProps) {
   return (
     <article className="event-card card" data-reveal="true" data-reveal-delay={String(delay)}>
       <div className="event-header">
-        <span className="date-badge">{formatEventDate(event.date)}</span>
+        {event.dateLabel ? <span className="date-badge">{event.dateLabel}</span> : <span className="date-badge date-badge-muted">Past Show</span>}
         <span className={`status-badge badge-${event.statusType}`}>
           <span className="status-dot" />
-          {event.status}
+          {event.status || (event.statusType === "active" ? "Completed" : "Archive")}
         </span>
       </div>
       <h3>{event.title}</h3>
       <div className="event-meta">
         <span>{event.venue}</span>
         <span>{event.city}</span>
-        <span>Capacity: {event.capacity}</span>
-        <span>{event.time}</span>
+        {event.capacity ? <span>Capacity: {event.capacity}</span> : null}
+        {event.time ? <span>{event.time}</span> : null}
       </div>
       <p>{event.desc}</p>
-      <a href={event.href} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-        {event.cta}
-      </a>
+      {event.youtubeEmbedUrl ? (
+        <div className="event-video">
+          <iframe
+            src={event.youtubeEmbedUrl}
+            title={`${event.title} video`}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        </div>
+      ) : null}
+      {event.href !== "#" ? (
+        <a href={event.href} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+          {event.cta}
+        </a>
+      ) : null}
 
       <style jsx>{`
         .event-card {
@@ -191,6 +246,11 @@ function EventCard({ event, delay }: EventCardProps) {
           letter-spacing: 0.08em;
           text-transform: uppercase;
           flex-shrink: 0;
+        }
+
+        .date-badge-muted {
+          background: rgba(230, 211, 163, 0.1);
+          color: var(--accent-authority);
         }
 
         .status-badge {
@@ -263,6 +323,23 @@ function EventCard({ event, delay }: EventCardProps) {
           color: var(--text-secondary);
           font-size: 14px;
           line-height: 1.65;
+        }
+
+        .event-video {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          overflow: hidden;
+          border-radius: 16px;
+          border: 1px solid var(--border-muted);
+          background: rgba(255, 255, 255, 0.02);
+        }
+
+        .event-video iframe {
+          display: block;
+          width: 100%;
+          height: 100%;
+          border: 0;
         }
 
         @media (max-width: 600px) {
