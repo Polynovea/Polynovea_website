@@ -35,8 +35,6 @@ function ShowCard({ id, title, venue, date, delay }: {
         <div className="show-title">{title}</div>
         <div className="show-meta">
           <span>{venue}</span>
-          <span className="dot">·</span>
-          <span>{date}</span>
         </div>
       </div>
 

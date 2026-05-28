@@ -1,10 +1,8 @@
-"use client";
-
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const About = dynamic(() => import("@/components/About"), { ssr: false });
+const About = dynamic(() => import("@/components/About"));
 
 export default function AboutPage() {
   return (
