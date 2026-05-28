@@ -5,6 +5,8 @@ import Link from "next/link";
 
 const API_BASE = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://admin.polynovea.in/api/content";
 
+type PortfolioStatusType = "active" | "progress" | "planned";
+
 interface LiveEvent {
   id: string;
   title: string;
@@ -14,10 +16,26 @@ interface LiveEvent {
   city: string;
   capacity: string;
   status: string;
-  statusType: "active" | "progress" | "planned";
+  statusType: PortfolioStatusType;
   desc: string;
   cta: string;
   href: string;
+}
+
+interface CmsLiveEvent {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  venue: string;
+  city: string;
+  capacity: string;
+  status: string;
+  statusType?: "upcoming" | "completed" | PortfolioStatusType;
+  description?: string;
+  cta?: string;
+  href?: string;
+  youtubeUrl?: string;
 }
 
 interface VenuePartnership {
@@ -28,8 +46,21 @@ interface VenuePartnership {
   type: string;
   desc: string;
   contactStatus: string;
-  statusType: "active" | "progress" | "planned";
+  statusType: PortfolioStatusType;
   logo: string;
+}
+
+interface CmsVenuePartnership {
+  id: string;
+  name: string;
+  city: string;
+  capacity: string;
+  type: string;
+  description?: string;
+  contactStatus?: string;
+  statusType?: "upcoming" | "completed" | PortfolioStatusType;
+  logo?: string;
+  logo_url?: string;
 }
 
 interface Metric {
@@ -63,6 +94,44 @@ function formatEventDate(date: string) {
   const month = formatted.toLocaleString("en-US", { month: "short" }).toUpperCase();
   const day = String(formatted.getDate()).padStart(2, "0");
   return `${month} ${day}`;
+}
+
+function normalizeStatusType(statusType?: string): PortfolioStatusType {
+  if (statusType === "completed") return "active";
+  if (statusType === "upcoming") return "planned";
+  if (statusType === "active" || statusType === "progress" || statusType === "planned") return statusType;
+  return "planned";
+}
+
+function normalizeEvent(event: CmsLiveEvent): LiveEvent {
+  return {
+    id: event.id,
+    title: event.title,
+    date: event.date,
+    time: event.time,
+    venue: event.venue,
+    city: event.city,
+    capacity: event.capacity,
+    status: event.status,
+    statusType: normalizeStatusType(event.statusType),
+    desc: event.description ?? "",
+    cta: event.cta ?? "Learn More",
+    href: event.href ?? event.youtubeUrl ?? "#",
+  };
+}
+
+function normalizeVenue(venue: CmsVenuePartnership): VenuePartnership {
+  return {
+    id: venue.id,
+    name: venue.name,
+    city: venue.city,
+    capacity: venue.capacity,
+    type: venue.type,
+    desc: venue.description ?? "",
+    contactStatus: venue.contactStatus ?? "",
+    statusType: normalizeStatusType(venue.statusType),
+    logo: venue.logo_url ?? venue.logo ?? "",
+  };
 }
 
 function EventCard({ event, delay }: EventCardProps) {
@@ -397,9 +466,9 @@ export default function LivePortfolioExpanded() {
         const showsData = await showsRes.json();
         const venuesData = await venuesRes.json();
 
-        setLiveEvents(eventsData.data || []);
-        setPastShows(showsData.data || []);
-        setVenuePartnerships(venuesData.data || []);
+        setLiveEvents(((eventsData.data || []) as CmsLiveEvent[]).map(normalizeEvent));
+        setPastShows(((showsData.data || []) as CmsLiveEvent[]).map(normalizeEvent));
+        setVenuePartnerships(((venuesData.data || []) as CmsVenuePartnership[]).map(normalizeVenue));
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load portfolio");
       } finally {
