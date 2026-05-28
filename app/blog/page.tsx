@@ -28,7 +28,7 @@ export default function BlogPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const apiBase = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://polynovea-admin-488b.vercel.app/api/content";
+        const apiBase = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://admin.polynovea.in/api/content";
         const response = await fetch(`${apiBase}/blog-posts`);
         const data = await response.json();
         const published = data.data?.filter((p: BlogPost) => p.status === "published") || [];

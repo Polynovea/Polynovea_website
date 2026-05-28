@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const BASE = "https://www.polynovea.in";
-const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://polynovea-admin-488b.vercel.app/api/content";
+const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://admin.polynovea.in/api/content";
 
 async function getPublishedBlogPosts(): Promise<{ id: string; date: string }[]> {
   try {

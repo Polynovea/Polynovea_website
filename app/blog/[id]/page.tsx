@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import styles from "./page.module.css";
 
-const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://polynovea-admin-488b.vercel.app/api/content";
+const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://admin.polynovea.in/api/content";
 
 interface BlogPost {
   id: string;
