@@ -11,6 +11,7 @@ const homeLinks = [
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/research", label: "Research" },
+  { href: "/cappella-account-deletion", label: "Cappella" },
 ];
 
 export default function Navbar() {
