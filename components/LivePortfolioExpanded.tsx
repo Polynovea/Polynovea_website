@@ -734,6 +734,7 @@ export default function LivePortfolioExpanded() {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: var(--space-lg);
+          align-items: start;
         }
 
         .booking-cta {
