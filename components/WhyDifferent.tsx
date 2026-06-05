@@ -47,13 +47,19 @@ export default function WhyDifferent() {
 
           {rows.map((row, i) => (
             <div key={i} className="contrast-row">
-              <div className="contrast-cell left-cell">{row.left}</div>
+              <div className="contrast-cell left-cell">
+                <span className="mobile-prefix">Everyone Else</span>
+                {row.left}
+              </div>
               <div className="contrast-divider">
                 <div className="divider-line" />
                 <div className="vs-dot" />
                 <div className="divider-line" />
               </div>
-              <div className="contrast-cell right-cell">{row.right}</div>
+              <div className="contrast-cell right-cell">
+                <span className="mobile-prefix">Polynovea</span>
+                {row.right}
+              </div>
             </div>
           ))}
         </div>
@@ -162,16 +168,56 @@ export default function WhyDifferent() {
           margin-top: var(--space-2xl);
         }
 
+        .mobile-prefix {
+          display: none;
+        }
+
         @media (max-width: 640px) {
-          .contrast-row,
-          .contrast-header-row {
-            grid-template-columns: 1fr;
-            gap: var(--space-sm);
+          .mobile-prefix {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
           }
-          .contrast-divider { display: none; }
-          .left-cell, .right-cell { text-align: left; padding: 0; }
-          .col-label-right { text-align: left; }
-          .col-divider-head { display: none; }
+          
+          .left-cell .mobile-prefix {
+            color: var(--text-disabled);
+          }
+          
+          .right-cell .mobile-prefix {
+            color: var(--accent-authority);
+          }
+          
+          .contrast-row {
+            background: rgba(24, 24, 27, 0.2);
+            border: 1px solid var(--border-muted);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            grid-template-columns: 1fr;
+            gap: var(--space-md);
+            align-items: start;
+          }
+          
+          .contrast-row:hover {
+            background: rgba(24, 24, 27, 0.3);
+            border-color: rgba(124, 58, 237, 0.3);
+          }
+          
+          .left-cell, .right-cell {
+            padding: 0;
+            text-align: left;
+          }
+          
+          .contrast-divider {
+            display: none;
+          }
+          
+          .contrast-header-row {
+            display: none;
+          }
         }
       `}</style>
     </section>

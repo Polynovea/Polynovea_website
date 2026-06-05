@@ -24,7 +24,7 @@ export default function Footer() {
                   ["#home", "Home"],
                   ["#architecture", "The Architecture"],
                   ["#projects", "Projects"],
-                  ["#live-portfolio", "Live Portfolio"],
+                  ["/live-portfolio", "Live Portfolio"],
                   ["#contact", "Contact"],
                 ].map(([href, label]) => (
                   <li key={href}>

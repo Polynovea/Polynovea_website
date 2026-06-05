@@ -4,11 +4,11 @@ import { useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-function WaveRings({ pulseRef }: { pulseRef: React.MutableRefObject<number> }) {
+function WaveRings({ pulse }: { pulse: number }) {
   const ringsRef = useRef<(THREE.Mesh | null)[]>([]);
   const t = useRef(0);
-  const lastPulse = useRef(0);
-  const pulse = useRef(0);
+  const lastPulse = useRef(pulse);
+  const pulseVal = useRef(0);
 
   const rings = useMemo(() =>
     Array.from({ length: 5 }, (_, i) => ({
@@ -21,15 +21,18 @@ function WaveRings({ pulseRef }: { pulseRef: React.MutableRefObject<number> }) {
 
   useFrame((_, dt) => {
     t.current += dt;
-    if (pulseRef.current !== lastPulse.current) { lastPulse.current = pulseRef.current; pulse.current = 1; }
-    pulse.current *= 0.88;
+    if (pulse !== lastPulse.current) {
+      lastPulse.current = pulse;
+      pulseVal.current = 1;
+    }
+    pulseVal.current *= 0.88;
     rings.forEach((r, i) => {
       const m = ringsRef.current[i];
       if (!m) return;
       const w = Math.sin(t.current * r.speed + r.phase);
-      const s = 1 + w * 0.03 + pulse.current * Math.max(0, 0.1 - i * 0.018);
+      const s = 1 + w * 0.03 + pulseVal.current * Math.max(0, 0.1 - i * 0.018);
       m.scale.set(s, s, 1);
-      (m.material as THREE.MeshBasicMaterial).opacity = Math.max(0, r.opacity + w * 0.025 + pulse.current * 0.04);
+      (m.material as THREE.MeshBasicMaterial).opacity = Math.max(0, r.opacity + w * 0.025 + pulseVal.current * 0.04);
     });
   });
 
@@ -45,16 +48,22 @@ function WaveRings({ pulseRef }: { pulseRef: React.MutableRefObject<number> }) {
   );
 }
 
+const PARTICLE_COUNT = 80;
+const INITIAL_PARTICLE_POSITIONS = (() => {
+  const arr = new Float32Array(PARTICLE_COUNT * 3);
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const a = Math.random() * Math.PI * 2;
+    const r = 2 + Math.random() * 5;
+    arr[i * 3] = Math.cos(a) * r;
+    arr[i * 3 + 1] = (Math.random() - 0.5) * 5;
+    arr[i * 3 + 2] = Math.sin(a) * r * 0.15 - 0.5;
+  }
+  return arr;
+})();
+
 function Particles() {
   const ref = useRef<THREE.Points>(null);
-  const positions = useMemo(() => {
-    const arr = new Float32Array(80 * 3);
-    for (let i = 0; i < 80; i++) {
-      const a = Math.random() * Math.PI * 2, r = 2 + Math.random() * 5;
-      arr[i*3] = Math.cos(a)*r; arr[i*3+1] = (Math.random()-0.5)*5; arr[i*3+2] = Math.sin(a)*r*0.15-0.5;
-    }
-    return arr;
-  }, []);
+  const positions = useMemo(() => INITIAL_PARTICLE_POSITIONS.slice(), []);
 
   useFrame((_, dt) => {
     if (!ref.current) return;
@@ -73,7 +82,7 @@ function Particles() {
   );
 }
 
-function Scene({ pulseRef }: { pulseRef: React.MutableRefObject<number> }) {
+function Scene({ pulse }: { pulse: number }) {
   const g = useRef<THREE.Group>(null);
   const mouse = useRef({ x: 0, y: 0 });
   const target = useRef({ x: 0, y: 0 });
@@ -92,13 +101,13 @@ function Scene({ pulseRef }: { pulseRef: React.MutableRefObject<number> }) {
     g.current.rotation.x = mouse.current.y;
   });
 
-  return <group ref={g}><WaveRings pulseRef={pulseRef} /><Particles /></group>;
+  return <group ref={g}><WaveRings pulse={pulse} /><Particles /></group>;
 }
 
-export default function ResearchScene({ pulseRef }: { pulseRef: React.MutableRefObject<number> }) {
+export default function ResearchScene({ pulse }: { pulse: number }) {
   return (
     <Canvas camera={{ position: [0, 0, 8], fov: 52 }} gl={{ antialias: false, alpha: true }} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} dpr={1}>
-      <Scene pulseRef={pulseRef} />
+      <Scene pulse={pulse} />
     </Canvas>
   );
 }

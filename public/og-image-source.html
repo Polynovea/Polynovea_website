@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 600px;
+    height: 315px;
+    overflow: hidden;
+    background: #0A0A0A;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .slide {
+    width: 600px;
+    height: 315px;
+    background: #0A0A0A;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* Ambient glow */
+  .glow {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(230,211,163,0.07) 0%, transparent 65%);
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* Corner marks */
+  .corner-tl, .corner-br {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    opacity: 0.18;
+  }
+  .corner-tl { top: 20px; left: 20px; border-top: 1px solid #E6D3A3; border-left: 1px solid #E6D3A3; }
+  .corner-br { bottom: 20px; right: 20px; border-bottom: 1px solid #E6D3A3; border-right: 1px solid #E6D3A3; }
+
+  /* Main layout */
+  .content {
+    position: relative;
+    z-index: 10;
+    padding: 0 56px;
+    width: 100%;
+  }
+
+  /* Top: logo + parent label */
+  .top-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .logo-mark svg {
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(230,211,163,0.2));
+  }
+
+  .parent-name {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #E6D3A3;
+  }
+
+  .parent-type {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(230,211,163,0.4);
+    margin-top: 2px;
+  }
+
+  /* Parent description */
+  .parent-desc {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.38);
+    line-height: 1.55;
+    max-width: 380px;
+    margin-bottom: 24px;
+  }
+
+  .parent-desc em {
+    color: rgba(230,211,163,0.6);
+    font-style: normal;
+  }
+
+  /* Divider with label */
+  .divider-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .divider-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    white-space: nowrap;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  /* Sub-brand glass card */
+  .sub-brand-glass {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-top-color: rgba(255,255,255,0.14);
+    border-radius: 10px;
+    padding: 11px 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07);
+  }
+
+  .glass-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(230,211,163,0.1);
+    border: 1px solid rgba(230,211,163,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .glass-icon svg { display: block; }
+
+  .glass-text { display: flex; flex-direction: column; gap: 2px; }
+
+  .sub-brand-name {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: rgba(245,245,245,0.9);
+  }
+
+  .sub-brand-desc {
+    font-size: 10px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.06em;
+  }
+
+  /* Domain */
+  .domain {
+    position: absolute;
+    bottom: 20px;
+    right: 28px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.15);
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="glow"></div>
+  <div class="corner-tl"></div>
+  <div class="corner-br"></div>
+
+  <div class="content">
+    <!-- Parent company -->
+    <div class="top-row">
+      <svg width="28" height="28" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 4 L37 27 L60 32 L37 37 L32 60 L27 37 L4 32 L27 27 Z" fill="#E6D3A3"/>
+      </svg>
+      <div>
+        <div class="parent-name">Polynovea</div>
+        <div class="parent-type">Parent Company</div>
+      </div>
+    </div>
+
+    <div class="parent-desc">
+      Observes decisions. Extracts patterns. Converts them into <em>repeatable frameworks</em> — building the Behavioral Intelligence layer across domains.
+    </div>
+
+    <!-- Divider -->
+    <div class="divider-row">
+      <span class="divider-label">Division</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Sub-brand glass card -->
+    <div class="sub-brand-glass">
+      <div class="glass-icon">
+        <svg width="14" height="14" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 4 L37 27 L60 32 L37 37 L32 60 L27 37 L4 32 L27 27 Z" fill="#E6D3A3"/>
+        </svg>
+      </div>
+      <div class="glass-text">
+        <span class="sub-brand-name">Polynovea Records</span>
+        <span class="sub-brand-desc">Independent Music Label · India</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="domain">polynovearecords.in</div>
+</div>
+</body>
+</html>

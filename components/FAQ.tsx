@@ -27,20 +27,21 @@ const faqs = [
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
-  const answerRef = useRef<HTMLDivElement>(null);
+
+  const handleToggle = () => {
+    setOpen(!open);
+  };
 
   return (
     <div className={`faq-item${open ? " open" : ""}`}>
-      <button className="faq-question" onClick={() => setOpen(!open)} aria-expanded={open}>
+      <button className="faq-question" onClick={handleToggle} aria-expanded={open}>
         <span>{q}</span>
         <span className="faq-icon">{open ? "−" : "+"}</span>
       </button>
-      <div
-        className="faq-answer-wrap"
-        ref={answerRef}
-        style={{ maxHeight: open ? (answerRef.current?.scrollHeight ?? 400) + "px" : "0px" }}
-      >
-        <div className="faq-answer">{a}</div>
+      <div className={`faq-answer-wrap${open ? " open" : ""}`}>
+        <div className="faq-answer-inner">
+          <div className="faq-answer">{a}</div>
+        </div>
       </div>
 
       <style jsx>{`
@@ -77,9 +78,16 @@ function FAQItem({ q, a }: { q: string; a: string }) {
           line-height: 1;
         }
         .faq-answer-wrap {
-          max-height: 0;
+          display: grid;
+          grid-template-rows: 0fr;
           overflow: hidden;
-          transition: max-height 0.35s ease;
+          transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .faq-answer-wrap.open {
+          grid-template-rows: 1fr;
+        }
+        .faq-answer-inner {
+          min-height: 0;
         }
         .faq-answer {
           margin: 0 var(--space-lg) var(--space-md);

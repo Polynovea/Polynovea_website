@@ -147,7 +147,7 @@ export default function About() {
           <div className="why-exists-content">
             <div className="why-block">
               <h3>The Pattern We Noticed</h3>
-              <p>Important decisions across industries are made blindly inside systems that should be measurable. The problem isn't weak activity — it's weak measurement. Weak measurement creates weak decisions, wasted resources, and repeated mistakes.</p>
+              <p>Important decisions across industries are made blindly inside systems that should be measurable. The problem isn&apos;t weak activity — it&apos;s weak measurement. Weak measurement creates weak decisions, wasted resources, and repeated mistakes.</p>
             </div>
             <div className="why-block">
               <h3>The Core Insight</h3>
@@ -174,7 +174,7 @@ export default function About() {
             </div>
             <div className="phil-item">
               <h4>Systems Over Intuition</h4>
-              <p>Creativity becomes more powerful when patterns are visible, feedback loops are active, variables are isolated, and outcomes are measurable. We don't reject creativity — we reject unmeasured execution.</p>
+              <p>Creativity becomes more powerful when patterns are visible, feedback loops are active, variables are isolated, and outcomes are measurable. We don&apos;t reject creativity — we reject unmeasured execution.</p>
             </div>
             <div className="phil-item">
               <h4>Baseline Before Intervention</h4>
@@ -209,7 +209,7 @@ export default function About() {
             </div>
             <div className="records-item">
               <h3>The Music-Facing Identity</h3>
-              <p>Records embodies the artist development layer, the audience ownership strategy, and the long-term cultural asset approach. It's where intelligence becomes music.</p>
+              <p>Records embodies the artist development layer, the audience ownership strategy, and the long-term cultural asset approach. It&apos;s where intelligence becomes music.</p>
             </div>
           </div>
         </div>
@@ -275,17 +275,24 @@ export default function About() {
         }
 
         .thesis-card {
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
+          background: rgba(24, 24, 27, 0.25);
+          border: 1px solid rgba(124, 58, 237, 0.2);
           border-radius: 12px;
           padding: 40px;
-          backdrop-filter: blur(20px);
-          transition: all 0.3s ease;
+          backdrop-filter: blur(32px);
+          -webkit-backdrop-filter: blur(32px);
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 4px 24px rgba(0, 0, 0, 0.4);
+          transition: border-color var(--duration-default) var(--ease-state),
+                      box-shadow var(--duration-default) var(--ease-state),
+                      transform var(--duration-default) var(--ease-state);
         }
 
         .thesis-card:hover {
-          border-color: var(--accent-intelligence);
-          box-shadow: 0 8px 32px rgba(124, 58, 237, 0.1);
+          border-color: rgba(124, 58, 237, 0.45);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6),
+                      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                      0 0 32px rgba(124, 58, 237, 0.15);
+          transform: translateY(-2px);
         }
 
         .card-number {
@@ -335,11 +342,24 @@ export default function About() {
         }
 
         .milestone {
-          background: linear-gradient(135deg, rgba(10,10,10,0.8), rgba(124,58,237,0.05));
-          border: 1px solid var(--border-muted);
+          background: linear-gradient(135deg, rgba(24, 24, 27, 0.25) 0%, rgba(24, 24, 27, 0.1) 100%);
+          border: 1px solid rgba(124, 58, 237, 0.2);
           border-radius: 12px;
           padding: 40px;
-          backdrop-filter: blur(20px);
+          backdrop-filter: blur(32px);
+          -webkit-backdrop-filter: blur(32px);
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 4px 24px rgba(0, 0, 0, 0.4);
+          transition: border-color var(--duration-default) var(--ease-state),
+                      box-shadow var(--duration-default) var(--ease-state),
+                      transform var(--duration-default) var(--ease-state);
+        }
+
+        .milestone:hover {
+          border-color: rgba(124, 58, 237, 0.45);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6),
+                      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                      0 0 32px rgba(124, 58, 237, 0.15);
+          transform: translateY(-2px);
         }
 
         .milestone-number {
@@ -401,8 +421,24 @@ export default function About() {
         }
 
         .why-block {
+          background: rgba(24, 24, 27, 0.25);
+          border: 1px solid rgba(124, 58, 237, 0.2);
+          border-radius: 12px;
           padding: 30px;
-          border-left: 3px solid var(--accent-intelligence);
+          backdrop-filter: blur(32px);
+          -webkit-backdrop-filter: blur(32px);
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 4px 24px rgba(0, 0, 0, 0.4);
+          transition: border-color var(--duration-default) var(--ease-state),
+                      box-shadow var(--duration-default) var(--ease-state),
+                      transform var(--duration-default) var(--ease-state);
+        }
+
+        .why-block:hover {
+          border-color: rgba(124, 58, 237, 0.45);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6),
+                      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                      0 0 32px rgba(124, 58, 237, 0.15);
+          transform: translateY(-2px);
         }
 
         .why-block h3 {
@@ -431,11 +467,25 @@ export default function About() {
         }
 
         .phil-item {
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
-          border-radius: 8px;
+          background: rgba(24, 24, 27, 0.25);
+          border: 1px solid rgba(124, 58, 237, 0.2);
+          border-radius: 12px;
           padding: 32px 24px;
           text-align: center;
+          backdrop-filter: blur(32px);
+          -webkit-backdrop-filter: blur(32px);
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 4px 20px rgba(0, 0, 0, 0.4);
+          transition: border-color var(--duration-default) var(--ease-state),
+                      box-shadow var(--duration-default) var(--ease-state),
+                      transform var(--duration-default) var(--ease-state);
+        }
+
+        .phil-item:hover {
+          border-color: rgba(124, 58, 237, 0.45);
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6),
+                      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                      0 0 24px rgba(124, 58, 237, 0.1);
+          transform: translateY(-2px);
         }
 
         .phil-item h4 {
@@ -464,11 +514,24 @@ export default function About() {
         }
 
         .records-item {
-          background: linear-gradient(135deg, rgba(230,211,163,0.05), rgba(124,58,237,0.05));
-          border: 1px solid var(--border-muted);
+          background: linear-gradient(135deg, rgba(230, 211, 163, 0.08) 0%, rgba(124, 58, 237, 0.05) 100%);
+          border: 1px solid rgba(124, 58, 237, 0.2);
           border-radius: 12px;
           padding: 40px;
-          backdrop-filter: blur(20px);
+          backdrop-filter: blur(32px);
+          -webkit-backdrop-filter: blur(32px);
+          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 4px 24px rgba(0, 0, 0, 0.4);
+          transition: border-color var(--duration-default) var(--ease-state),
+                      box-shadow var(--duration-default) var(--ease-state),
+                      transform var(--duration-default) var(--ease-state);
+        }
+
+        .records-item:hover {
+          border-color: rgba(124, 58, 237, 0.4);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6),
+                      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                      0 0 32px rgba(230, 211, 163, 0.15);
+          transform: translateY(-2px);
         }
 
         .records-item h3 {

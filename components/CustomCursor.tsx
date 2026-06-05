@@ -62,57 +62,71 @@ export default function CustomCursor() {
 
   return (
     <>
-      <div ref={dotRef} className="cursor-dot" />
-      <div ref={ringRef} className="cursor-ring" />
+      <div ref={dotRef} className="cursor-dot-container">
+        <div className="cursor-dot-child" />
+      </div>
+      <div ref={ringRef} className="cursor-ring-container">
+        <div className="cursor-ring-child" />
+      </div>
 
       <style jsx global>{`
-        .cursor-dot {
+        .cursor-dot-container {
           position: fixed;
           top: 0;
           left: 0;
           width: 8px;
           height: 8px;
-          background: var(--accent-intelligence);
-          border-radius: 50%;
           pointer-events: none;
           z-index: 9999;
+          will-change: transform;
+        }
+
+        .cursor-dot-child {
+          width: 100%;
+          height: 100%;
+          background: var(--accent-intelligence);
+          border-radius: 50%;
           box-shadow: 0 0 10px var(--accent-intelligence-glow),
                       0 0 20px var(--accent-intelligence-glow);
           will-change: transform;
-          transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+          transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .cursor-dot.expanded {
-          width: 12px;
-          height: 12px;
+        .cursor-dot-container.expanded .cursor-dot-child {
+          transform: scale(1.5);
           background: var(--accent-authority);
           box-shadow: 0 0 14px rgba(230, 211, 163, 0.5);
         }
 
-        .cursor-ring {
+        .cursor-ring-container {
           position: fixed;
           top: 0;
           left: 0;
           width: 40px;
           height: 40px;
-          border: 1px solid rgba(124, 58, 237, 0.5);
-          border-radius: 50%;
           pointer-events: none;
           z-index: 9998;
           will-change: transform;
-          transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease,
+        }
+
+        .cursor-ring-child {
+          width: 100%;
+          height: 100%;
+          border: 1px solid rgba(124, 58, 237, 0.5);
+          border-radius: 50%;
+          will-change: transform;
+          transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease,
                       opacity 0.2s ease;
         }
 
-        .cursor-ring.expanded {
-          width: 56px;
-          height: 56px;
+        .cursor-ring-container.expanded .cursor-ring-child {
+          transform: scale(1.4);
           border-color: rgba(230, 211, 163, 0.4);
         }
 
         @media (hover: none) {
-          .cursor-dot,
-          .cursor-ring {
+          .cursor-dot-container,
+          .cursor-ring-container {
             display: none;
           }
         }

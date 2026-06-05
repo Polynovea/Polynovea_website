@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useMemo } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 function FlowNodes() {
@@ -91,7 +91,6 @@ function FlowNodes() {
 }
 
 function CameraRig() {
-  const { camera } = useThree();
   const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -103,7 +102,7 @@ function CameraRig() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  useFrame(() => {
+  useFrame(({ camera }) => {
     camera.position.x += (mouseRef.current.x - camera.position.x) * 0.05;
     camera.position.y += (mouseRef.current.y - camera.position.y) * 0.05;
     camera.lookAt(0, 0, 0);

@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "21st-dev-magic": {
+      "command": "npx",
+      "args": ["-y", "@21st-dev/magic@latest", "API_KEY=148f68debaafac363b2ac0623ec4d9dacfc7c2f29a9c096b655c2f588efd90a4"],
+      "env": {
+        "API_KEY": "148f68debaafac363b2ac0623ec4d9dacfc7c2f29a9c096b655c2f588efd90a4"
+      }
+    },
+    "magic": {
+      "command": "npx",
+      "args": ["-y", "@21st-dev/magic@latest", "API_KEY=148f68debaafac363b2ac0623ec4d9dacfc7c2f29a9c096b655c2f588efd90a4"],
+      "env": {
+        "API_KEY": "148f68debaafac363b2ac0623ec4d9dacfc7c2f29a9c096b655c2f588efd90a4"
+      }
+    }
+  }
+}

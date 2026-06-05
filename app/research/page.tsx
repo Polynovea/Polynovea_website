@@ -123,10 +123,13 @@ function qlabel(idx: number) {
 export default function ResearchPage() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
-  const [submitted, setSubmitted] = useState(false);
+  const subIdRef = useRef("");
+  useEffect(() => {
+    subIdRef.current = "sub_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+  }, []);
+  const [pulse, setPulse] = useState(0);
+  const submittedRef = useRef(false);
   const [transitioning, setTransitioning] = useState(false);
-  const pulseRef = useRef(0);
-  const subId = useRef("sub_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9));
   const wrapRef = useRef<HTMLDivElement>(null);
 
   const go = useCallback((dir: 1 | -1) => {
@@ -161,13 +164,13 @@ export default function ResearchPage() {
     fetch(ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...answers, ...extra, submissionId: subId.current }),
+      body: JSON.stringify({ ...answers, ...extra, submissionId: subIdRef.current }),
     }).catch(() => {});
   }, [answers]);
 
   useEffect(() => {
-    if (STEPS[step].type === "thanks" && !submitted) {
-      setSubmitted(true);
+    if (STEPS[step].type === "thanks" && !submittedRef.current) {
+      submittedRef.current = true;
       submitForm();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,14 +179,14 @@ export default function ResearchPage() {
   const advance = useCallback(() => go(1), [go]);
   const back    = useCallback(() => go(-1), [go]);
 
-  const pick = (key: string, val: string) => {
-    pulseRef.current += 1;
+  const pick = useCallback((key: string, val: string) => {
+    setPulse(p => p + 1);
     setAnswers(a => ({ ...a, [key]: val }));
     setTimeout(() => advance(), 260);
-  };
+  }, [advance]);
 
-  const toggleMulti = (key: string, val: string, limit: number) => {
-    pulseRef.current += 1;
+  const toggleMulti = useCallback((key: string, val: string, limit: number) => {
+    setPulse(p => p + 1);
     setAnswers(a => {
       const cur: string[] = Array.isArray(a[key]) ? (a[key] as string[]) : [];
       const on = cur.includes(val);
@@ -191,7 +194,7 @@ export default function ResearchPage() {
       const next = cur.length >= limit ? [...cur.slice(1), val] : [...cur, val];
       return { ...a, [key]: next };
     });
-  };
+  }, []);
 
   const s = STEPS[step];
   const showBack = step > 0 && s.type !== "thanks";
@@ -372,7 +375,7 @@ export default function ResearchPage() {
       <Navbar />
 
       <div className="rp-shell">
-        <ResearchScene pulseRef={pulseRef} />
+        <ResearchScene pulse={pulse} />
         <div className="rp-vignette" />
 
         <div className="rp-bar">

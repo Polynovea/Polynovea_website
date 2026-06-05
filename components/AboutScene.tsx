@@ -1,11 +1,54 @@
 "use client";
 
 import { useRef, useMemo, useEffect } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 const NODE_COUNT = 120;
 const CONNECTION_DISTANCE = 1.8;
+
+const INITIAL_NODE_POSITIONS = (() => {
+  const arr = new Float32Array(NODE_COUNT * 3);
+  for (let i = 0; i < NODE_COUNT; i++) {
+    arr[i * 3]     = (Math.random() - 0.5) * 10;
+    arr[i * 3 + 1] = (Math.random() - 0.5) * 6;
+    arr[i * 3 + 2] = (Math.random() - 0.5) * 4;
+  }
+  return arr;
+})();
+
+const INITIAL_NODE_VELOCITIES = (() => {
+  const arr = new Float32Array(NODE_COUNT * 3);
+  for (let i = 0; i < NODE_COUNT; i++) {
+    arr[i * 3]     = (Math.random() - 0.5) * 0.002;
+    arr[i * 3 + 1] = (Math.random() - 0.5) * 0.002;
+    arr[i * 3 + 2] = (Math.random() - 0.5) * 0.002;
+  }
+  return arr;
+})();
+
+const INITIAL_LINE_POSITIONS = (() => {
+  const nodes: number[][] = [];
+  for (let i = 0; i < NODE_COUNT; i++) {
+    nodes.push([
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 6,
+      (Math.random() - 0.5) * 4,
+    ]);
+  }
+  const lines: number[] = [];
+  for (let i = 0; i < NODE_COUNT; i++) {
+    for (let j = i + 1; j < NODE_COUNT; j++) {
+      const dx = nodes[i][0] - nodes[j][0];
+      const dy = nodes[i][1] - nodes[j][1];
+      const dz = nodes[i][2] - nodes[j][2];
+      if (Math.sqrt(dx * dx + dy * dy + dz * dz) < CONNECTION_DISTANCE) {
+        lines.push(...nodes[i], ...nodes[j]);
+      }
+    }
+  }
+  return new Float32Array(lines);
+})();
 
 function Nodes() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
@@ -13,23 +56,19 @@ function Nodes() {
   const timeRef = useRef(0);
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  const positions = useMemo(() => {
-    const arr = new Float32Array(NODE_COUNT * 3);
-    for (let i = 0; i < NODE_COUNT; i++) {
-      arr[i * 3]     = (Math.random() - 0.5) * 10;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 6;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 4;
-    }
-    return arr;
-  }, []);
+  const positionsRef = useRef<Float32Array | null>(null);
+  const velocitiesRef = useRef<Float32Array | null>(null);
+  const currentRef = useRef<Float32Array | null>(null);
 
-  const velocities = useMemo(() => {
-    const arr = new Float32Array(NODE_COUNT * 3);
-    for (let i = 0; i < NODE_COUNT * 3; i++) arr[i] = (Math.random() - 0.5) * 0.002;
-    return arr;
-  }, []);
-
-  const current = useMemo(() => new Float32Array(positions), [positions]);
+  if (positionsRef.current == null) {
+    positionsRef.current = INITIAL_NODE_POSITIONS;
+  }
+  if (velocitiesRef.current == null) {
+    velocitiesRef.current = INITIAL_NODE_VELOCITIES.slice();
+  }
+  if (currentRef.current == null) {
+    currentRef.current = INITIAL_NODE_POSITIONS.slice();
+  }
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -41,8 +80,11 @@ function Nodes() {
   }, []);
 
   useFrame((_, delta) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || !currentRef.current || !velocitiesRef.current) return;
     timeRef.current += delta;
+
+    const current = currentRef.current;
+    const velocities = velocitiesRef.current;
 
     for (let i = 0; i < NODE_COUNT; i++) {
       current[i * 3]     += velocities[i * 3];
@@ -82,25 +124,6 @@ function Connections() {
   const linesRef = useRef<THREE.LineSegments>(null);
   const timeRef  = useRef(0);
 
-  const linePositions = useMemo(() => {
-    const nodes: number[][] = [];
-    for (let i = 0; i < NODE_COUNT; i++) {
-      nodes.push([(Math.random() - 0.5) * 10, (Math.random() - 0.5) * 6, (Math.random() - 0.5) * 4]);
-    }
-    const lines: number[] = [];
-    for (let i = 0; i < NODE_COUNT; i++) {
-      for (let j = i + 1; j < NODE_COUNT; j++) {
-        const dx = nodes[i][0] - nodes[j][0];
-        const dy = nodes[i][1] - nodes[j][1];
-        const dz = nodes[i][2] - nodes[j][2];
-        if (Math.sqrt(dx*dx + dy*dy + dz*dz) < CONNECTION_DISTANCE) {
-          lines.push(...nodes[i], ...nodes[j]);
-        }
-      }
-    }
-    return new Float32Array(lines);
-  }, []);
-
   useFrame((_, delta) => {
     timeRef.current += delta;
     if (linesRef.current) linesRef.current.rotation.y = Math.sin(timeRef.current * 0.05) * 0.03;
@@ -109,7 +132,7 @@ function Connections() {
   return (
     <lineSegments ref={linesRef}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[linePositions, 3]} />
+        <bufferAttribute attach="attributes-position" args={[INITIAL_LINE_POSITIONS, 3]} />
       </bufferGeometry>
       <lineBasicMaterial color="#7C3AED" transparent opacity={0.35} />
     </lineSegments>
@@ -117,7 +140,6 @@ function Connections() {
 }
 
 function CameraRig() {
-  const { camera } = useThree();
   const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -129,7 +151,7 @@ function CameraRig() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  useFrame(() => {
+  useFrame(({ camera }) => {
     camera.position.x += (mouseRef.current.x - camera.position.x) * 0.03;
     camera.position.y += (mouseRef.current.y - camera.position.y) * 0.03;
   });

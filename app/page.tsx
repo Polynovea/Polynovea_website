@@ -3,7 +3,6 @@ import Hero from "@/components/Hero";
 import Architecture from "@/components/Architecture";
 import WhoWeAre from "@/components/WhoWeAre";
 import Projects from "@/components/Projects";
-import LivePortfolio from "@/components/LivePortfolio";
 import WhyDifferent from "@/components/WhyDifferent";
 import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
@@ -19,7 +18,6 @@ export default function Home() {
         <WhyDifferent />
         <WhoWeAre />
         <Projects />
-        <LivePortfolio />
         <FAQ />
         <Contact />
       </main>
