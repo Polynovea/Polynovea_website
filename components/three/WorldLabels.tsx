@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
-import { SECTION_COUNT } from "@/lib/depthStore";
+import { depthState, SECTION_COUNT } from "@/lib/depthStore";
 import { clusterCenter } from "./networkData";
 import { clusterFocus, journeyPosition } from "@/lib/clusterFocus";
 
@@ -31,6 +31,13 @@ function WorldLabel({ index, text }: { index: number; text: string }) {
   useFrame(() => {
     const mesh = ref.current;
     if (!mesh) return;
+    // Environmental titles are tuned for the home journey's legibility lens;
+    // on subpages (ambient mode) they have nothing to recede behind and
+    // collide with real DOM copy, so keep them hidden there.
+    if (depthState.sceneMode !== "journey") {
+      mesh.visible = false;
+      return;
+    }
     const focus = clusterFocus(journeyPosition(), index);
     // Recede + rise slightly when unfocused so arrival feels like the title
     // settling into place.
