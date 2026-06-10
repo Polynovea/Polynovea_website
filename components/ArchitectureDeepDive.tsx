@@ -418,89 +418,84 @@ function FlowScene({
   );
 }
 
-function MiniMilestoneObjects({
-  color,
-  activeModule,
-}: {
-  color: string;
-  activeModule: number | null;
-}) {
-  const groupRef = useRef<THREE.Group>(null);
-  useFrame(({ clock, mouse }) => {
-    const time = clock.getElapsedTime();
-    if (!groupRef.current) return;
-    groupRef.current.rotation.y = Math.sin(time * 0.4) * 0.25 + mouse.x * 0.08;
-    groupRef.current.children.forEach((child, index) => {
-      if (child instanceof THREE.Mesh) {
-        const active = activeModule === index;
-        child.scale.setScalar((active ? 1.24 : 1) + Math.sin(time * 2 + index) * (active ? 0.16 : 0.12));
-        if (child.material instanceof THREE.MeshBasicMaterial) {
-          child.material.opacity = active ? 1 : 0.78;
-        }
-      }
-    });
-  });
-
-  return (
-    <group ref={groupRef}>
-      {[
-        [-0.9, 0.55, 0],
-        [0.9, 0.55, 0],
-        [0, -0.75, 0],
-      ].map((position, index) => (
-        <mesh key={index} position={position as [number, number, number]}>
-          <sphereGeometry args={[0.22, 24, 24]} />
-          <meshBasicMaterial color={color} transparent opacity={0.88} />
-        </mesh>
-      ))}
-      <lineSegments>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[new Float32Array([
-              -0.9, 0.55, 0, 0.9, 0.55, 0,
-              0.9, 0.55, 0, 0, -0.75, 0,
-              0, -0.75, 0, -0.9, 0.55, 0,
-            ]), 3]}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial color={color} transparent opacity={0.45} />
-      </lineSegments>
-    </group>
+/** Per-milestone SVG glyphs — no canvas overhead, visually distinctive. */
+function MilestoneGlyph({ milestoneKey, color }: { milestoneKey: MilestoneKey; color: string }) {
+  const c = color;
+  if (milestoneKey === "m1") return (
+    <svg viewBox="0 0 240 200" className="mg" aria-hidden="true">
+      {/* Concentric signal arcs */}
+      <circle cx="120" cy="115" r="30" stroke={c} strokeWidth="1.5" fill="none" opacity="0.25" className="mg-ring mg-r1" />
+      <circle cx="120" cy="115" r="55" stroke={c} strokeWidth="1" fill="none" opacity="0.15" className="mg-ring mg-r2" />
+      <circle cx="120" cy="115" r="82" stroke={c} strokeWidth="0.7" fill="none" opacity="0.08" className="mg-ring mg-r3" />
+      {/* Radar sweep line */}
+      <line x1="120" y1="115" x2="120" y2="33" stroke={c} strokeWidth="1.5" opacity="0.7" className="mg-sweep" style={{ transformOrigin: "120px 115px" }} />
+      {/* Data nodes */}
+      <circle cx="162" cy="72" r="5.5" fill={c} opacity="0.9" className="mg-dot" />
+      <circle cx="82" cy="88" r="4" fill={c} opacity="0.7" className="mg-dot" style={{ animationDelay: "0.3s" }} />
+      <circle cx="148" cy="152" r="6.5" fill={c} opacity="1" className="mg-dot mg-dot-active" style={{ animationDelay: "0.6s" }} />
+      <circle cx="66" cy="145" r="3.5" fill={c} opacity="0.55" className="mg-dot" style={{ animationDelay: "0.9s" }} />
+      {/* Connection lines */}
+      <line x1="162" y1="72" x2="148" y2="152" stroke={c} strokeWidth="0.8" opacity="0.3" />
+      <line x1="82" y1="88" x2="148" y2="152" stroke={c} strokeWidth="0.8" opacity="0.3" />
+    </svg>
   );
-}
-
-function StaticFlowDiagram({ selected }: { selected: MilestoneKey }) {
-  return (
-    <div className="static-flow-diagram" aria-hidden="true">
-      <div className="static-flow-line" />
-      {milestones.map((milestone) => (
-        <div
-          key={milestone.key}
-          className={`static-node ${milestone.key === selected ? "active" : ""}`}
-          style={
-            {
-              "--node-color": milestoneVisuals[milestone.key].primary,
-              "--node-glow": milestoneVisuals[milestone.key].secondary,
-            } as CSSProperties
-          }
-        />
-      ))}
-    </div>
+  if (milestoneKey === "m2") return (
+    <svg viewBox="0 0 240 200" className="mg" aria-hidden="true">
+      {/* Stacked catalog bars */}
+      <rect x="40" y="148" width="160" height="9" rx="4.5" fill={c} opacity="0.85" className="mg-bar" />
+      <rect x="40" y="131" width="126" height="9" rx="4.5" fill={c} opacity="0.65" className="mg-bar" style={{ animationDelay: "0.1s" }} />
+      <rect x="40" y="114" width="98" height="9" rx="4.5" fill={c} opacity="0.45" className="mg-bar" style={{ animationDelay: "0.2s" }} />
+      <rect x="40" y="97" width="72" height="9" rx="4.5" fill={c} opacity="0.28" className="mg-bar" style={{ animationDelay: "0.3s" }} />
+      {/* IP ring + label */}
+      <circle cx="120" cy="56" r="26" stroke={c} strokeWidth="1.5" fill="none" opacity="0.55" className="mg-ring mg-r1" />
+      <circle cx="120" cy="56" r="14" fill={c} opacity="0.12" />
+      <circle cx="120" cy="56" r="5" fill={c} opacity="0.9" />
+      {/* IP anchor lines */}
+      <line x1="120" y1="82" x2="120" y2="97" stroke={c} strokeWidth="1" opacity="0.4" />
+      <line x1="120" y1="82" x2="80" y2="97" stroke={c} strokeWidth="0.8" opacity="0.25" />
+      <line x1="120" y1="82" x2="160" y2="97" stroke={c} strokeWidth="0.8" opacity="0.25" />
+    </svg>
   );
-}
-
-function MiniMilestoneScene({
-  color,
-  activeModule,
-}: {
-  color: string;
-  activeModule: number | null;
-}) {
+  if (milestoneKey === "m3") return (
+    <svg viewBox="0 0 240 200" className="mg" aria-hidden="true">
+      {/* Central hub */}
+      <circle cx="120" cy="100" r="16" fill={c} opacity="0.15" />
+      <circle cx="120" cy="100" r="8" fill={c} opacity="0.9" className="mg-dot mg-dot-active" />
+      {/* Spoke nodes */}
+      {([[-1.1, -0.85], [1.1, -0.85], [-1.4, 0.15], [1.4, 0.15], [-0.8, 1.1], [0.8, 1.1]] as [number, number][]).map(([dx, dy], i) => {
+        const nx = 120 + dx * 62, ny = 100 + dy * 52;
+        return (
+          <g key={i}>
+            <line x1="120" y1="100" x2={nx} y2={ny} stroke={c} strokeWidth="0.9" opacity="0.35" />
+            <circle cx={nx} cy={ny} r="5" fill={c} opacity="0.7" className="mg-dot" style={{ animationDelay: `${i * 0.15}s` }} />
+          </g>
+        );
+      })}
+      {/* Outer ring */}
+      <circle cx="120" cy="100" r="72" stroke={c} strokeWidth="0.6" fill="none" opacity="0.12" strokeDasharray="4 6" />
+    </svg>
+  );
+  // m4
   return (
-    <Canvas camera={{ position: [0, 0, 4], fov: 50 }} gl={{ alpha: true, antialias: true }}>
-      <MiniMilestoneObjects color={color} activeModule={activeModule} />
-    </Canvas>
+    <svg viewBox="0 0 240 200" className="mg" aria-hidden="true">
+      {/* Root node */}
+      <circle cx="120" cy="32" r="8" fill={c} opacity="0.9" className="mg-dot mg-dot-active" />
+      {/* Level 2 */}
+      <line x1="120" y1="40" x2="80" y2="88" stroke={c} strokeWidth="1" opacity="0.5" />
+      <line x1="120" y1="40" x2="160" y2="88" stroke={c} strokeWidth="1" opacity="0.5" />
+      <circle cx="80" cy="92" r="6" fill={c} opacity="0.75" className="mg-dot" style={{ animationDelay: "0.2s" }} />
+      <circle cx="160" cy="92" r="6" fill={c} opacity="0.75" className="mg-dot" style={{ animationDelay: "0.3s" }} />
+      {/* Level 3 */}
+      {([[80, 100, 52, 148], [80, 100, 108, 148], [160, 100, 132, 148], [160, 100, 188, 148]] as number[][]).map(([x1, y1, x2, y2], i) => (
+        <g key={i}>
+          <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={c} strokeWidth="0.8" opacity="0.35" />
+          <circle cx={x2} cy={y2 + 5} r="4.5" fill={c} opacity="0.6" className="mg-dot" style={{ animationDelay: `${0.4 + i * 0.12}s` }} />
+        </g>
+      ))}
+      {/* Sovereign base line */}
+      <line x1="44" y1="168" x2="196" y2="168" stroke={c} strokeWidth="1.5" opacity="0.35" />
+      <rect x="44" y="165" width="152" height="3" rx="1.5" fill={c} opacity="0.2" />
+    </svg>
   );
 }
 
@@ -511,7 +506,6 @@ export default function ArchitectureDeepDive() {
   const [hoveredMilestoneNode, setHoveredMilestoneNode] = useState<MilestoneKey | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(() => new Set());
   const [selectedSurface, setSelectedSurface] = useState<SurfaceKey>("venues");
-  const [useCompactHero, setUseCompactHero] = useState(false);
   const selectedMilestone = manualSelectedMilestone ?? visibleMilestone;
   const activeMilestone = milestones.find((m) => m.key === selectedMilestone) ?? milestones[0];
   const surface = appliedSurfaces[selectedSurface];
@@ -534,15 +528,6 @@ export default function ArchitectureDeepDive() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    const syncHeroMode = () => {
-      setUseCompactHero(window.innerWidth < 1280);
-    };
-
-    syncHeroMode();
-    window.addEventListener("resize", syncHeroMode);
-    return () => window.removeEventListener("resize", syncHeroMode);
-  }, []);
 
   useEffect(() => {
     const releaseManualSelection = () => {
@@ -570,50 +555,45 @@ export default function ArchitectureDeepDive() {
   return (
     <main className="architecture-page">
       <section className="architecture-hero">
-        <div className="hero-bg" />
-        <div className="container hero-grid">
-          <div className="hero-copy">
-            <span className="t-label" style={{ color: "var(--accent-authority)" }}>
-              The Behavioral Intelligence Stack
-            </span>
-            <h1 className="hero-title">The ecosystem flow from behavior to ownership.</h1>
-            <p className="t-body-lg">
-              Polynovea turns fragmented human behavior into intelligence, uses that intelligence to create IP,
-              commercializes the infrastructure, and compounds toward distribution control.
-            </p>
+        {/* Full-bleed 3D canvas — fills the entire viewport */}
+        <div className="hero-canvas-wrap" aria-hidden="true">
+          <FlowScene
+            selected={selectedMilestone}
+            hovered={hoveredMilestone}
+            onHover={setHoveredMilestoneNode}
+          />
+        </div>
+        {/* Bottom vignette so copy stays readable */}
+        <div className="hero-fade" />
+
+        {/* Overlaid content anchored to the bottom */}
+        <div className="container hero-content">
+          <span className="t-label" style={{ color: "var(--accent-authority)" }}>
+            The Behavioral Intelligence Stack
+          </span>
+          <h1 className="hero-title">The ecosystem flow<br />from behavior to ownership.</h1>
+          <p className="t-body-lg hero-desc">
+            Polynovea turns fragmented human behavior into intelligence, uses that intelligence to create IP,
+            commercializes the infrastructure, and compounds toward distribution control.
+          </p>
+          <div className="flow-labels">
+            {milestones.map((m) => (
+              <button
+                key={m.key}
+                className={`flow-label ${m.key === selectedMilestone ? "active" : ""}`}
+                style={{ "--node-color": milestoneColors[m.key] } as CSSProperties}
+                onClick={() => selectMilestone(m.key)}
+                type="button"
+              >
+                <span aria-hidden="true" />
+                {m.number} — {m.title}
+              </button>
+            ))}
           </div>
-          <div className={`hero-visual card${useCompactHero ? " compact" : ""}`}>
-            {useCompactHero ? (
-              <StaticFlowDiagram selected={selectedMilestone} />
-            ) : (
-              <div className="flow-canvas">
-                <FlowScene
-                  selected={selectedMilestone}
-                  hovered={hoveredMilestone}
-                  onHover={setHoveredMilestoneNode}
-                />
-              </div>
-            )}
-            <div className="flow-labels">
-              {milestones.map((m) => (
-                <button
-                  key={m.key}
-                  className={`flow-label ${m.key === selectedMilestone ? "active" : ""}`}
-                  style={{ "--node-color": milestoneColors[m.key] } as CSSProperties}
-                  onClick={() => selectMilestone(m.key)}
-                  type="button"
-                >
-                  <span aria-hidden="true" />
-                  {m.number} — {m.title}
-                </button>
-              ))}
-            </div>
-            <div className="hero-selected-panel">
-              <span>{activeMilestone.stage}</span>
-              <strong>{activeMilestone.title}</strong>
-              <p>{activeMilestone.flow}</p>
-            </div>
-          </div>
+          <p className="hero-active-flow">
+            <span style={{ color: milestoneColors[activeMilestone.key] }}>{activeMilestone.stage} · </span>
+            {activeMilestone.flow}
+          </p>
         </div>
       </section>
 
@@ -635,10 +615,13 @@ export default function ArchitectureDeepDive() {
                 data-milestone-key={milestone.key}
                 data-reveal
               >
-                <div className="sticky-visual card">
-                  <MiniMilestoneScene
+                <div
+                  className="sticky-visual"
+                  style={{ "--mg-color": milestoneColors[milestone.key] } as CSSProperties}
+                >
+                  <MilestoneGlyph
+                    milestoneKey={milestone.key}
                     color={milestoneColors[milestone.key]}
-                    activeModule={hoveredModule?.milestone === milestone.key ? hoveredModule.index : null}
                   />
                   <div className="sticky-caption">
                     <span>{milestone.number}</span>
@@ -796,114 +779,60 @@ export default function ArchitectureDeepDive() {
           color: var(--text-primary);
         }
 
+        /* ─── Hero ──────────────────────────────────────────────────── */
         .architecture-hero {
           position: relative;
-          min-height: 100vh;
-          padding-top: var(--nav-height);
+          height: 100vh;
+          min-height: 680px;
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           overflow: hidden;
         }
 
-        .hero-bg {
+        .hero-canvas-wrap {
           position: absolute;
           inset: 0;
-          background:
-            linear-gradient(180deg, rgba(10,10,10,0.45), var(--bg-primary)),
-            radial-gradient(circle at 20% 30%, rgba(124,58,237,0.16), transparent 32%),
-            radial-gradient(circle at 76% 42%, rgba(251,191,36,0.09), transparent 28%);
+          z-index: 0;
         }
 
-        .hero-grid {
-          position: relative;
+        /* Vignette at bottom so copy is always readable */
+        .hero-fade {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 55%;
+          background: linear-gradient(to bottom, transparent, rgba(9, 8, 16, 0.88) 55%, #090810 100%);
           z-index: 1;
-          display: grid;
-          grid-template-columns: 0.85fr 1.15fr;
-          gap: var(--space-3xl);
-          align-items: center;
+          pointer-events: none;
+        }
+
+        .hero-content {
+          position: relative;
+          z-index: 2;
+          padding-bottom: var(--space-3xl);
+          max-width: 800px;
         }
 
         .hero-title {
           font-family: var(--font-display);
-          font-size: clamp(46px, 6vw, 84px);
+          font-size: clamp(42px, 5.5vw, 82px);
           font-weight: 700;
-          line-height: 1.02;
+          line-height: 1.03;
           letter-spacing: -0.02em;
           margin: var(--space-md) 0 var(--space-lg);
         }
 
-        .hero-visual {
-          height: 560px;
-          padding: var(--space-md);
-          background: rgba(10,10,10,0.72);
-          overflow: hidden;
-          display: grid;
-          grid-template-rows: minmax(260px, 1fr) auto auto;
-          gap: var(--space-md);
+        .hero-desc {
+          max-width: 560px;
+          margin-bottom: var(--space-xl);
         }
 
-        .flow-canvas {
-          width: 100%;
-          height: 100%;
-          min-height: 260px;
-          aspect-ratio: 16 / 9;
-          pointer-events: none;
-          display: none;
-        }
-
-        @media (min-width: 1025px) {
-          .flow-canvas {
-            display: block;
-          }
-        }
-
-        .static-flow-diagram {
-          position: relative;
-          display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          align-items: center;
-          min-height: 140px;
-          padding-inline: var(--space-sm);
-        }
-
-        .static-flow-line {
-          position: absolute;
-          left: calc(var(--space-sm) + 28px);
-          right: calc(var(--space-sm) + 28px);
-          top: 50%;
-          height: 2px;
-          background: linear-gradient(90deg, #7C3AED, #FBBF24, #06B6D4, #EC4899);
-          opacity: 0.72;
-        }
-
-        .static-node {
-          position: relative;
-          z-index: 1;
-          justify-self: center;
-          width: 56px;
-          height: 56px;
-          border-radius: 50%;
-          background:
-            radial-gradient(circle at 35% 35%, rgba(255,255,255,0.8), transparent 40%),
-            radial-gradient(circle at 50% 50%, var(--node-color), var(--node-color));
-          box-shadow:
-            0 0 32px color-mix(in srgb, var(--node-color) 48%, transparent),
-            0 0 64px color-mix(in srgb, var(--node-color) 18%, transparent);
-          opacity: 0.68;
-          transform: scale(0.92);
-          transition:
-            transform var(--duration-default) ease,
-            opacity var(--duration-default) ease,
-            box-shadow var(--duration-default) ease;
-        }
-
-        .static-node.active {
-          opacity: 1;
-          transform: scale(1.08);
-          box-shadow:
-            0 0 48px color-mix(in srgb, var(--node-color) 72%, transparent),
-            0 0 96px color-mix(in srgb, var(--node-color) 28%, transparent),
-            inset 0 0 20px rgba(255,255,255,0.24);
+        .hero-active-flow {
+          margin-top: var(--space-md);
+          font-size: 13px;
+          color: var(--text-secondary);
+          letter-spacing: 0.02em;
         }
 
         .flow-labels {
@@ -915,56 +844,6 @@ export default function ArchitectureDeepDive() {
           z-index: 2;
         }
 
-        .hero-selected-panel {
-          border: 1px solid var(--border-muted);
-          border-radius: var(--radius-md);
-          background: rgba(255,255,255,0.035);
-          padding: var(--space-md);
-          min-height: 116px;
-        }
-
-        .hero-selected-panel span {
-          display: block;
-          color: var(--accent-authority);
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          margin-bottom: 4px;
-        }
-
-        .hero-selected-panel strong {
-          display: block;
-          color: var(--text-primary);
-          font-size: 16px;
-          line-height: 1.25;
-        }
-
-        .hero-selected-panel p {
-          color: var(--text-secondary);
-          font-size: 13px;
-          margin-top: 6px;
-        }
-
-        .hero-selected-panel button {
-          margin-top: var(--space-md);
-          border: 1px solid var(--border-muted);
-          border-radius: var(--radius-pill);
-          background: rgba(255,255,255,0.04);
-          color: var(--text-primary);
-          cursor: pointer;
-          font: inherit;
-          font-size: 13px;
-          font-weight: 600;
-          padding: 8px 14px;
-          transition: all var(--duration-default) ease;
-        }
-
-        .hero-selected-panel button:hover {
-          border-color: var(--accent-authority);
-          color: var(--accent-authority);
-          transform: translateY(-1px);
-        }
 
         .flow-label,
         .surface-tabs button {
@@ -1020,15 +899,6 @@ export default function ArchitectureDeepDive() {
           }
         }
 
-        .hero-visual.compact {
-          height: auto;
-          min-height: 320px;
-          grid-template-rows: 140px auto auto;
-        }
-
-        .hero-visual.compact .flow-labels {
-          gap: 5px;
-        }
 
         .cta-card {
           padding: var(--space-xl);
@@ -1109,25 +979,66 @@ export default function ArchitectureDeepDive() {
           }
         }
 
+        /* ─── Milestone glyph (SVG visual in sticky card) ─────────── */
         .sticky-visual {
           position: sticky;
           top: calc(var(--nav-height) + var(--space-xl));
           height: 340px;
           overflow: hidden;
+          border-radius: var(--radius-lg);
+          background: rgba(10, 9, 18, 0.7);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .mg {
+          width: 68%;
+          height: 68%;
+          overflow: visible;
+        }
+
+        /* Pulsing dots */
+        @keyframes mgDotPulse {
+          0%, 100% { opacity: 0.55; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.35); }
+        }
+        .mg-dot { animation: mgDotPulse 2.8s ease-in-out infinite; }
+        .mg-dot-active { animation: mgDotPulse 1.6s ease-in-out infinite; }
+
+        /* Concentric ring breathe */
+        @keyframes mgRingBreathe {
+          0%, 100% { opacity: 0.25; }
+          50% { opacity: 0.55; }
+        }
+        .mg-ring { animation: mgRingBreathe 3.5s ease-in-out infinite; }
+        .mg-r2 { animation-delay: 0.6s; }
+        .mg-r3 { animation-delay: 1.2s; }
+
+        /* Radar sweep rotation */
+        @keyframes mgSweep {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .mg-sweep { animation: mgSweep 4s linear infinite; }
+
+        /* Bars grow in */
+        @keyframes mgBarGrow {
+          from { transform: scaleX(0); opacity: 0; }
+          to { transform: scaleX(1); opacity: 1; }
+        }
+        .mg-bar {
+          transform-origin: left center;
+          animation: mgBarGrow 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
         @media (max-width: 1024px) {
-          .sticky-visual {
-            height: 300px;
-          }
+          .sticky-visual { height: 300px; }
         }
-
         @media (max-width: 768px) {
-          .sticky-visual {
-            height: 260px;
-            position: relative;
-            top: 0;
-          }
+          .sticky-visual { height: 240px; position: relative; top: 0; }
+          .mg { width: 55%; height: 55%; }
         }
 
         .sticky-caption {
@@ -1493,20 +1404,8 @@ export default function ArchitectureDeepDive() {
         }
 
         @media (max-width: 1024px) {
-          .hero-grid,
           .milestone-row {
             grid-template-columns: 1fr;
-          }
-
-          .architecture-hero {
-            min-height: auto;
-            padding-block: calc(var(--nav-height) + var(--space-3xl)) var(--space-4xl);
-          }
-
-          .hero-visual {
-            height: auto;
-            min-height: 280px;
-            grid-template-rows: 120px auto auto;
           }
 
           .sticky-visual {
@@ -1526,43 +1425,11 @@ export default function ArchitectureDeepDive() {
         }
 
         @media (max-width: 768px) {
-          .hero-visual {
-            width: 100%;
-            grid-template-rows: 110px auto auto;
-            padding: var(--space-sm);
-            gap: var(--space-sm);
-          }
-
-          .hero-visual.compact {
-            min-height: 260px;
-            grid-template-rows: 110px auto auto;
-          }
-
-          .static-flow-diagram {
-            min-height: 110px;
-          }
-
-          .hero-selected-panel {
-            padding: var(--space-sm);
-            min-height: 100px;
-          }
-
-          .hero-selected-panel button {
-            padding: 6px 12px;
-            font-size: 12px;
-          }
-
-          .hero-visual.compact .flow-labels,
           .surface-tabs,
           .sankey-card {
             grid-template-columns: 1fr;
           }
 
-          .flow-label {
-            min-height: 48px;
-            padding: var(--space-md);
-            text-align: left;
-          }
 
           .sankey-step {
             min-height: auto;
