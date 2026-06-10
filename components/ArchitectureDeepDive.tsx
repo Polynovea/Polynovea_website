@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import Link from "next/link";
@@ -39,8 +39,7 @@ const milestones = [
           "Score venues across fitness dimensions and audience archetypes using Bayesian inference",
           "Convert intelligence into a field execution framework — 8-phase acquisition system deployed live at each venue",
         ],
-        output:
-          "Behavioural fitness profiles, audience archetype maps, competitor intelligence by behavioural similarity, and a proven acquisition playbook per venue",
+        output: "Behavioural fitness profiles, audience archetype maps, competitor intelligence by behavioural similarity, and a proven acquisition playbook per venue",
       },
       {
         title: "Module 3: Optimization System",
@@ -55,8 +54,7 @@ const milestones = [
     number: "02",
     stage: "Execution",
     title: "IP & Records Layer",
-    summary:
-      "The cultural execution surface where intelligence informs creator development, owned IP, and audience relationships.",
+    summary: "The cultural execution surface where intelligence informs creator development, owned IP, and audience relationships.",
     flow: "Intelligence insights → records execution",
     items: [
       {
@@ -84,8 +82,7 @@ const milestones = [
     number: "03",
     stage: "Monetization",
     title: "External Services",
-    summary:
-      "The infrastructure becomes commercially useful through creator services, licensing, and implementation work.",
+    summary: "The infrastructure becomes commercially useful through creator services, licensing, and implementation work.",
     flow: "IP + audience data → external services leverage",
     items: [
       {
@@ -113,8 +110,7 @@ const milestones = [
     number: "04",
     stage: "Revenue",
     title: "Distribution & Ownership",
-    summary:
-      "The final layer: distribution control, rights leverage, and long-term ecosystem sovereignty.",
+    summary: "The final layer: distribution control, rights leverage, and long-term ecosystem sovereignty.",
     flow: "Service revenue + margin → distribution control",
     items: [
       {
@@ -139,12 +135,7 @@ const milestones = [
   },
 ];
 
-const appliedSurfaces: Record<SurfaceKey, {
-  label: string;
-  eyebrow: string;
-  color: string;
-  examples: string[];
-}> = {
+const appliedSurfaces: Record<SurfaceKey, { label: string; eyebrow: string; color: string; examples: string[] }> = {
   venues: {
     label: "Venue Revenue Optimisation",
     eyebrow: "Live environments",
@@ -169,115 +160,305 @@ const appliedSurfaces: Record<SurfaceKey, {
   },
 };
 
-// ─── Timeline ──────────────────────────────────────────────────────────────
+// ─── TimelineEntry — own styled-jsx scope ────────────────────────────────────
 
 function TimelineEntry({
   milestone,
   expandedModules,
-  hoveredModule,
   onToggle,
-  onHover,
 }: {
   milestone: (typeof milestones)[number];
   expandedModules: Set<string>;
-  hoveredModule: { milestone: MilestoneKey; index: number } | null;
   onToggle: (key: string) => void;
-  onHover: (v: { milestone: MilestoneKey; index: number } | null) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15% 0px" });
+  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const color = milestoneColors[milestone.key];
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   return (
     <motion.div
       ref={ref}
-      className="tl-entry"
-      initial={{ opacity: 0, y: 32 }}
+      className="entry"
+      id={`milestone-${milestone.key}`}
+      initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* Timeline dot */}
-      <div className="tl-dot-wrap">
-        <div className="tl-dot" style={{ background: color, boxShadow: `0 0 16px ${color}88` }} />
+      {/* Dot on the timeline track */}
+      <div
+        className="entry-dot"
+        style={{ background: color, boxShadow: `0 0 14px ${color}99` }}
+        aria-hidden="true"
+      />
+
+      {/* Header row */}
+      <div className="entry-head">
+        <span className="entry-stage" style={{ color }}>{milestone.stage}</span>
+        <span className="entry-num" aria-hidden="true">{milestone.number}</span>
       </div>
 
-      {/* Content */}
-      <div className="tl-content" id={`milestone-${milestone.key}`}>
-        <div className="tl-header">
-          <span className="tl-stage" style={{ color }}>{milestone.stage}</span>
-          <span className="tl-number">{milestone.number}</span>
-        </div>
-        <h3 className="tl-title">{milestone.title}</h3>
-        <p className="tl-summary">{milestone.summary}</p>
+      {/* Title + summary */}
+      <h3 className="entry-title">{milestone.title}</h3>
+      <p className="entry-summary">{milestone.summary}</p>
 
-        <div className="module-grid">
-          {milestone.items.map((item, index) => {
-            const moduleKey = `${milestone.key}-${index}`;
-            const expanded = expandedModules.has(moduleKey);
-            const hovered =
-              hoveredModule?.milestone === milestone.key && hoveredModule.index === index;
+      {/* Module cards */}
+      <div className="mod-grid">
+        {milestone.items.map((item, index) => {
+          const key = `${milestone.key}-${index}`;
+          const expanded = expandedModules.has(key);
+          const hovered = hoveredIdx === index;
+          const open = expanded || hovered;
 
-            return (
-              <div
-                key={item.title}
-                className={`module-card card${expanded || hovered ? " expanded" : ""}`}
-                style={{ "--milestone-color": color } as CSSProperties}
-                onMouseEnter={() => onHover({ milestone: milestone.key, index })}
-                onMouseLeave={() => onHover(null)}
+          return (
+            <div
+              key={item.title}
+              className={`mod-card${open ? " open" : ""}`}
+              style={{ "--mc": color } as CSSProperties}
+              onMouseEnter={() => setHoveredIdx(index)}
+              onMouseLeave={() => setHoveredIdx(null)}
+            >
+              <button
+                type="button"
+                aria-expanded={expanded}
+                onClick={() => onToggle(key)}
               >
-                <button
-                  type="button"
-                  aria-expanded={expanded}
-                  onClick={() => onToggle(moduleKey)}
-                >
-                  <span>{item.title}</span>
-                </button>
-                <div className="module-body">
-                  <div className="module-body-inner">
-                    <p>{item.what}</p>
-                    <ul>
-                      {item.how.map((line) => (
-                        <li key={line}>{line}</li>
-                      ))}
-                    </ul>
-                    <div className="output">Output: {item.output}</div>
-                  </div>
+                {item.title}
+              </button>
+              <div className="mod-body">
+                <div className="mod-inner">
+                  <p>{item.what}</p>
+                  <ul>
+                    {item.how.map((line) => <li key={line}>{line}</li>)}
+                  </ul>
+                  <div className="mod-output">Output: {item.output}</div>
                 </div>
               </div>
-            );
-          })}
-        </div>
-
-        <div className="tl-flow">{milestone.flow}</div>
+            </div>
+          );
+        })}
       </div>
+
+      {/* Flow label */}
+      <div className="entry-flow">{milestone.flow}</div>
+
+      <style jsx>{`
+        .entry {
+          position: relative;
+          padding-left: 52px;
+          padding-bottom: var(--space-5xl);
+        }
+
+        .entry-dot {
+          position: absolute;
+          left: -8px;
+          top: 14px;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 2.5px solid #090810;
+          z-index: 2;
+        }
+
+        .entry-head {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          margin-bottom: var(--space-md);
+        }
+
+        .entry-stage {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .entry-num {
+          font-family: var(--font-display);
+          font-size: 64px;
+          font-weight: 700;
+          line-height: 1;
+          color: rgba(255, 255, 255, 0.04);
+          letter-spacing: -0.02em;
+          user-select: none;
+        }
+
+        .entry-title {
+          font-family: var(--font-display);
+          font-size: clamp(28px, 3.5vw, 48px);
+          font-weight: 700;
+          line-height: 1.06;
+          letter-spacing: -0.02em;
+          margin: 0 0 var(--space-md);
+          color: var(--text-primary);
+        }
+
+        .entry-summary {
+          color: var(--text-secondary);
+          font-size: 15px;
+          line-height: 1.65;
+          max-width: 620px;
+          margin: 0 0 var(--space-xl);
+        }
+
+        /* Module grid */
+        .mod-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--space-md);
+        }
+
+        @media (max-width: 1024px) {
+          .mod-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+          .mod-grid { grid-template-columns: 1fr; }
+        }
+
+        .mod-card {
+          position: relative;
+          overflow: hidden;
+          border-radius: var(--radius-md);
+          border: 1px solid var(--border-muted);
+          background: rgba(255, 255, 255, 0.02);
+          transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.2s ease,
+            background 0.2s ease;
+        }
+
+        .mod-card::before {
+          content: "";
+          position: absolute;
+          inset: 0 auto 0 0;
+          width: 3px;
+          background: var(--mc);
+          opacity: 0.8;
+          border-radius: 3px 0 0 3px;
+        }
+
+        .mod-card.open {
+          background: color-mix(in srgb, var(--mc) 8%, rgba(24,24,27,0.6));
+          border-color: color-mix(in srgb, var(--mc) 50%, var(--border-muted));
+          box-shadow: 0 0 28px color-mix(in srgb, var(--mc) 16%, transparent);
+          transform: translateY(-2px);
+        }
+
+        .mod-card button {
+          width: 100%;
+          min-height: 68px;
+          padding: var(--space-md) var(--space-lg);
+          padding-left: calc(var(--space-lg) + 3px);
+          background: transparent;
+          border: 0;
+          cursor: pointer;
+          color: var(--text-primary);
+          font: inherit;
+          font-size: 14px;
+          font-weight: 700;
+          line-height: 1.35;
+          text-align: left;
+        }
+
+        /* Collapse via grid trick */
+        .mod-body {
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: grid-template-rows 0.25s ease;
+        }
+
+        .mod-card.open .mod-body {
+          grid-template-rows: 1fr;
+        }
+
+        .mod-inner {
+          min-height: 0;
+          overflow: hidden;
+          padding: 0 var(--space-lg);
+          padding-left: calc(var(--space-lg) + 3px);
+        }
+
+        .mod-card.open .mod-inner {
+          padding-bottom: var(--space-lg);
+        }
+
+        .mod-inner p,
+        .mod-inner li,
+        .mod-output {
+          color: var(--text-secondary);
+          font-size: 13px;
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        .mod-inner ul {
+          margin: var(--space-sm) 0;
+          padding: 0;
+          list-style: none;
+        }
+
+        .mod-inner li {
+          position: relative;
+          padding-left: 18px;
+          margin-top: 6px;
+        }
+
+        .mod-inner li::before {
+          content: "→";
+          position: absolute;
+          left: 0;
+          color: var(--accent-intelligence);
+          font-size: 11px;
+        }
+
+        .mod-output {
+          border-top: 1px solid var(--border-muted);
+          padding-top: var(--space-sm);
+          margin-top: var(--space-sm);
+        }
+
+        .entry-flow {
+          margin-top: var(--space-xl);
+          padding-top: var(--space-md);
+          border-top: 1px solid var(--border-muted);
+          color: var(--accent-authority);
+          font-weight: 600;
+          font-size: 13px;
+          letter-spacing: 0.01em;
+        }
+      `}</style>
     </motion.div>
   );
 }
 
+// ─── MilestoneTimeline — own styled-jsx scope ────────────────────────────────
+
 function MilestoneTimeline({
   expandedModules,
-  hoveredModule,
   onToggle,
-  onHover,
 }: {
   expandedModules: Set<string>;
-  hoveredModule: { milestone: MilestoneKey; index: number } | null;
   onToggle: (key: string) => void;
-  onHover: (v: { milestone: MilestoneKey; index: number } | null) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 12%", "end 68%"],
+    offset: ["start 15%", "end 65%"],
   });
-  const beamHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const beamScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <div ref={containerRef} className="tl-container">
+    <div ref={containerRef} className="tl">
       {/* Track */}
       <div className="tl-track" aria-hidden="true">
-        <div className="tl-track-line" />
-        <motion.div className="tl-track-beam" style={{ height: beamHeight }} />
+        <div className="tl-line" />
+        <motion.div
+          className="tl-beam"
+          style={{ scaleY: beamScaleY, originY: 0 }}
+        />
       </div>
 
       {/* Entries */}
@@ -287,27 +468,77 @@ function MilestoneTimeline({
             key={m.key}
             milestone={m}
             expandedModules={expandedModules}
-            hoveredModule={hoveredModule}
             onToggle={onToggle}
-            onHover={onHover}
           />
         ))}
       </div>
+
+      <style jsx>{`
+        .tl {
+          display: grid;
+          grid-template-columns: 24px 1fr;
+          gap: 0 var(--space-2xl);
+          position: relative;
+        }
+
+        .tl-track {
+          position: relative;
+          grid-column: 1;
+          grid-row: 1;
+          /* Stretch to cover entries column height */
+          align-self: stretch;
+        }
+
+        .tl-line {
+          position: absolute;
+          left: 50%;
+          top: 24px;
+          bottom: 24px;
+          width: 2px;
+          transform: translateX(-50%);
+          background: rgba(255, 255, 255, 0.07);
+          border-radius: 1px;
+        }
+
+        .tl-beam {
+          position: absolute;
+          left: 50%;
+          top: 24px;
+          bottom: 24px;
+          width: 2px;
+          transform: translateX(-50%);
+          background: linear-gradient(to bottom, #7C3AED 0%, #06B6D4 60%, #EC4899 100%);
+          border-radius: 1px;
+          transform-origin: top center;
+          will-change: transform;
+        }
+
+        .tl-entries {
+          grid-column: 2;
+          grid-row: 1;
+        }
+
+        @media (max-width: 768px) {
+          .tl {
+            grid-template-columns: 16px 1fr;
+            gap: 0 var(--space-lg);
+          }
+        }
+      `}</style>
     </div>
   );
 }
 
-// ─── Main component ─────────────────────────────────────────────────────────
+// ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function ArchitectureDeepDive() {
-  const [hoveredModule, setHoveredModule] = useState<{ milestone: MilestoneKey; index: number } | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(() => new Set());
   const [selectedSurface, setSelectedSurface] = useState<SurfaceKey>("venues");
   const surface = appliedSurfaces[selectedSurface];
 
   const toggleModule = (moduleKey: string) => {
-    setExpandedModules((current) => {
-      const next = new Set(current);
+    setExpandedModules((prev) => {
+      const next = new Set(prev);
       if (next.has(moduleKey)) next.delete(moduleKey);
       else next.add(moduleKey);
       return next;
@@ -315,50 +546,55 @@ export default function ArchitectureDeepDive() {
   };
 
   return (
-    <main className="architecture-page">
+    <main className="arch-page">
 
-      {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="architecture-hero">
+      {/* ── Hero ──────────────────────────────────────────────────── */}
+      <section className="arch-hero">
         <div className="hero-aurora" aria-hidden="true" />
-        <div className="hero-grid-overlay" aria-hidden="true" />
-        <div className="container hero-content">
+        <div className="hero-dots" aria-hidden="true" />
+
+        <div className="container hero-body">
           <motion.span
-            className="t-label hero-eyebrow"
-            initial={{ opacity: 0, y: 16 }}
+            className="hero-label"
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.55, ease: "easeOut" }}
           >
             The Behavioral Intelligence Stack
           </motion.span>
+
           <motion.h1
             className="hero-title"
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
             From behavior<br />to ownership.
           </motion.h1>
+
           <motion.p
             className="hero-desc"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.22, ease: "easeOut" }}
+            transition={{ duration: 0.65, delay: 0.2, ease: "easeOut" }}
           >
             Polynovea turns fragmented human behavior into intelligence, uses that intelligence
-            to create IP, commercializes the infrastructure, and compounds toward distribution control.
+            to create IP, commercializes the infrastructure, and compounds toward
+            distribution control.
           </motion.p>
+
           <motion.div
             className="hero-chips"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.38 }}
+            transition={{ duration: 0.55, delay: 0.36 }}
           >
             {milestones.map((m) => (
               <a
                 key={m.key}
                 href={`#milestone-${m.key}`}
-                className="hero-chip"
-                style={{ "--chip-color": milestoneColors[m.key] } as CSSProperties}
+                className="chip"
+                style={{ "--cc": milestoneColors[m.key] } as CSSProperties}
               >
                 <span className="chip-dot" aria-hidden="true" />
                 {m.number} — {m.title}
@@ -366,31 +602,31 @@ export default function ArchitectureDeepDive() {
             ))}
           </motion.div>
         </div>
+
         <div className="hero-fade" aria-hidden="true" />
       </section>
 
-      {/* ── Timeline breakdown ───────────────────────────────────────── */}
-      <section className="section breakdown-section">
+      {/* ── Timeline breakdown ────────────────────────────────────── */}
+      <section className="section">
         <div className="container">
-          <div className="section-heading" data-reveal>
+          <div className="sec-head" data-reveal>
             <span className="t-label" style={{ color: "var(--accent-authority)" }}>
               Milestone Breakdown
             </span>
             <h2 className="t-display-md">Four compounding layers.</h2>
           </div>
+
           <MilestoneTimeline
             expandedModules={expandedModules}
-            hoveredModule={hoveredModule}
             onToggle={toggleModule}
-            onHover={setHoveredModule}
           />
         </div>
       </section>
 
-      {/* ── Applied Surfaces ─────────────────────────────────────────── */}
-      <section className="section surface-section">
+      {/* ── Applied Surfaces ──────────────────────────────────────── */}
+      <section className="section">
         <div className="container">
-          <div className="section-heading" data-reveal>
+          <div className="sec-head" data-reveal>
             <span className="t-label" style={{ color: "var(--accent-authority)" }}>
               Applied Surfaces
             </span>
@@ -401,12 +637,12 @@ export default function ArchitectureDeepDive() {
             </p>
           </div>
 
-          <div className="surface-tabs" data-reveal>
+          <div className="surf-tabs" data-reveal>
             {(Object.keys(appliedSurfaces) as SurfaceKey[]).map((key) => (
               <button
                 key={key}
                 className={key === selectedSurface ? "active" : ""}
-                style={{ "--surface-color": appliedSurfaces[key].color } as CSSProperties}
+                style={{ "--sc": appliedSurfaces[key].color } as CSSProperties}
                 onClick={() => setSelectedSurface(key)}
               >
                 {appliedSurfaces[key].label}
@@ -415,16 +651,20 @@ export default function ArchitectureDeepDive() {
             ))}
           </div>
 
-          <div className="surface-card card" style={{ "--surface-color": surface.color } as CSSProperties} data-reveal>
+          <div
+            className="surf-card card"
+            style={{ "--sc": surface.color } as CSSProperties}
+            data-reveal
+          >
             <div>
               <span className="t-label" style={{ color: surface.color }}>{surface.eyebrow}</span>
               <h3>{surface.label}</h3>
             </div>
-            <div className="surface-flow">
-              {surface.examples.map((example, index) => (
-                <div key={example} className="surface-step">
-                  <span>M{index + 1}</span>
-                  <p>{example}</p>
+            <div className="surf-flow">
+              {surface.examples.map((ex, i) => (
+                <div key={ex} className="surf-step">
+                  <span>M{i + 1}</span>
+                  <p>{ex}</p>
                 </div>
               ))}
             </div>
@@ -432,62 +672,59 @@ export default function ArchitectureDeepDive() {
         </div>
       </section>
 
-      {/* ── Intelligence Flow ────────────────────────────────────────── */}
-      <section className="section data-section">
+      {/* ── Intelligence Flow ─────────────────────────────────────── */}
+      <section className="section">
         <div className="container">
-          <div className="section-heading" data-reveal>
+          <div className="sec-head" data-reveal>
             <span className="t-label" style={{ color: "var(--accent-authority)" }}>
               Intelligence Flow
             </span>
             <h2 className="t-display-md">How signal becomes leverage.</h2>
           </div>
-          <div className="sankey-card card" data-reveal>
+          <div className="sankey card" data-reveal>
             {[
-              "Raw behavior input",
-              "Decision framework",
-              "Acquisition system",
-              "Optimization system",
-              "Execution layer",
-              "Monetization",
-              "Sovereignty",
-              "Sustainable value",
-            ].map((step, index) => (
+              "Raw behavior input", "Decision framework", "Acquisition system",
+              "Optimization system", "Execution layer", "Monetization",
+              "Sovereignty", "Sustainable value",
+            ].map((step, i) => (
               <div key={step} className="sankey-step">
-                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span>{String(i + 1).padStart(2, "0")}</span>
                 <strong>{step}</strong>
-                {index < 7 && <i />}
+                {i < 7 && <i />}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ─────────────────────────────────────────────────────── */}
-      <section className="section architecture-cta">
-        <div className="container cta-card card">
-          <span className="t-label" style={{ color: "var(--accent-authority)" }}>
-            Build The System
-          </span>
-          <h2>Bring behavioral intelligence into your ecosystem.</h2>
-          <p>
-            Partner with Polynovea to define the signals, build the measurement layer, and turn
-            behavior into a compounding operating advantage.
-          </p>
-          <div className="cta-actions">
-            <Link href="/#contact" className="btn btn-primary">Partner with us</Link>
-            <a href="#milestone-m1" className="btn btn-secondary">Review the stack</a>
+      {/* ── CTA ───────────────────────────────────────────────────── */}
+      <section className="section">
+        <div className="container">
+          <div className="cta-card card">
+            <span className="t-label" style={{ color: "var(--accent-authority)" }}>
+              Build The System
+            </span>
+            <h2>Bring behavioral intelligence into your ecosystem.</h2>
+            <p>
+              Partner with Polynovea to define the signals, build the measurement layer, and turn
+              behavior into a compounding operating advantage.
+            </p>
+            <div className="cta-actions">
+              <Link href="/#contact" className="btn btn-primary">Partner with us</Link>
+              <a href="#milestone-m1" className="btn btn-secondary">Review the stack</a>
+            </div>
           </div>
         </div>
       </section>
 
       <style jsx>{`
-        .architecture-page {
+        .arch-page {
           background: rgba(9, 8, 16, 0.62);
           color: var(--text-primary);
         }
 
-        /* ─── Hero ─────────────────────────────────────────────────── */
-        .architecture-hero {
+        /* ── Hero ──────────────────────────────────────────────── */
+        .arch-hero {
           position: relative;
           min-height: 100vh;
           display: flex;
@@ -496,65 +733,64 @@ export default function ArchitectureDeepDive() {
           padding-top: var(--nav-height);
         }
 
-        /* Aurora gradient layer */
         .hero-aurora {
           position: absolute;
           inset: 0;
           background:
-            radial-gradient(ellipse 80% 60% at 20% 20%, rgba(124, 58, 237, 0.28) 0%, transparent 55%),
-            radial-gradient(ellipse 60% 50% at 80% 70%, rgba(6, 182, 212, 0.14) 0%, transparent 50%),
-            radial-gradient(ellipse 50% 40% at 55% 40%, rgba(236, 72, 153, 0.1) 0%, transparent 45%);
-          animation: auroraShift 12s ease-in-out infinite alternate;
+            radial-gradient(ellipse 80% 60% at 18% 22%, rgba(124, 58, 237, 0.30) 0%, transparent 52%),
+            radial-gradient(ellipse 55% 45% at 82% 68%, rgba(6, 182, 212, 0.16) 0%, transparent 48%),
+            radial-gradient(ellipse 45% 38% at 52% 42%, rgba(236, 72, 153, 0.10) 0%, transparent 44%);
+          animation: aurora 14s ease-in-out infinite alternate;
         }
 
-        @keyframes auroraShift {
-          0%   { opacity: 0.85; transform: scale(1) translate(0, 0); }
-          33%  { opacity: 1;    transform: scale(1.04) translate(-1%, 1%); }
-          66%  { opacity: 0.9;  transform: scale(1.02) translate(1%, -1%); }
-          100% { opacity: 0.85; transform: scale(1) translate(0, 0); }
+        @keyframes aurora {
+          0%   { transform: scale(1) translate(0, 0); }
+          50%  { transform: scale(1.05) translate(-1.5%, 1.2%); }
+          100% { transform: scale(1) translate(1%, -0.8%); }
         }
 
-        /* Subtle dot grid */
-        .hero-grid-overlay {
+        .hero-dots {
           position: absolute;
           inset: 0;
-          background-image: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+          background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
           background-size: 36px 36px;
-          mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+          mask-image: radial-gradient(ellipse 75% 65% at 50% 50%, black 20%, transparent 100%);
         }
 
         .hero-fade {
           position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 38%;
+          bottom: 0; left: 0; right: 0;
+          height: 35%;
           background: linear-gradient(to bottom, transparent, #090810);
           pointer-events: none;
           z-index: 1;
         }
 
-        .hero-content {
+        .hero-body {
           position: relative;
           z-index: 2;
           max-width: 860px;
           padding-bottom: var(--space-4xl);
         }
 
-        .hero-eyebrow {
+        .hero-label {
           display: block;
           color: var(--accent-authority);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
           margin-bottom: var(--space-lg);
         }
 
         .hero-title {
           font-family: var(--font-display);
-          font-size: clamp(52px, 7vw, 104px);
+          font-size: clamp(52px, 7.5vw, 108px);
           font-weight: 700;
-          line-height: 0.97;
+          line-height: 0.96;
           letter-spacing: -0.03em;
           margin: 0 0 var(--space-xl);
-          background: linear-gradient(135deg, #fff 60%, rgba(168, 132, 255, 0.7));
+          background: linear-gradient(135deg, #ffffff 55%, rgba(168, 132, 255, 0.65));
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -562,10 +798,10 @@ export default function ArchitectureDeepDive() {
 
         .hero-desc {
           color: var(--text-secondary);
-          max-width: 520px;
-          margin-bottom: var(--space-2xl);
           font-size: clamp(15px, 1.6vw, 18px);
-          line-height: 1.6;
+          line-height: 1.65;
+          max-width: 520px;
+          margin: 0 0 var(--space-2xl);
         }
 
         .hero-chips {
@@ -574,7 +810,7 @@ export default function ArchitectureDeepDive() {
           gap: 8px;
         }
 
-        .hero-chip {
+        .chip {
           display: inline-flex;
           align-items: center;
           gap: 7px;
@@ -582,309 +818,54 @@ export default function ArchitectureDeepDive() {
           padding: 7px 14px 7px 10px;
           font-size: 12px;
           font-weight: 500;
-          letter-spacing: 0.01em;
           line-height: 1;
           white-space: nowrap;
           text-decoration: none;
           color: var(--text-secondary);
-          background: rgba(255, 255, 255, 0.04);
+          background: rgba(255,255,255,0.03);
           border: 1px solid var(--border-muted);
           transition: all 0.2s ease;
         }
 
-        .hero-chip:hover {
+        .chip:hover {
           color: var(--text-primary);
-          border-color: var(--chip-color);
-          background: color-mix(in srgb, var(--chip-color) 10%, transparent);
-          box-shadow: 0 0 18px color-mix(in srgb, var(--chip-color) 22%, transparent);
+          border-color: var(--cc);
+          background: color-mix(in srgb, var(--cc) 10%, transparent);
+          box-shadow: 0 0 16px color-mix(in srgb, var(--cc) 20%, transparent);
           transform: translateY(-1px);
         }
 
         .chip-dot {
           display: inline-block;
-          width: 7px;
-          height: 7px;
+          width: 7px; height: 7px;
           border-radius: 50%;
-          background: var(--chip-color);
-          box-shadow: 0 0 6px var(--chip-color);
+          background: var(--cc);
+          box-shadow: 0 0 6px var(--cc);
           flex-shrink: 0;
         }
 
-        /* ─── Timeline ─────────────────────────────────────────────── */
-        .tl-container {
-          display: grid;
-          grid-template-columns: 48px 1fr;
-          gap: 0 var(--space-2xl);
-          position: relative;
-        }
-
-        .tl-track {
-          position: relative;
-          grid-column: 1;
-          grid-row: 1 / -1;
-        }
-
-        .tl-track-line {
-          position: absolute;
-          left: 50%;
-          top: 16px;
-          bottom: 16px;
-          width: 2px;
-          transform: translateX(-50%);
-          background: rgba(255, 255, 255, 0.06);
-          border-radius: 1px;
-        }
-
-        .tl-track-beam {
-          position: absolute;
-          left: 50%;
-          top: 16px;
-          width: 2px;
-          transform: translateX(-50%);
-          background: linear-gradient(to bottom, #7C3AED, #06B6D4, #EC4899);
-          border-radius: 1px;
-          will-change: height;
-        }
-
-        .tl-entries {
-          grid-column: 2;
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-5xl);
-          padding-bottom: var(--space-5xl);
-        }
-
-        .tl-entry {
-          display: contents;
-        }
-
-        /* Dot positioned on the track */
-        .tl-dot-wrap {
-          grid-column: 1;
-          display: flex;
-          align-items: flex-start;
-          justify-content: center;
-          padding-top: 10px;
-          position: relative;
-          z-index: 1;
-        }
-
-        .tl-dot {
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          border: 2px solid rgba(9, 8, 16, 0.8);
-          flex-shrink: 0;
-        }
-
-        /* Entry content */
-        .tl-content {
-          grid-column: 2;
-          padding-bottom: var(--space-4xl);
-        }
-
-        .tl-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: var(--space-md);
-        }
-
-        .tl-stage {
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-        }
-
-        .tl-number {
-          font-family: var(--font-display);
-          font-size: 72px;
-          font-weight: 700;
-          line-height: 1;
-          color: rgba(255, 255, 255, 0.04);
-          letter-spacing: -0.02em;
-          user-select: none;
-        }
-
-        .tl-title {
-          font-family: var(--font-display);
-          font-size: clamp(30px, 4vw, 52px);
-          font-weight: 700;
-          line-height: 1.07;
-          letter-spacing: -0.02em;
-          margin: 0 0 var(--space-md);
-          color: var(--text-primary);
-        }
-
-        .tl-summary {
-          color: var(--text-secondary);
-          font-size: 15px;
-          line-height: 1.65;
-          max-width: 640px;
-          margin: 0 0 var(--space-xl);
-        }
-
-        .tl-flow {
-          margin-top: var(--space-xl);
-          padding-top: var(--space-md);
-          border-top: 1px solid var(--border-muted);
-          color: var(--accent-authority);
-          font-weight: 600;
-          font-size: 14px;
-          letter-spacing: 0.01em;
-        }
-
-        /* ─── Module cards ─────────────────────────────────────────── */
-        .module-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: var(--space-md);
-        }
-
-        @media (max-width: 1024px) {
-          .module-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 600px) {
-          .module-grid { grid-template-columns: 1fr; }
-        }
-
-        .module-card {
-          position: relative;
-          padding: 0;
-          overflow: hidden;
-          transition:
-            border-color var(--duration-default) ease,
-            box-shadow var(--duration-default) ease,
-            transform var(--duration-default) ease,
-            background var(--duration-default) ease;
-        }
-
-        .module-card::before {
-          content: "";
-          position: absolute;
-          inset: 0 auto 0 0;
-          width: 3px;
-          background: var(--milestone-color);
-          opacity: 0.85;
-        }
-
-        .module-card:hover,
-        .module-card.expanded {
-          background: color-mix(in srgb, var(--milestone-color) 8%, rgba(24,24,27,0.65));
-          border-color: color-mix(in srgb, var(--milestone-color) 54%, var(--border-muted));
-          box-shadow: 0 0 28px color-mix(in srgb, var(--milestone-color) 18%, transparent);
-          transform: scale(1.02);
-        }
-
-        .module-card button {
-          width: 100%;
-          min-height: 72px;
-          padding: var(--space-lg);
-          padding-left: calc(var(--space-lg) + 3px);
-          background: transparent;
-          border: 0;
-          cursor: pointer;
-          color: var(--text-primary);
-          font: inherit;
-          font-weight: 700;
-          line-height: 1.35;
-          text-align: left;
-        }
-
-        @media (max-width: 768px) {
-          .module-card button {
-            min-height: 64px;
-            padding: var(--space-md);
-            padding-left: calc(var(--space-md) + 3px);
-            font-size: 14px;
-          }
-        }
-
-        .module-card button span { display: block; }
-
-        .module-card p,
-        .module-card li,
-        .output {
-          color: var(--text-secondary);
-          font-size: 14px;
-          line-height: 1.55;
-        }
-
-        .module-body {
-          display: grid;
-          grid-template-rows: 0fr;
-          transition: grid-template-rows var(--duration-default) ease;
-        }
-
-        .module-card.expanded .module-body,
-        .module-card:hover .module-body,
-        .module-card:focus-within .module-body {
-          grid-template-rows: 1fr;
-        }
-
-        .module-body-inner {
-          min-height: 0;
-          overflow: hidden;
-          padding-inline: var(--space-lg);
-          padding-left: calc(var(--space-lg) + 3px);
-        }
-
-        .module-card.expanded .module-body-inner,
-        .module-card:hover .module-body-inner,
-        .module-card:focus-within .module-body-inner {
-          padding-bottom: var(--space-lg);
-        }
-
-        .module-card p { margin-top: 0; }
-
-        .module-card ul {
-          margin: var(--space-md) 0;
-          padding-left: 0;
-          list-style: none;
-        }
-
-        .module-card li {
-          position: relative;
-          padding-left: 18px;
-          margin-top: 8px;
-        }
-
-        .module-card li::before {
-          content: "->";
-          position: absolute;
-          left: 0;
-          color: var(--accent-intelligence);
-        }
-
-        .output {
-          border-top: 1px solid var(--border-muted);
-          padding-top: var(--space-md);
-        }
-
-        /* ─── Section headings ─────────────────────────────────────── */
-        .section-heading {
-          max-width: 820px;
+        /* ── Section ───────────────────────────────────────────── */
+        .sec-head {
+          max-width: 760px;
           margin-bottom: var(--space-3xl);
         }
 
-        .section-heading h2 {
+        .sec-head h2 {
           color: var(--text-primary);
           margin-top: var(--space-md);
         }
 
-        .section-heading p { margin-top: var(--space-md); }
+        .sec-head p { margin-top: var(--space-md); }
 
-        /* ─── Applied surfaces ─────────────────────────────────────── */
-        .surface-tabs {
+        /* ── Applied surfaces ──────────────────────────────────── */
+        .surf-tabs {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: var(--space-sm);
           margin-bottom: var(--space-lg);
         }
 
-        .surface-tabs button {
+        .surf-tabs button {
           border-radius: var(--radius-md);
           padding: var(--space-md);
           text-align: left;
@@ -893,10 +874,11 @@ export default function ArchitectureDeepDive() {
           background: rgba(255,255,255,0.03);
           border: 1px solid var(--border-muted);
           cursor: pointer;
-          transition: all var(--duration-default) ease;
+          transition: all 0.2s ease;
+          font: inherit;
         }
 
-        .surface-tabs button span {
+        .surf-tabs button span {
           display: block;
           margin-top: 4px;
           color: var(--text-disabled);
@@ -904,70 +886,45 @@ export default function ArchitectureDeepDive() {
           font-weight: 500;
         }
 
-        .surface-tabs button.active {
-          border-color: var(--surface-color);
-          box-shadow: 0 0 24px color-mix(in srgb, var(--surface-color) 24%, transparent);
+        .surf-tabs button.active {
+          border-color: var(--sc);
+          box-shadow: 0 0 22px color-mix(in srgb, var(--sc) 22%, transparent);
         }
 
-        .surface-card {
+        .surf-card {
           padding: var(--space-xl);
-          border-color: color-mix(in srgb, var(--surface-color) 36%, var(--border-muted));
+          border-color: color-mix(in srgb, var(--sc) 34%, var(--border-muted));
         }
 
-        .surface-card h3 {
+        .surf-card h3 {
           font-family: var(--font-display);
-          font-size: 36px;
+          font-size: 34px;
           margin-top: var(--space-sm);
         }
 
-        .surface-flow {
+        .surf-flow {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: var(--space-md);
           margin-top: var(--space-xl);
         }
 
-        @media (max-width: 1024px) {
-          .surface-flow { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-          .surface-flow { grid-template-columns: 1fr; }
-          .surface-tabs { grid-template-columns: 1fr; }
-        }
-
-        .surface-step {
+        .surf-step {
           background: rgba(255,255,255,0.03);
           border: 1px solid var(--border-muted);
           border-radius: var(--radius-md);
           padding: var(--space-md);
         }
 
-        .surface-step span {
-          color: var(--surface-color);
-          font-weight: 800;
-        }
+        .surf-step span { color: var(--sc); font-weight: 800; }
+        .surf-step p { color: var(--text-secondary); margin-top: var(--space-sm); font-size: 14px; }
 
-        .surface-step p {
-          color: var(--text-secondary);
-          margin-top: var(--space-sm);
-          font-size: 14px;
-        }
-
-        /* ─── Intelligence flow ────────────────────────────────────── */
-        .sankey-card {
+        /* ── Intelligence flow ─────────────────────────────────── */
+        .sankey {
           padding: var(--space-xl);
           display: grid;
           grid-template-columns: repeat(8, 1fr);
           gap: var(--space-sm);
-        }
-
-        @media (max-width: 1024px) {
-          .sankey-card { grid-template-columns: repeat(4, 1fr); }
-        }
-
-        @media (max-width: 600px) {
-          .sankey-card { grid-template-columns: repeat(2, 1fr); }
         }
 
         .sankey-step {
@@ -997,10 +954,8 @@ export default function ArchitectureDeepDive() {
 
         .sankey-step i {
           position: absolute;
-          right: -1px;
-          top: 50%;
-          width: 0;
-          height: 0;
+          right: -1px; top: 50%;
+          width: 0; height: 0;
           border-top: 7px solid transparent;
           border-bottom: 7px solid transparent;
           border-left: 8px solid var(--border-muted);
@@ -1008,7 +963,7 @@ export default function ArchitectureDeepDive() {
           z-index: 1;
         }
 
-        /* ─── CTA ──────────────────────────────────────────────────── */
+        /* ── CTA ───────────────────────────────────────────────── */
         .cta-card {
           padding: var(--space-xl);
           text-align: center;
@@ -1031,35 +986,22 @@ export default function ArchitectureDeepDive() {
           margin-top: var(--space-xl);
         }
 
-        /* ─── Timeline responsive ──────────────────────────────────── */
-        @media (max-width: 900px) {
-          .tl-container {
-            grid-template-columns: 32px 1fr;
-            gap: 0 var(--space-lg);
-          }
+        /* ── Responsive ────────────────────────────────────────── */
+        @media (max-width: 1024px) {
+          .surf-flow { grid-template-columns: repeat(2, 1fr); }
+          .sankey { grid-template-columns: repeat(4, 1fr); }
+        }
 
-          .tl-number { font-size: 48px; }
+        @media (max-width: 768px) {
+          .surf-tabs { grid-template-columns: 1fr; }
+          .surf-flow { grid-template-columns: 1fr; }
+          .hero-title { font-size: clamp(44px, 12vw, 72px); }
         }
 
         @media (max-width: 600px) {
-          .tl-container {
-            grid-template-columns: 24px 1fr;
-            gap: 0 var(--space-md);
-          }
-
-          .tl-dot { width: 12px; height: 12px; }
-
-          .architecture-hero { min-height: 85vh; }
-
-          .hero-title { font-size: clamp(44px, 12vw, 72px); }
-
-          .cta-card {
-            padding: var(--space-lg);
-          }
-
-          .cta-card h2 { font-size: clamp(24px, 5vw, 36px); }
-
-          .cta-actions { flex-direction: column; gap: var(--space-sm); }
+          .sankey { grid-template-columns: repeat(2, 1fr); }
+          .cta-card { padding: var(--space-lg); }
+          .cta-actions { flex-direction: column; }
           .cta-actions a { width: 100%; }
         }
       `}</style>
