@@ -1,12 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-const ArchitectureVisualization = dynamic(
-  () => import("@/components/ArchitectureVisualization"),
-  { ssr: false }
-);
-
 const flowSteps = [
   "Raw Behaviour Input",
   "Pattern Recognition Layer",
@@ -19,29 +12,21 @@ const milestones = [
   {
     num: "01",
     title: "Behavioral Intelligence Framework",
-    status: "In Progress",
-    statusType: "progress",
     desc: "The foundation. An AI and data-driven system built to read, map, and model human behaviour — designed to power every milestone that follows.",
   },
   {
     num: "02",
     title: "Original Music & IP",
-    status: "Active",
-    statusType: "active",
     desc: "Creating original music and building our own intellectual property — establishing Polynovea as an independent creative operation with real cultural output.",
   },
   {
     num: "03",
     title: "Artist Automation Tools",
-    status: "Planned",
-    statusType: "planned",
     desc: "AI-powered tools that handle the tedious parts of music publishing — giving independent artists a fairer, simpler path without the exploitation.",
   },
   {
     num: "04",
     title: "Distribution Infrastructure",
-    status: "Long-term",
-    statusType: "longterm",
     desc: "Building a full distribution framework — acquiring the licenses and infrastructure to make music release sustainable and accessible for artists across India.",
   },
 ];
@@ -72,7 +57,6 @@ export default function Architecture() {
 
           {/* Flow diagram */}
           <div className="flow-diagram-wrap" data-reveal data-reveal-delay="100">
-            <ArchitectureVisualization />
             <div className="flow-diagram">
               {flowSteps.map((step, i) => (
                 <div key={step}>
@@ -82,7 +66,9 @@ export default function Architecture() {
                   </div>
                   {i < flowSteps.length - 1 && (
                     <div className="flow-connector">
-                      <div className="flow-line" />
+                      <div className="flow-line">
+                        <div className="flow-pulse" style={{ animationDelay: `${i * 0.4}s` }} />
+                      </div>
                       <span className="flow-arrow">↓</span>
                     </div>
                   )}
@@ -106,18 +92,12 @@ export default function Architecture() {
           {milestones.map((m, i) => (
             <div
               key={m.num}
-              className="milestone-card card"
+              className="milestone-card milestone-card-glass"
               data-reveal
               data-reveal-delay={String(i * 80)}
             >
               <div className="milestone-header">
-                <div>
-                  <div className="milestone-title">{m.title}</div>
-                  <span className={`badge badge-${m.statusType}`}>
-                    <span className="badge-dot" />
-                    {m.status}
-                  </span>
-                </div>
+                <div className="milestone-title">{m.title}</div>
                 <div className="milestone-num">{m.num}</div>
               </div>
               <p className="t-body-sm">{m.desc}</p>
@@ -145,7 +125,6 @@ export default function Architecture() {
 
         .flow-diagram-wrap {
           position: relative;
-          min-height: 450px;
         }
 
         .flow-diagram {
@@ -153,6 +132,8 @@ export default function Architecture() {
           z-index: 1;
           display: flex;
           flex-direction: column;
+          max-width: 480px;
+          margin-inline: auto;
         }
 
         .flow-box {
@@ -160,14 +141,20 @@ export default function Architecture() {
           align-items: center;
           gap: var(--space-md);
           padding: var(--space-md) var(--space-lg);
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
+          background: rgba(24, 24, 27, 0.35);
+          backdrop-filter: blur(24px) saturate(120%);
+          -webkit-backdrop-filter: blur(24px) saturate(120%);
+          border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: var(--radius-md);
-          transition: border-color var(--duration-default) ease;
+          box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.05);
+          transition: all var(--duration-default) ease;
         }
 
         .flow-box:hover {
-          border-color: var(--border-active);
+          border-color: rgba(230, 211, 163, 0.3);
+          background: rgba(24, 24, 27, 0.45);
+          box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.1), 0 8px 24px rgba(0, 0, 0, 0.5);
+          transform: translateY(-1px);
         }
 
         .flow-dot {
@@ -193,12 +180,6 @@ export default function Architecture() {
           margin-left: 28px;
         }
 
-        .flow-line {
-          width: 1px;
-          height: 16px;
-          background: var(--border-muted);
-        }
-
         .flow-arrow {
           color: var(--accent-authority-muted);
           font-size: 14px;
@@ -216,8 +197,27 @@ export default function Architecture() {
           gap: var(--space-lg);
         }
 
-        .milestone-card {
+        .milestone-card-glass {
           padding: var(--space-xl);
+          background: rgba(24, 24, 27, 0.35);
+          backdrop-filter: blur(24px) saturate(120%);
+          -webkit-backdrop-filter: blur(24px) saturate(120%);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: var(--radius-lg);
+          box-shadow: 
+            inset 0 1px 0px 0px rgba(255, 255, 255, 0.05),
+            0 8px 32px 0 rgba(0, 0, 0, 0.4);
+          position: relative;
+          transition: all var(--duration-default) var(--ease-state);
+        }
+
+        .milestone-card-glass:hover {
+          background: rgba(24, 24, 27, 0.45);
+          border-color: rgba(230, 211, 163, 0.3);
+          box-shadow: 
+            inset 0 1px 0px 0px rgba(255, 255, 255, 0.1),
+            0 12px 40px 0 rgba(0, 0, 0, 0.6);
+          transform: translateY(-2px);
         }
 
         .milestone-header {
@@ -234,7 +234,7 @@ export default function Architecture() {
           font-weight: 600;
           color: var(--text-primary);
           line-height: 1.3;
-          margin-bottom: var(--space-sm);
+          margin-top: 6px;
         }
 
         .milestone-num {
@@ -247,33 +247,6 @@ export default function Architecture() {
           letter-spacing: -2px;
           flex-shrink: 0;
         }
-
-        .badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.06em;
-          padding: 3px 10px;
-          border-radius: var(--radius-pill);
-        }
-
-        .badge-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          flex-shrink: 0;
-        }
-
-        .badge-active { background: rgba(34,197,94,0.12); color: #4ade80; }
-        .badge-active .badge-dot { background: #4ade80; }
-        .badge-progress { background: rgba(124,58,237,0.15); color: #a78bfa; }
-        .badge-progress .badge-dot { background: #a78bfa; }
-        .badge-planned { background: rgba(230,211,163,0.1); color: var(--accent-authority); }
-        .badge-planned .badge-dot { background: var(--accent-authority); }
-        .badge-longterm { background: rgba(113,113,122,0.15); color: var(--text-disabled); }
-        .badge-longterm .badge-dot { background: var(--text-disabled); }
 
         @media (max-width: 900px) {
           .arch-grid { grid-template-columns: 1fr; }

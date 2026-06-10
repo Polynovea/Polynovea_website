@@ -664,7 +664,7 @@ export default function LivePortfolioExpanded() {
         .live-portfolio-expanded {
           --booking-bg-start: rgba(124, 58, 237, 0.12);
           --booking-bg-end: rgba(230, 211, 163, 0.08);
-          background: var(--bg-primary);
+          background: rgba(9, 8, 16, 0.62); /* veil over the global neural scene */
         }
 
         .hero-section {

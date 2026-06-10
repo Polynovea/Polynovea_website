@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 const faqs = [
   {
@@ -46,13 +46,23 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
       <style jsx>{`
         .faq-item {
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
+          background: rgba(24, 24, 27, 0.35);
+          backdrop-filter: blur(24px) saturate(120%);
+          -webkit-backdrop-filter: blur(24px) saturate(120%);
+          border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: var(--radius-md);
           overflow: hidden;
-          transition: border-color var(--duration-default) ease;
+          transition: all var(--duration-default) var(--ease-state);
         }
-        .faq-item.open { border-color: var(--border-active); }
+        .faq-item.open { 
+          border-color: var(--accent-authority) !important; 
+          background: rgba(24, 24, 27, 0.45);
+          box-shadow: 0 4px 20px rgba(230, 211, 163, 0.1);
+        }
+        .faq-item:hover:not(.open) {
+          border-color: rgba(255, 255, 255, 0.15);
+          background: rgba(24, 24, 27, 0.4);
+        }
         .faq-question {
           width: 100%;
           display: flex;
@@ -69,6 +79,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
           color: var(--text-primary);
           font-family: var(--font-body);
           line-height: 1.4;
+          outline: none;
         }
         .faq-icon {
           color: var(--accent-authority);
@@ -76,6 +87,10 @@ function FAQItem({ q, a }: { q: string; a: string }) {
           font-weight: 700;
           flex-shrink: 0;
           line-height: 1;
+          transition: transform var(--duration-fast) ease;
+        }
+        .faq-item.open .faq-icon {
+          transform: rotate(180deg);
         }
         .faq-answer-wrap {
           display: grid;
@@ -92,7 +107,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         .faq-answer {
           margin: 0 var(--space-lg) var(--space-md);
           padding-top: var(--space-md);
-          border-top: 1px solid var(--border-muted);
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
           font-size: 14px;
           color: var(--text-secondary);
           line-height: 1.65;
@@ -112,7 +127,7 @@ export default function FAQ() {
           </span>
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
             Common questions,{" "}
-            <span className="gradient-text-gold">direct answers.</span>
+            <span className="gold-accent">direct answers.</span>
           </h2>
         </div>
 
@@ -126,6 +141,10 @@ export default function FAQ() {
       <style jsx>{`
         .faq-section { background: rgba(18, 18, 18, 0.5); }
         .faq-header { text-align: center; margin-bottom: var(--space-2xl); }
+        .gold-accent {
+          color: var(--accent-authority);
+          font-weight: inherit;
+        }
         .faq-list {
           display: flex;
           flex-direction: column;

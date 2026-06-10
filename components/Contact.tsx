@@ -25,7 +25,7 @@ export default function Contact() {
             <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
               Not everyone gets in.
               <br />
-              <span className="gradient-text">Start a conversation.</span>
+              <span className="gold-accent">Start a conversation.</span>
             </h2>
             <p className="t-body" style={{ marginTop: "var(--space-md)" }}>
               We evaluate fit before we engage. Tell us what you&apos;re building
@@ -117,6 +117,10 @@ export default function Contact() {
           gap: var(--space-3xl);
           align-items: start;
         }
+        .gold-accent {
+          color: var(--accent-authority);
+          font-weight: inherit;
+        }
         .contact-tags {
           display: flex;
           flex-wrap: wrap;
@@ -131,7 +135,26 @@ export default function Contact() {
           border: 1px solid var(--border-muted);
           border-radius: var(--radius-pill);
         }
-        .contact-form-wrap { padding: var(--space-xl); }
+        .contact-form-wrap { 
+          padding: var(--space-xl);
+          background: rgba(24, 24, 27, 0.35);
+          backdrop-filter: blur(24px) saturate(120%);
+          -webkit-backdrop-filter: blur(24px) saturate(120%);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: var(--radius-lg);
+          box-shadow: 
+            inset 0 1px 0px 0px rgba(255, 255, 255, 0.05),
+            0 8px 32px 0 rgba(0, 0, 0, 0.4);
+          position: relative;
+          transition: all var(--duration-default) var(--ease-state);
+        }
+        .contact-form-wrap:hover {
+          background: rgba(24, 24, 27, 0.45);
+          border-color: rgba(230, 211, 163, 0.3);
+          box-shadow: 
+            inset 0 1px 0px 0px rgba(255, 255, 255, 0.1),
+            0 12px 40px 0 rgba(0, 0, 0, 0.6);
+        }
         .contact-form { display: flex; flex-direction: column; gap: var(--space-lg); }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
         .form-group { display: flex; flex-direction: column; gap: var(--space-xs); }
@@ -143,19 +166,22 @@ export default function Contact() {
           color: var(--text-disabled);
         }
         .form-input, .form-select, .form-textarea {
-          background: var(--bg-primary);
-          border: 1px solid var(--border-muted);
+          background: rgba(10, 10, 10, 0.6);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: var(--radius-md);
           color: var(--text-primary);
           font-family: var(--font-body);
           font-size: 14px;
           padding: 11px 14px;
-          transition: border-color var(--duration-fast) ease;
+          transition: all var(--duration-fast) ease;
           outline: none;
           width: 100%;
         }
         .form-input:focus, .form-select:focus, .form-textarea:focus {
-          border-color: var(--border-active);
+          border-color: var(--accent-authority);
+          box-shadow: 0 0 10px rgba(230, 211, 163, 0.15);
+          background: rgba(10, 10, 10, 0.8);
         }
         .form-input::placeholder, .form-textarea::placeholder { color: var(--text-disabled); }
         .form-select option { background: var(--bg-card); color: var(--text-primary); }
@@ -173,13 +199,13 @@ export default function Contact() {
           width: 56px;
           height: 56px;
           border-radius: 50%;
-          background: rgba(124,58,237,0.15);
-          border: 1px solid var(--border-active);
+          background: rgba(230, 211, 163, 0.1);
+          border: 1px solid var(--accent-authority);
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 22px;
-          color: var(--accent-intelligence);
+          color: var(--accent-authority);
         }
         @media (max-width: 900px) { .contact-inner { grid-template-columns: 1fr; } }
         @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }

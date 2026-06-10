@@ -218,7 +218,7 @@ export default function ResearchPage() {
         .rp-shell {
           position: relative;
           min-height: calc(100vh - var(--nav-height));
-          background: #0A0A0A;
+          background: rgba(9, 8, 16, 0.68); /* veil over the global neural scene */
           display: flex; flex-direction: column;
           font-family: "Clash Display", sans-serif;
           overflow: hidden;

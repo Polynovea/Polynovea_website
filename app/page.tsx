@@ -1,27 +1,11 @@
 import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Architecture from "@/components/Architecture";
-import WhoWeAre from "@/components/WhoWeAre";
-import Projects from "@/components/Projects";
-import WhyDifferent from "@/components/WhyDifferent";
-import FAQ from "@/components/FAQ";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+import HomeExperience from "@/components/HomeExperience";
 
 export default function Home() {
   return (
     <>
       <Navbar />
-      <main>
-        <Hero />
-        <Architecture />
-        <WhyDifferent />
-        <WhoWeAre />
-        <Projects />
-        <FAQ />
-        <Contact />
-      </main>
-      <Footer />
+      <HomeExperience />
     </>
   );
 }

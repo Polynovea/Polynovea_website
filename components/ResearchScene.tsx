@@ -32,7 +32,7 @@ function WaveRings({ pulse }: { pulse: number }) {
       const w = Math.sin(t.current * r.speed + r.phase);
       const s = 1 + w * 0.03 + pulseVal.current * Math.max(0, 0.1 - i * 0.018);
       m.scale.set(s, s, 1);
-      (m.material as THREE.MeshBasicMaterial).opacity = Math.max(0, r.opacity + w * 0.025 + pulseVal.current * 0.04);
+      (m.material as THREE.MeshStandardMaterial).opacity = Math.max(0, r.opacity + w * 0.025 + pulseVal.current * 0.04);
     });
   });
 
@@ -40,8 +40,16 @@ function WaveRings({ pulse }: { pulse: number }) {
     <group rotation={[0.06, 0, 0]}>
       {rings.map((r, i) => (
         <mesh key={i} ref={(el) => { ringsRef.current[i] = el; }} position={[0, 0, -i * 0.1]}>
-          <torusGeometry args={[r.radius, 0.006, 6, 80]} />
-          <meshBasicMaterial color={r.color} transparent opacity={r.opacity} />
+          <torusGeometry args={[r.radius, 0.012, 16, 120]} />
+          <meshStandardMaterial 
+            color={r.color} 
+            roughness={0.1} 
+            metalness={0.95} 
+            transparent 
+            opacity={r.opacity} 
+            emissive={r.color}
+            emissiveIntensity={0.25}
+          />
         </mesh>
       ))}
     </group>
@@ -104,9 +112,25 @@ function Scene({ pulse }: { pulse: number }) {
   return <group ref={g}><WaveRings pulse={pulse} /><Particles /></group>;
 }
 
+function StudioRig() {
+  return (
+    <>
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[5, 8, 5]} intensity={1.5} color="#F5F5F5" />
+      <pointLight position={[-5, -3, -2]} intensity={0.8} color="#E6D3A3" />
+    </>
+  );
+}
+
 export default function ResearchScene({ pulse }: { pulse: number }) {
   return (
-    <Canvas camera={{ position: [0, 0, 8], fov: 52 }} gl={{ antialias: false, alpha: true }} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} dpr={1}>
+    <Canvas 
+      camera={{ position: [0, 0, 8], fov: 52 }} 
+      gl={{ antialias: true, alpha: true }} 
+      dpr={[1, 2]}
+      style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+    >
+      <StudioRig />
       <Scene pulse={pulse} />
     </Canvas>
   );

@@ -95,6 +95,8 @@ export default function HeroScene() {
 
     window.addEventListener("mousemove", onMouseMove);
 
+
+
     // Handle window resize
     const onWindowResize = () => {
       const width = window.innerWidth;

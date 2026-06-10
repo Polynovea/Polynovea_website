@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { depthState, REVEAL_OPEN_EVENT } from "@/lib/depthStore";
 
 const homeLinks = [
   { href: "/", label: "Home" },
@@ -23,6 +24,46 @@ export default function Navbar() {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Assemble the navbar into place: on the home page this is held until the
+  // curtain parts (REVEAL_OPEN_EVENT); on subpages it plays as the scene eases in.
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const isHome = window.location.pathname === "/";
+    let played = false;
+
+    const play = () => {
+      if (played) return;
+      played = true;
+      import("gsap").then(({ gsap }) => {
+        const q = gsap.utils.selector(nav);
+        const tl = gsap.timeline();
+        tl.fromTo(
+          nav,
+          { opacity: 0, y: -18 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }
+        );
+        tl.fromTo(
+          q(".nav-logo, .nav-link, .nav-cta"),
+          { opacity: 0, y: -10 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power2.out" },
+          "-=0.4"
+        );
+      });
+    };
+
+    if (depthState.revealOpen || !isHome) {
+      play();
+    } else {
+      window.addEventListener(REVEAL_OPEN_EVENT, play, { once: true });
+    }
+    const fallback = setTimeout(play, isHome ? 5200 : 600);
+    return () => {
+      window.removeEventListener(REVEAL_OPEN_EVENT, play);
+      clearTimeout(fallback);
+    };
   }, []);
 
   const handleAnchorClick = (
@@ -120,16 +161,37 @@ export default function Navbar() {
           right: 0;
           z-index: 100;
           height: var(--nav-height);
-          transition: background var(--duration-default) var(--ease-state),
-            border-color var(--duration-default) var(--ease-state);
-          border-bottom: 1px solid transparent;
         }
 
-        .navbar.scrolled {
-          background: rgba(10, 10, 10, 0.85);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border-bottom-color: var(--border-muted);
+        .navbar::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          pointer-events: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          background-color: transparent;
+          opacity: 0;
+          transition: opacity var(--duration-default) var(--ease-state);
+        }
+
+        .navbar::after {
+          content: "";
+          position: absolute;
+          z-index: -2;
+          inset: 0;
+          -webkit-backdrop-filter: blur(0px);
+          backdrop-filter: blur(0px);
+          -webkit-filter: url(#container-glass);
+          filter: url(#container-glass);
+          background-color: rgba(24, 24, 27, 0.35);
+          opacity: 0;
+          transition: opacity var(--duration-default) var(--ease-state);
+        }
+
+        .navbar.scrolled::before,
+        .navbar.scrolled::after {
+          opacity: 1;
         }
 
         .nav-inner {

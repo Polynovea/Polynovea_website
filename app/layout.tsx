@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
+import ExperienceLayer from "@/components/ExperienceLayer";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollReveal from "@/components/ScrollReveal";
 import TiltEffect from "@/components/TiltEffect";
@@ -115,10 +116,73 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {/* Persistent WebGL backdrop: must render before content so positioned content paints above it */}
+        <ExperienceLayer />
         <CustomCursor />
         <ScrollReveal />
         <TiltEffect />
         <SmoothScroll>{children}</SmoothScroll>
+
+        {/* Global SVG Filters for Liquid Glass Effect */}
+        <svg style={{ display: "none", position: "absolute", width: 0, height: 0 }} aria-hidden="true">
+          <defs>
+            <filter id="container-glass">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.015 0.015"
+                numOctaves="2"
+                seed="5"
+                result="turbulence"
+              />
+              <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
+              <feSpecularLighting
+                in="softMap"
+                surfaceScale="4"
+                specularConstant="1.2"
+                specularExponent="80"
+                lightingColor="#ffffff"
+                result="specLight"
+              >
+                <fePointLight x="-200" y="-200" z="300" />
+              </feSpecularLighting>
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="softMap"
+                scale="25"
+                xChannelSelector="R"
+                yChannelSelector="G"
+              />
+            </filter>
+
+            <filter id="btn-glass">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.03 0.03"
+                numOctaves="1"
+                seed="17"
+                result="turbulence"
+              />
+              <feGaussianBlur in="turbulence" stdDeviation="1.5" result="softMap" />
+              <feSpecularLighting
+                in="softMap"
+                surfaceScale="3"
+                specularConstant="1.5"
+                specularExponent="120"
+                lightingColor="#ffffff"
+                result="specLight"
+              >
+                <fePointLight x="-100" y="-100" z="200" />
+              </feSpecularLighting>
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="softMap"
+                scale="12"
+                xChannelSelector="R"
+                yChannelSelector="G"
+              />
+            </filter>
+          </defs>
+        </svg>
       </body>
     </html>
   );

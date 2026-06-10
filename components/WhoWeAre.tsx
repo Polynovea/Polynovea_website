@@ -11,12 +11,29 @@ export default function WhoWeAre() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>('.who-heading').forEach((el) => {
-        gsap.fromTo(el, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
-      });
+      gsap.fromTo('.who-heading', 
+        { opacity: 0, y: 25 }, 
+        { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out', scrollTrigger: { trigger: '.who-heading', start: 'top 85%' } }
+      );
+
+      gsap.fromTo('.who-subtitle', 
+        { opacity: 0, y: 15 }, 
+        { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out', scrollTrigger: { trigger: '.who-subtitle', start: 'top 85%' } }
+      );
 
       gsap.utils.toArray<HTMLElement>('.who-card').forEach((el, i) => {
-        gsap.fromTo(el, { opacity: 0, x: i % 2 === 0 ? -30 : 30 }, { opacity: 1, x: 0, duration: 0.8, delay: i * 0.1, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
+        gsap.fromTo(el, 
+          { opacity: 0, y: 40, scale: 0.96 }, 
+          { 
+            opacity: 1, 
+            y: 0, 
+            scale: 1, 
+            duration: 1.0, 
+            delay: i * 0.12, 
+            ease: 'power3.out', 
+            scrollTrigger: { trigger: el, start: 'top 88%' } 
+          }
+        );
       });
     }, sectionRef);
 
@@ -24,7 +41,7 @@ export default function WhoWeAre() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="who-we-are-section">
+    <section ref={sectionRef} className="section who-we-are-section">
       <div className="container">
         <div className="section-header">
           <h2 className="who-heading">Who We Are</h2>
@@ -83,6 +100,7 @@ export default function WhoWeAre() {
         }
 
         .who-heading {
+          font-family: var(--font-display);
           font-size: 48px;
           font-weight: 700;
           color: var(--text-primary);
@@ -103,20 +121,30 @@ export default function WhoWeAre() {
         }
 
         .who-card {
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
-          border-radius: 12px;
+          background: rgba(24, 24, 27, 0.35);
+          backdrop-filter: blur(24px) saturate(120%);
+          -webkit-backdrop-filter: blur(24px) saturate(120%);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: var(--radius-lg);
           padding: 40px;
-          backdrop-filter: blur(20px);
-          transition: all 0.3s ease;
+          position: relative;
+          box-shadow: 
+            inset 0 1px 0px 0px rgba(255, 255, 255, 0.05),
+            0 8px 32px 0 rgba(0, 0, 0, 0.4);
+          transition: all var(--duration-default) var(--ease-state);
         }
 
         .who-card:hover {
-          border-color: var(--accent-intelligence);
-          box-shadow: 0 8px 32px rgba(124, 58, 237, 0.1);
+          background: rgba(24, 24, 27, 0.45);
+          border-color: rgba(230, 211, 163, 0.3);
+          box-shadow: 
+            inset 0 1px 0px 0px rgba(255, 255, 255, 0.1),
+            0 12px 40px 0 rgba(0, 0, 0, 0.6);
+          transform: translateY(-2px);
         }
 
         .card-label {
+          font-family: var(--font-display);
           font-size: 48px;
           font-weight: 700;
           color: var(--accent-authority);
@@ -125,6 +153,7 @@ export default function WhoWeAre() {
         }
 
         .who-card h3 {
+          font-family: var(--font-display);
           font-size: 24px;
           color: var(--text-primary);
           margin-bottom: 15px;

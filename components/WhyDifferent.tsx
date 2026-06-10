@@ -34,7 +34,7 @@ export default function WhyDifferent() {
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
             Not Creative. Not Consulting.
             <br />
-            <span className="gradient-text-gold">Something Else.</span>
+            <span className="gold-accent">Something Else.</span>
           </h2>
         </div>
 
@@ -78,12 +78,26 @@ export default function WhyDifferent() {
 
         .why-heading {
           text-align: center;
-          margin-bottom: var(--space-3xl);
+          margin-bottom: clamp(16px, 3.5vh, 48px);
+        }
+
+        .gold-accent {
+          color: var(--accent-authority);
+          font-weight: inherit;
         }
 
         .contrast-table {
           max-width: 900px;
           margin-inline: auto;
+          background: rgba(24, 24, 27, 0.35);
+          backdrop-filter: blur(24px) saturate(120%);
+          -webkit-backdrop-filter: blur(24px) saturate(120%);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: var(--radius-lg);
+          padding: clamp(12px, 2.2vh, 32px) var(--space-2xl);
+          box-shadow: 
+            inset 0 1px 0px 0px rgba(255, 255, 255, 0.05),
+            0 8px 32px 0 rgba(0, 0, 0, 0.4);
         }
 
         .contrast-header-row {
@@ -91,7 +105,7 @@ export default function WhyDifferent() {
           grid-template-columns: 1fr 40px 1fr;
           margin-bottom: var(--space-md);
           padding-bottom: var(--space-md);
-          border-bottom: 1px solid var(--border-muted);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .col-label {
@@ -114,32 +128,41 @@ export default function WhyDifferent() {
           display: grid;
           grid-template-columns: 1fr 40px 1fr;
           align-items: center;
-          padding: var(--space-md) 0;
-          border-bottom: 1px solid var(--border-muted);
-          transition: background var(--duration-fast) ease;
+          padding: clamp(10px, 1.8vh, 24px) 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+          transition: all var(--duration-default) var(--ease-state);
+        }
+
+        .contrast-row:last-child {
+          border-bottom: none;
         }
 
         .contrast-row:hover {
-          background: rgba(255, 255, 255, 0.02);
-          border-radius: var(--radius-sm);
+          background: rgba(255, 255, 255, 0.015);
         }
 
         .contrast-cell {
           font-size: 15px;
           line-height: 1.5;
           padding: 0 var(--space-md);
+          transition: all var(--duration-default) var(--ease-state);
         }
 
         .left-cell {
           color: var(--text-disabled);
           text-decoration: line-through;
-          text-decoration-color: rgba(113, 113, 122, 0.4);
+          text-decoration-color: rgba(113, 113, 122, 0.3);
         }
 
         .right-cell {
           color: var(--text-primary);
           font-weight: 500;
           text-align: right;
+        }
+
+        .contrast-row:hover .right-cell {
+          color: var(--accent-authority);
+          transform: scale(1.01);
         }
 
         .contrast-divider {
@@ -151,25 +174,45 @@ export default function WhyDifferent() {
 
         .divider-line {
           width: 1px;
-          height: 10px;
-          background: var(--border-muted);
+          height: 12px;
+          background: rgba(255, 255, 255, 0.08);
+          transition: background var(--duration-default) var(--ease-state);
+        }
+
+        .contrast-row:hover .divider-line {
+          background: var(--accent-authority-muted);
         }
 
         .vs-dot {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: var(--border-active);
-          box-shadow: 0 0 6px var(--accent-intelligence-glow);
+          background: rgba(255, 255, 255, 0.2);
+          transition: all var(--duration-default) var(--ease-state);
+        }
+
+        .contrast-row:hover .vs-dot {
+          background: var(--accent-authority);
+          transform: scale(1.3);
+          box-shadow: 0 0 10px var(--accent-authority);
         }
 
         .why-cta {
           text-align: center;
-          margin-top: var(--space-2xl);
+          margin-top: clamp(14px, 3vh, 40px);
         }
 
         .mobile-prefix {
           display: none;
+        }
+
+        @media (max-width: 768px) {
+          .contrast-table {
+            padding: var(--space-md);
+          }
+          .contrast-row {
+            padding: var(--space-md) 0;
+          }
         }
 
         @media (max-width: 640px) {
@@ -203,12 +246,16 @@ export default function WhyDifferent() {
           
           .contrast-row:hover {
             background: rgba(24, 24, 27, 0.3);
-            border-color: rgba(124, 58, 237, 0.3);
+            border-color: rgba(230, 211, 163, 0.3);
           }
           
           .left-cell, .right-cell {
             padding: 0;
             text-align: left;
+          }
+
+          .contrast-row:hover .right-cell {
+            transform: none;
           }
           
           .contrast-divider {

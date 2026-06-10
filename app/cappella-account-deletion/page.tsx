@@ -86,7 +86,7 @@ export default function CappellaPage() {
   return (
     <>
       <Navbar />
-      <main style={{ background: "var(--bg-primary)", color: "var(--text-primary)" }}>
+      <main style={{ background: "rgba(9, 8, 16, 0.7)", color: "var(--text-primary)" }}>
 
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <section style={styles.hero}>

@@ -116,13 +116,22 @@ body {
   overflow-x: hidden;
 }
 
+/*
+ * NOTE: body must never carry `perspective` or `transform-style` —
+ * either one turns it into the containing block for position:fixed
+ * descendants, which breaks the fullscreen WebGL scene and depth pager.
+ */
 body {
   min-height: 100%;
-  background:
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
     radial-gradient(ellipse 80% 60% at 10% 20%, rgba(124, 58, 237, 0.18) 0%, transparent 55%),
     radial-gradient(ellipse 60% 50% at 90% 80%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
     radial-gradient(ellipse 50% 40% at 50% 50%, rgba(230, 211, 163, 0.06) 0%, transparent 60%),
-    var(--bg-primary);
+    linear-gradient(var(--bg-primary), var(--bg-primary));
+  background-size: 80px 80px, 80px 80px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 16px;
@@ -130,6 +139,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
 
 /* Lenis smooth scroll */
 html.lenis,
@@ -245,6 +256,9 @@ html.lenis body {
   position: relative;
   padding-block: var(--space-5xl);
   overflow: hidden;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 /* Animated gradient mesh backdrop */
@@ -312,71 +326,106 @@ body::before {
    GLASSMORPHISM COMPONENTS (ENHANCED)
    ============================================ */
 
-.card {
-  background: rgba(24, 24, 27, 0.2);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  border: 1px solid rgba(124, 58, 237, 0.3);
-  border-radius: var(--radius-lg);
-  position: relative;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
-  transition:
-    border-color var(--duration-default) var(--ease-state),
-    box-shadow var(--duration-default) var(--ease-state),
-    transform var(--duration-default) var(--ease-state),
-    backdrop-filter var(--duration-slow) var(--ease-state);
+/* ============================================
+   GLASSMORPHISM COMPONENTS (LIQUID GLASS)
+   ============================================ */
+
+.card,
+.who-card,
+.milestone-card,
+.project-card,
+.module-card,
+.faq-item,
+.contact-form-wrap {
+  position: relative !important;
+  z-index: 1 !important;
+  border: none !important;
+  background: transparent !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: none !important;
+  transition: transform var(--duration-default) var(--ease-state) !important;
 }
 
-.card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius-lg);
-  border: 1px solid transparent;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(230, 211, 163, 0.15), rgba(124, 58, 237, 0.08)) border-box;
-  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: destination-out;
-  mask-composite: exclude;
-  opacity: 0.6;
-  transition: opacity var(--duration-default) var(--ease-state);
-  pointer-events: none;
+.card::before,
+.who-card::before,
+.milestone-card::before,
+.project-card::before,
+.module-card::before,
+.faq-item::before,
+.contact-form-wrap::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  overflow: hidden !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  -webkit-box-shadow: inset 2px 2px 0px -2px rgba(255, 255, 255, 0.4), inset 0 0 3px 1px rgba(255, 255, 255, 0.2) !important;
+  box-shadow: inset 2px 2px 0px -2px rgba(255, 255, 255, 0.4), inset 0 0 3px 1px rgba(255, 255, 255, 0.2) !important;
+  background-color: transparent !important;
+  transition: box-shadow 0.3s ease !important;
 }
 
-.card:hover {
-  border-color: rgba(124, 58, 237, 0.35);
-  box-shadow:
-    0 0 32px rgba(124, 58, 237, 0.12),
-    0 8px 32px rgba(0, 0, 0, 0.4);
-  transform: translateY(-2px);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+.card::after,
+.who-card::after,
+.milestone-card::after,
+.project-card::after,
+.module-card::after,
+.faq-item::after,
+.contact-form-wrap::after {
+  content: '' !important;
+  position: absolute !important;
+  z-index: -2 !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  -webkit-backdrop-filter: blur(0px) saturate(120%) !important;
+  backdrop-filter: blur(0px) saturate(120%) !important;
+  -webkit-filter: url(#container-glass) !important;
+  filter: url(#container-glass) !important;
+  background-color: rgba(24, 24, 27, 0.35) !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  transition: background-color 0.3s ease !important;
 }
 
-.card:hover::after {
-  opacity: 1;
+/* Hover effects for liquid glass cards */
+.card:hover,
+.who-card:hover,
+.milestone-card:hover,
+.project-card:hover,
+.module-card:hover,
+.faq-item:hover,
+.contact-form-wrap:hover {
+  transform: translateY(-2px) !important;
+}
+
+.card:hover::before,
+.who-card:hover::before,
+.milestone-card:hover::before,
+.project-card:hover::before,
+.module-card:hover::before,
+.faq-item:hover::before,
+.contact-form-wrap:hover::before {
+  -webkit-box-shadow: inset 2px 2px 0px -2px rgba(230, 211, 163, 0.7), inset 0 0 4px 1px rgba(230, 211, 163, 0.5) !important;
+  box-shadow: inset 2px 2px 0px -2px rgba(230, 211, 163, 0.7), inset 0 0 4px 1px rgba(230, 211, 163, 0.5) !important;
+}
+
+.card:hover::after,
+.who-card:hover::after,
+.milestone-card:hover::after,
+.project-card:hover::after,
+.module-card:hover::after,
+.faq-item:hover::after,
+.contact-form-wrap:hover::after {
+  background-color: rgba(24, 24, 27, 0.5) !important;
 }
 
 /* Fallback for browsers that don't support backdrop-filter */
 @supports not (backdrop-filter: blur(1px)) {
-  .card {
-    background: rgba(24, 24, 27, 0.6);
-    border: 1px solid rgba(124, 58, 237, 0.4);
+  .card::after, .who-card::after, .milestone-card::after, .project-card::after, .module-card::after, .faq-item::after, .contact-form-wrap::after {
+    background: rgba(24, 24, 27, 0.6) !important;
+    filter: none !important;
   }
-}
-
-/* Glassmorphism for other card types */
-.who-card,
-.faq-item,
-.live-card,
-.contact-card,
-.module-card,
-.project-card {
-  background: rgba(24, 24, 27, 0.2) !important;
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  border: 1px solid rgba(124, 58, 237, 0.3) !important;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
-  position: relative;
 }
 
 /* ============================================
@@ -428,19 +477,51 @@ body::before {
 }
 
 .btn-secondary {
-  background: rgba(24, 24, 27, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--text-primary);
-  border: 1px solid var(--border-muted);
+  position: relative !important;
+  z-index: 1 !important;
+  cursor: pointer;
+  background: transparent !important;
+  outline: none;
+  border: none !important;
+  color: var(--text-primary) !important;
+}
+
+.btn-secondary::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  overflow: hidden !important;
+  border-radius: var(--radius-pill) !important;
+  pointer-events: none !important;
+  -webkit-box-shadow: inset 2px 2px 0px -2px rgba(255, 255, 255, 0.7), inset 0 0 3px 1px rgba(255, 255, 255, 0.7) !important;
+  box-shadow: inset 2px 2px 0px -2px rgba(255, 255, 255, 0.7), inset 0 0 3px 1px rgba(255, 255, 255, 0.7) !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.btn-secondary::after {
+  content: '' !important;
+  position: absolute !important;
+  z-index: -2 !important;
+  inset: 0 !important;
+  border-radius: var(--radius-pill) !important;
+  -webkit-backdrop-filter: blur(0px) !important;
+  backdrop-filter: blur(0px) !important;
+  -webkit-filter: url(#btn-glass) !important;
+  filter: url(#btn-glass) !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
 }
 
 .btn-secondary:hover {
-  border-color: var(--accent-authority);
-  color: var(--accent-authority);
-  background: rgba(230, 211, 163, 0.08);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  color: var(--accent-authority) !important;
+}
+
+.btn-secondary:hover::before {
+  background-color: rgba(230, 211, 163, 0.2) !important;
+  -webkit-box-shadow: inset 2px 2px 0px -2px rgba(230, 211, 163, 0.8), inset 0 0 4px 1.5px rgba(230, 211, 163, 0.8) !important;
+  box-shadow: inset 2px 2px 0px -2px rgba(230, 211, 163, 0.8), inset 0 0 4px 1.5px rgba(230, 211, 163, 0.8) !important;
 }
 
 .btn-ghost {
@@ -613,4 +694,155 @@ img {
   .section {
     padding-block: var(--space-3xl);
   }
+}
+
+/* ============================================
+   DEPTH SCROLL SYSTEM (z-axis section pager)
+   ============================================ */
+
+/* Curtain reveal: freeze the page until the scene is revealed */
+html.reveal-lock,
+html.reveal-lock body {
+  overflow: hidden !important;
+}
+
+/* Scroll track: invisible, provides scroll range + anchor targets */
+.depth-track {
+  position: relative;
+  pointer-events: none;
+}
+
+/* Fixed stage that hosts every section pane */
+.depth-viewport {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+}
+
+.depth-pane {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity, filter;
+}
+
+/* Legibility lens: a focused dark pool behind content so copy stays readable
+   over the busier scene (labels + ignition particles), while the network stays
+   visible and bright at the edges. */
+.depth-pane::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 70% at 50% 50%,
+    rgba(8, 7, 15, 0.74) 0%,
+    rgba(8, 7, 15, 0.52) 38%,
+    rgba(8, 7, 15, 0.18) 68%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.depth-pane > * {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* Panes ride on the WebGL scene: their own backdrops get out of the way */
+.depth-pane .section {
+  background: transparent !important;
+  border: none !important;
+  /* top padding clears the fixed navbar so kickers/headings never hide under it */
+  padding-block: calc(var(--nav-height) + clamp(12px, 2.5vh, 28px)) clamp(28px, 4.5vh, 64px);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: visible;
+}
+
+.depth-pane .section::before {
+  display: none; /* the scene replaces the CSS mesh backdrop */
+}
+
+.depth-pane .section > .container {
+  width: 100%;
+}
+
+/* Flow mode (mobile / reduced motion): classic scroll */
+.depth-flow-pane {
+  position: relative;
+}
+
+.home-main {
+  position: relative;
+}
+
+/* ============================================
+   GLOBAL SCENE + 3D PAGE TRANSITIONS
+   ============================================ */
+
+/*
+ * The WebGL backdrop is position:fixed at z-index 0; page content must be
+ * positioned so it paints above the canvas on every route.
+ */
+main,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/*
+ * Route warp: content fades while the camera flies to the next cluster.
+ * Opacity ONLY — transform/filter on main would turn it into the containing
+ * block for the fixed depth pager and break it.
+ */
+html.warp-out main,
+html.warp-out footer {
+  opacity: 0;
+  transition: opacity 380ms cubic-bezier(0.55, 0, 0.85, 0.4);
+  pointer-events: none;
+}
+
+html.warp-in main,
+html.warp-in footer {
+  animation: warpArrive 950ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes warpArrive {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============================================
+   ANIMATED SYSTEM FLOW SIGNAL CONNECTORS
+   ============================================ */
+.flow-line {
+  position: relative;
+  width: 2px !important;
+  height: 24px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  overflow: hidden;
+}
+
+.flow-pulse {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to bottom, transparent, var(--accent-authority), transparent);
+  animation: flowSignal 2.2s infinite linear;
+}
+
+@keyframes flowSignal {
+  0% { top: -100%; }
+  100% { top: 200%; }
 }

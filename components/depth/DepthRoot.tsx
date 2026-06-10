@@ -1,0 +1,168 @@
+"use client";
+
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { depthState, SECTION_COUNT } from "@/lib/depthStore";
+
+export interface DepthPaneDef {
+  /** anchor id placed at this pane's scroll offset (for #links) */
+  id?: string;
+  node: ReactNode;
+}
+
+const DESKTOP_MIN_WIDTH = 900;
+const ENTER_SCALE = 0.84;
+const EXIT_SCALE = 1.2;
+const ENTER_BLUR_PX = 12;
+const EXIT_BLUR_PX = 8;
+
+function easeOutQuart(t: number): number {
+  return 1 - Math.pow(1 - t, 4);
+}
+
+/**
+ * Z-axis section pager. The document provides (N-1) viewports of scroll
+ * range; every pane is a fixed full-viewport layer. Scroll progress fades
+ * and scales panes so new sections arrive from the back (small, blurred)
+ * while outgoing sections fly past the camera (enlarged, fading).
+ *
+ * Mobile and reduced-motion users get a normal scrolling page instead.
+ */
+export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
+  const [mode, setMode] = useState<"flow" | "depth">("flow");
+  const viewportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isDepth = window.innerWidth >= DESKTOP_MIN_WIDTH && !reduced;
+    depthState.mode = isDepth ? "depth" : "flow";
+    setMode(depthState.mode);
+  }, []);
+
+  // Drive pane styles + global progress from scroll, frame-synced.
+  useEffect(() => {
+    if (mode !== "depth") return;
+
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const els = Array.from(viewport.querySelectorAll<HTMLDivElement>(".depth-pane"));
+
+    let raf = 0;
+    let activeIndex = -1;
+
+    const update = () => {
+      raf = requestAnimationFrame(update);
+      const vh = window.innerHeight;
+      const max = (SECTION_COUNT - 1) * vh;
+      const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      depthState.progress = p;
+      const f = p * (SECTION_COUNT - 1);
+
+      const nextActive = Math.round(f);
+      if (nextActive !== activeIndex) {
+        activeIndex = nextActive;
+        els.forEach((el, i) => {
+          el.style.pointerEvents = i === activeIndex ? "auto" : "none";
+        });
+      }
+
+      els.forEach((el, i) => {
+        const local = i - f; // >0 upcoming (behind, deeper), <0 passed (flew by)
+        const dist = Math.abs(local);
+        if (dist >= 1) {
+          if (el.style.visibility !== "hidden") el.style.visibility = "hidden";
+          return;
+        }
+        if (el.style.visibility !== "visible") el.style.visibility = "visible";
+
+        let scale: number;
+        let opacity: number;
+        let blur: number;
+        if (local >= 0) {
+          // Arriving from the depths of the network.
+          const t = easeOutQuart(1 - local);
+          scale = ENTER_SCALE + (1 - ENTER_SCALE) * t;
+          opacity = Math.pow(1 - local, 1.7);
+          blur = ENTER_BLUR_PX * local;
+        } else {
+          // Flying past the camera.
+          const v = -local;
+          scale = 1 + (EXIT_SCALE - 1) * v * v;
+          opacity = Math.max(0, 1 - v * 1.9);
+          blur = EXIT_BLUR_PX * v;
+        }
+        el.style.opacity = opacity.toFixed(3);
+        el.style.transform = `scale(${scale.toFixed(4)})`;
+        el.style.filter = blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : "none";
+      });
+    };
+    raf = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(raf);
+  }, [mode]);
+
+  // Snap each scroll gesture to a whole section.
+  useEffect(() => {
+    if (mode !== "depth") return;
+    let trigger: import("gsap/ScrollTrigger").ScrollTrigger | undefined;
+    let cancelled = false;
+
+    const init = async () => {
+      const { gsap } = await import("gsap");
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+      if (cancelled) return;
+      gsap.registerPlugin(ScrollTrigger);
+      trigger = ScrollTrigger.create({
+        start: 0,
+        end: () => (SECTION_COUNT - 1) * window.innerHeight,
+        snap: {
+          snapTo: 1 / (SECTION_COUNT - 1),
+          duration: { min: 0.45, max: 0.95 },
+          ease: "power3.out",
+          delay: 0.06,
+          directional: true,
+        },
+      });
+    };
+    init();
+    return () => {
+      cancelled = true;
+      trigger?.kill();
+    };
+  }, [mode]);
+
+  if (mode === "flow") {
+    return (
+      <div className="depth-flow">
+        {panes.map((p, i) => (
+          <section key={i} id={p.id} className="depth-flow-pane">
+            {p.node}
+          </section>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* Scroll track: provides range + anchor targets for #links */}
+      <div className="depth-track" style={{ height: `${SECTION_COUNT * 100}vh` }}>
+        {panes.map((p, i) =>
+          p.id ? (
+            <div key={p.id} id={p.id} style={{ position: "absolute", top: `${i * 100}vh` }} />
+          ) : null
+        )}
+      </div>
+
+      <div ref={viewportRef} className="depth-viewport">
+        {panes.map((p, i) => (
+          <div
+            key={i}
+            className="depth-pane"
+            style={i === 0 ? undefined : { opacity: 0, visibility: "hidden" }}
+          >
+            {p.node}
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}

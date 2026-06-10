@@ -37,6 +37,13 @@ export default function ScrollReveal() {
           }
         );
       });
+
+
+
+      // Refresh ScrollTrigger to ensure correct layout calculations
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 150);
     };
 
     init();

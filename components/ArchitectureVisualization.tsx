@@ -9,6 +9,8 @@ function FlowNodes() {
   const linesRef = useRef<THREE.LineSegments>(null);
   const timeRef = useRef(0);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const scaleRefs = useRef([0, 0, 0, 0]);
+
   const basePositions = useMemo(
     () => [
       new THREE.Vector3(-2.5, 0, 0),
@@ -25,6 +27,23 @@ function FlowNodes() {
       mouseRef.current.y = -(e.clientY / window.innerHeight - 0.5) * 2;
     };
     window.addEventListener("mousemove", onMove, { passive: true });
+
+    // Staggered reveal animation on mount using GSAP
+    import("gsap").then(({ gsap }) => {
+      scaleRefs.current.forEach((_, idx) => {
+        const obj = { value: 0 };
+        gsap.to(obj, {
+          value: 1,
+          duration: 1.0,
+          delay: idx * 0.12,
+          ease: "back.out(1.5)",
+          onUpdate: () => {
+            scaleRefs.current[idx] = obj.value;
+          },
+        });
+      });
+    });
+
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
@@ -38,19 +57,15 @@ function FlowNodes() {
       const base = basePositions[i];
       const cursor = new THREE.Vector3(mouseRef.current.x * 3, mouseRef.current.y * 2, 0);
       const distance = base.distanceTo(cursor);
-      const driftStrength = distance < 3 ? (3 - distance) * 0.01 : 0;
+      const driftStrength = distance < 3 ? (3 - distance) * 0.015 : 0;
       const target = base.clone().lerp(cursor, driftStrength);
       child.position.lerp(target, 0.08);
 
-      const pulse = 1 + Math.sin(timeRef.current * 2 + i * 0.5) * 0.2;
+      const pulse = (1 + Math.sin(timeRef.current * 1.5 + i * 0.4) * 0.12) * scaleRefs.current[i];
       child.scale.setScalar(pulse);
 
-      if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshBasicMaterial) {
-        const hue = (timeRef.current * 0.2 + i * 0.1) % 1;
-        const color = new THREE.Color();
-        color.setHSL(hue, 0.7, 0.6);
-        child.material.color = color;
-        child.material.opacity = 0.8 + Math.sin(timeRef.current * 2 + i * 0.5) * 0.2;
+      if (child.material instanceof THREE.MeshStandardMaterial) {
+        child.material.opacity = (0.75 + Math.sin(timeRef.current * 1.5 + i * 0.4) * 0.15) * scaleRefs.current[i];
       } 
     });
 
@@ -64,9 +79,15 @@ function FlowNodes() {
   return (
     <group ref={groupRef}>
       {positions.map((pos, i) => (
-        <mesh key={i} position={pos as [number, number, number]}>
-          <sphereGeometry args={[0.22, 24, 24]} />
-          <meshBasicMaterial color="#7C3AED" transparent opacity={0.85} />
+        <mesh key={i} position={pos}>
+          <sphereGeometry args={[0.22, 32, 32]} />
+          <meshStandardMaterial 
+            color="#7C3AED" 
+            roughness={0.2} 
+            metalness={0.9} 
+            transparent 
+            opacity={0.85} 
+          />
         </mesh>
       ))}
 
@@ -87,6 +108,16 @@ function FlowNodes() {
         <lineBasicMaterial color="#7C3AED" transparent opacity={0.35} />
       </lineSegments>
     </group>
+  );
+}
+
+function StudioRig() {
+  return (
+    <>
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[5, 8, 5]} intensity={1.5} color="#F5F5F5" />
+      <pointLight position={[-5, -3, -2]} intensity={0.8} color="#E6D3A3" />
+    </>
   );
 }
 
@@ -114,7 +145,13 @@ function CameraRig() {
 export default function ArchitectureVisualization() {
   return (
     <div className="arch-canvas">
-      <Canvas camera={{ position: [0, 0, 3.5], fov: 55 }} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
+      <Canvas 
+        camera={{ position: [0, 0, 3.5], fov: 55 }} 
+        gl={{ antialias: true, alpha: true }} 
+        dpr={[1, 2]}
+        style={{ background: "transparent" }}
+      >
+        <StudioRig />
         <CameraRig />
         <FlowNodes />
       </Canvas>

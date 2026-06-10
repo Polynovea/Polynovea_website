@@ -1,52 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
-import dynamic from 'next/dynamic';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-const AboutScene = dynamic(() => import('@/components/AboutScene'));
+import React from 'react';
 
 export default function About() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>('.hero-heading').forEach((el) => {
-        gsap.fromTo(el, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
-      });
-
-      gsap.utils.toArray<HTMLElement>('.thesis-card').forEach((el, i) => {
-        gsap.fromTo(el, { opacity: 0, x: i % 2 === 0 ? -30 : 30 }, { opacity: 1, x: 0, duration: 0.8, delay: i * 0.1, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
-      });
-
-      gsap.utils.toArray<HTMLElement>('.milestone').forEach((el, i) => {
-        gsap.fromTo(el, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, delay: i * 0.15, ease: 'back.out', scrollTrigger: { trigger: el, start: 'top 80%' } });
-      });
-
-      gsap.utils.toArray<HTMLElement>('.phil-item').forEach((el, i) => {
-        gsap.fromTo(el, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: i * 0.08, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
-      });
-
-      gsap.utils.toArray<HTMLElement>('.why-block').forEach((el, i) => {
-        gsap.fromTo(el, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.7, delay: i * 0.12, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
-      });
-
-      gsap.utils.toArray<HTMLElement>('.records-item').forEach((el, i) => {
-        gsap.fromTo(el, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: i * 0.1, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
 
   return (
-    <section ref={sectionRef} className="about-section">
-      {/* HERO WITH 3D BACKGROUND */}
+    <section className="about-section">
+      {/* Hero rides on the global neural scene */}
       <div className="hero-container">
-        <AboutScene />
         <div className="hero-content">
           <h1 className="hero-heading">Measurement Changes Everything</h1>
           <p className="hero-subheading">Most systems operate blind. We built the intelligence layer.</p>
@@ -224,8 +185,30 @@ export default function About() {
 
       <style jsx>{`
         .about-section {
-          background: var(--bg-primary);
+          position: relative;
+          background: rgba(9, 8, 16, 0.62); /* veil over the global neural scene */
           min-height: 100vh;
+          /* room for the fade-out so content never sits on the seam */
+          padding-bottom: 200px;
+        }
+
+        /* Ramp the translucent veil down into the opaque footer colour so the
+           neural scene resolves into the footer instead of cutting off. */
+        .about-section::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 360px;
+          background: linear-gradient(
+            to bottom,
+            rgba(18, 18, 18, 0) 0%,
+            rgba(18, 18, 18, 0.7) 55%,
+            var(--bg-secondary) 100%
+          );
+          pointer-events: none;
+          z-index: 0;
         }
 
         .hero-container {
@@ -548,9 +531,11 @@ export default function About() {
         }
 
         .about-cta {
+          position: relative;
+          z-index: 1;
           display: flex;
           justify-content: center;
-          margin: 100px 0 80px;
+          margin: 100px 0 0;
         }
 
         @media (max-width: 768px) {

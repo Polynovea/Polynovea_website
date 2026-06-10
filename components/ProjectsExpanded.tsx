@@ -284,6 +284,7 @@ export default function ProjectsExpanded() {
 
       <style jsx>{`
         .projects-expanded {
+          background: rgba(9, 8, 16, 0.62); /* veil over the global neural scene */
           --status-active-bg: rgba(34, 197, 94, 0.12);
           --status-active-color: #4ade80;
           --status-progress-bg: rgba(124, 58, 237, 0.15);

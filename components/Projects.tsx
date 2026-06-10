@@ -30,22 +30,16 @@ const systemModules = [
   {
     tag: "Module 01",
     title: "Decision Framework",
-    status: "Active",
-    statusType: "active",
     desc: "Determines whether an opportunity is viable. Evaluates engagement fit, pricing logic, and expected outcomes before any resource is committed.",
   },
   {
     tag: "Module 02",
     title: "Acquisition System",
-    status: "Complete",
-    statusType: "complete",
     desc: "Multi-source behavioural signal extraction, structured through an ontology layer that maps how human behaviour operates inside commercial environments. Not what customers say — the mechanisms that drive what they do. Feeds a field execution system that tells you who to target, how to reach them, and what they respond to before a single show runs.",
   },
   {
     tag: "Module 03",
     title: "Optimisation System",
-    status: "WiP",
-    statusType: "wip",
     desc: "Two-part system. Part 1 instruments the live environment — POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
   },
 ];
@@ -159,18 +153,14 @@ function VideoCard({
 }
 
 function ModuleCard({
-  tag, title, status, statusType, desc, delay,
+  tag, title, desc, delay,
 }: {
-  tag: string; title: string; status: string; statusType: string; desc: string; delay: number;
+  tag: string; title: string; desc: string; delay: number;
 }) {
   return (
     <div className="module-card card" data-reveal data-reveal-delay={String(delay)}>
       <div className="module-top">
         <span className="t-label">{tag}</span>
-        <span className={`badge badge-${statusType}`}>
-          <span className="badge-dot" />
-          {status}
-        </span>
       </div>
       <div className="module-title">{title}</div>
       <p className="t-body-sm">{desc}</p>
@@ -194,56 +184,6 @@ function ModuleCard({
           color: var(--text-primary);
           letter-spacing: -0.015em;
         }
-        .badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          padding: 4px 11px;
-          border-radius: var(--radius-pill);
-          border: 1px solid;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-        }
-        .badge-dot {
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          flex-shrink: 0;
-        }
-        .badge-active {
-          background: rgba(74,222,128,0.07);
-          border-color: rgba(74,222,128,0.28);
-          color: #4ade80;
-          box-shadow: 0 1px 12px rgba(74,222,128,0.1), inset 0 1px 0 rgba(255,255,255,0.07);
-        }
-        .badge-active .badge-dot {
-          background: #4ade80;
-          box-shadow: 0 0 6px rgba(74,222,128,0.9);
-        }
-        .badge-complete {
-          background: rgba(34,211,238,0.07);
-          border-color: rgba(34,211,238,0.28);
-          color: #22d3ee;
-          box-shadow: 0 1px 12px rgba(34,211,238,0.1), inset 0 1px 0 rgba(255,255,255,0.07);
-        }
-        .badge-complete .badge-dot {
-          background: #22d3ee;
-          box-shadow: 0 0 6px rgba(34,211,238,0.9);
-        }
-        .badge-wip {
-          background: rgba(251,191,36,0.07);
-          border-color: rgba(251,191,36,0.28);
-          color: #fbbf24;
-          box-shadow: 0 1px 12px rgba(251,191,36,0.1), inset 0 1px 0 rgba(255,255,255,0.07);
-        }
-        .badge-wip .badge-dot {
-          background: #fbbf24;
-          box-shadow: 0 0 6px rgba(251,191,36,0.9);
-        }
       `}</style>
     </div>
   );
@@ -259,7 +199,7 @@ export default function Projects() {
           </span>
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
             Original music and the intelligence{" "}
-            <span className="gradient-text">infrastructure</span> behind it.
+            <span className="gold-accent">infrastructure</span> behind it.
           </h2>
           <p className="t-body" style={{ marginTop: "var(--space-md)" }}>
             Both in motion.
@@ -291,6 +231,10 @@ export default function Projects() {
         }
         .projects-header {
           margin-bottom: var(--space-3xl);
+        }
+        .gold-accent {
+          color: var(--accent-authority);
+          font-weight: inherit;
         }
         .block-header {
           margin-bottom: var(--space-xl);

@@ -163,7 +163,7 @@ export default function ContactPage() {
 
       <style jsx>{`
         .contact-page {
-          background: var(--bg-primary);
+          background: rgba(9, 8, 16, 0.62); /* veil over the global neural scene */
           min-height: 100vh;
           padding-top: calc(var(--nav-height) + var(--space-2xl));
           padding-bottom: var(--space-4xl);

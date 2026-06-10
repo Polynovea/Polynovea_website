@@ -727,7 +727,7 @@ export default function ArchitectureDeepDive() {
 
       <style jsx>{`
         .architecture-page {
-          background: var(--bg-primary);
+          background: rgba(9, 8, 16, 0.62); /* veil over the global neural scene */
           color: var(--text-primary);
         }
 

@@ -1,62 +1,88 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
+import { useEffect } from "react";
+import Link from "next/link";
+import { depthState, REVEAL_OPEN_EVENT } from "@/lib/depthStore";
 
 export default function Hero() {
+  useEffect(() => {
+    let played = false;
+    const play = () => {
+      if (played) return;
+      played = true;
+      import("gsap").then(({ gsap }) => {
+        const tl = gsap.timeline({ delay: 0.25 });
+        // The whole block resolves out of a soft blur + slight push-back, as if
+        // the page is focusing into place behind the parting curtain.
+        tl.fromTo(
+          ".hero-content",
+          { scale: 0.965, filter: "blur(8px)" },
+          { scale: 1, filter: "blur(0px)", duration: 1.3, ease: "power3.out" }
+        );
+        tl.fromTo(
+          ".hero-headline",
+          { opacity: 0, y: 44, filter: "blur(14px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.2, ease: "power4.out" },
+          "-=1.2"
+        );
+        tl.fromTo(
+          ".hero-sub",
+          { opacity: 0, y: 25, filter: "blur(8px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.0, ease: "power3.out" },
+          "-=0.95"
+        );
+        tl.fromTo(
+          ".hero-ctas",
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
+          "-=0.7"
+        );
+        tl.fromTo(
+          ".hero-scroll-hint",
+          { opacity: 0 },
+          { opacity: 1, duration: 0.8, ease: "power2.out" },
+          "-=0.3"
+        );
+      });
+    };
+
+    // Sync the headline entrance with the curtain opening.
+    if (depthState.revealOpen) play();
+    window.addEventListener(REVEAL_OPEN_EVENT, play, { once: true });
+    const fallback = setTimeout(play, 5200);
+    return () => {
+      window.removeEventListener(REVEAL_OPEN_EVENT, play);
+      clearTimeout(fallback);
+    };
+  }, []);
+
   return (
     <section id="home" className="hero">
-      {/* Gradient orbs */}
-      <div
-        className="orb orb-violet"
-        style={{ width: 700, height: 700, top: "-20%", left: "30%", opacity: 0.5 }}
-      />
-      <div
-        className="orb orb-gold"
-        style={{ width: 500, height: 500, top: "40%", right: "-10%", opacity: 0.3 }}
-      />
-
-      {/* Three.js particle network */}
-      <HeroScene />
-
       <div className="hero-content">
-        {/* Data chain — animate-1 */}
-        <div className="hero-chain hero-animate-1">
-          {["Behaviour Observed", "Pattern Extracted", "Decision Modelled", "System Updated"].map(
-            (node, i, arr) => (
-              <span key={node} className="hero-chain-node-wrap">
-                <span className="hero-chain-node">{node}</span>
-                {i < arr.length - 1 && (
-                  <span className="hero-chain-arrow">→</span>
-                )}
-              </span>
-            )
-          )}
-        </div>
-
-        {/* Headline — animate-2 */}
-        <h1 className="hero-headline hero-animate-2">
+        <h1 className="hero-headline" style={{ opacity: 0 }}>
           We are building the system that{" "}
-          <span className="gradient-text">reads, maps, and acts on</span>{" "}
+          <span className="gold-accent">reads, maps, and acts on</span>{" "}
           human behaviour.
         </h1>
 
-        {/* Subline — animate-3 */}
-        <p className="hero-sub hero-animate-3">
+        <p className="hero-sub" style={{ opacity: 0 }}>
           Four milestones. One ecosystem. Records, intelligence infrastructure,
           AI agency, and data products — all in motion.
         </p>
 
-        {/* CTAs — animate-4 */}
-        <div className="hero-ctas hero-animate-4">
-          <a href="#architecture" className="btn btn-primary">
+        <div className="hero-ctas" style={{ opacity: 0 }}>
+          <Link href="/architecture" className="btn btn-primary">
             Explore the Architecture
-          </a>
-          <a href="#projects" className="btn btn-secondary">
+          </Link>
+          <Link href="/projects" className="btn btn-secondary">
             View Progress
-          </a>
+          </Link>
         </div>
+      </div>
+
+      <div className="hero-scroll-hint" style={{ opacity: 0 }}>
+        <span className="hint-label">Scroll to go deeper</span>
+        <span className="hint-line" />
       </div>
 
       <style jsx>{`
@@ -79,39 +105,6 @@ export default function Hero() {
           margin-inline: auto;
         }
 
-        .hero-chain {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: var(--space-sm);
-          flex-wrap: wrap;
-          margin-bottom: var(--space-2xl);
-        }
-
-        .hero-chain-node-wrap {
-          display: flex;
-          align-items: center;
-          gap: var(--space-sm);
-        }
-
-        .hero-chain-node {
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: var(--text-disabled);
-          padding: 5px 12px;
-          border: 1px solid var(--border-muted);
-          border-radius: var(--radius-pill);
-          background: rgba(18, 18, 18, 0.8);
-          backdrop-filter: blur(8px);
-        }
-
-        .hero-chain-arrow {
-          color: var(--text-disabled);
-          font-size: 12px;
-        }
-
         .hero-headline {
           font-family: var(--font-display);
           font-size: clamp(40px, 6vw, 80px);
@@ -120,6 +113,12 @@ export default function Hero() {
           letter-spacing: -0.03em;
           color: var(--text-primary);
           margin-bottom: var(--space-xl);
+          text-shadow: 0 2px 40px rgba(10, 9, 18, 0.9);
+        }
+
+        .gold-accent {
+          color: var(--accent-authority);
+          font-weight: inherit;
         }
 
         .hero-sub {
@@ -138,13 +137,37 @@ export default function Hero() {
           flex-wrap: wrap;
         }
 
-        @media (max-width: 768px) {
-          .hero-chain {
-            gap: var(--space-xs);
-          }
-          .hero-chain-arrow {
-            display: none;
-          }
+        .hero-scroll-hint {
+          position: absolute;
+          bottom: 36px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          z-index: 1;
+        }
+
+        .hint-label {
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: var(--text-disabled);
+        }
+
+        .hint-line {
+          width: 1px;
+          height: 36px;
+          background: linear-gradient(to bottom, var(--accent-authority), transparent);
+          animation: hintDrop 2s ease-in-out infinite;
+        }
+
+        @keyframes hintDrop {
+          0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
+          60% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+          100% { transform: scaleY(1); transform-origin: top; opacity: 0; }
         }
       `}</style>
     </section>

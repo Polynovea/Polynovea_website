@@ -55,6 +55,7 @@ function Nodes() {
   const mouseRef = useRef({ x: 0, y: 0 });
   const timeRef = useRef(0);
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const entranceRef = useRef({ scale: 0 });
 
   const positionsRef = useRef<Float32Array | null>(null);
   const velocitiesRef = useRef<Float32Array | null>(null);
@@ -76,6 +77,16 @@ function Nodes() {
       mouseRef.current.y = -(e.clientY / window.innerHeight - 0.5) * 2;
     };
     window.addEventListener("mousemove", onMove, { passive: true });
+
+    // Entrance scale animation using GSAP
+    import("gsap").then(({ gsap }) => {
+      gsap.to(entranceRef.current, {
+        scale: 1,
+        duration: 1.5,
+        ease: "power2.out",
+      });
+    });
+
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
@@ -94,7 +105,11 @@ function Nodes() {
       if (Math.abs(current[i * 3 + 1]) > 3.5) velocities[i * 3 + 1] *= -1;
       if (Math.abs(current[i * 3 + 2]) > 2.5) velocities[i * 3 + 2] *= -1;
 
-      const pulse = 0.04 + Math.sin(timeRef.current * 1.5 + i * 0.3) * 0.015;
+      // Mathematical stagger reveal based on index
+      const nodeDelay = i * 0.006;
+      const nodeEntrance = Math.max(0, Math.min(1, (entranceRef.current.scale * 1.5) - nodeDelay));
+      const pulse = (0.04 + Math.sin(timeRef.current * 1.5 + i * 0.3) * 0.015) * nodeEntrance;
+
       dummy.position.set(
         current[i * 3]     + mouseRef.current.x * 0.08,
         current[i * 3 + 1] + mouseRef.current.y * 0.08,
@@ -105,7 +120,7 @@ function Nodes() {
       meshRef.current.setMatrixAt(i, dummy.matrix);
 
       const c = new THREE.Color("#A78BFA");
-      c.multiplyScalar(0.8 + Math.sin(timeRef.current + i) * 0.2);
+      c.multiplyScalar((0.8 + Math.sin(timeRef.current + i) * 0.2) * nodeEntrance);
       meshRef.current.setColorAt(i, c);
     }
     meshRef.current.instanceMatrix.needsUpdate = true;
@@ -114,8 +129,8 @@ function Nodes() {
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, NODE_COUNT]}>
-      <sphereGeometry args={[1, 6, 6]} />
-      <meshBasicMaterial color="#A78BFA" transparent opacity={1} vertexColors />
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshStandardMaterial roughness={0.25} metalness={0.8} transparent opacity={1} vertexColors />
     </instancedMesh>
   );
 }
@@ -159,10 +174,26 @@ function CameraRig() {
   return null;
 }
 
+function StudioRig() {
+  return (
+    <>
+      <ambientLight intensity={0.25} />
+      <directionalLight position={[5, 10, 5]} intensity={1.5} color="#F5F5F5" />
+      <pointLight position={[-5, -3, -2]} intensity={0.8} color="#E6D3A3" />
+    </>
+  );
+}
+
 export default function AboutScene() {
   return (
     <div className="about-canvas">
-      <Canvas camera={{ position: [0, 0, 7], fov: 55 }} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
+      <Canvas 
+        camera={{ position: [0, 0, 7], fov: 55 }} 
+        gl={{ antialias: true, alpha: true }} 
+        dpr={[1, 2]}
+        style={{ background: "transparent" }}
+      >
+        <StudioRig />
         <CameraRig />
         <Nodes />
         <Connections />
