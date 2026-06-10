@@ -11,6 +11,8 @@ import Pulses from "./Pulses";
 import TheatreCamera from "./TheatreCamera";
 import WorldLabels from "./WorldLabels";
 import ClusterIgnite from "./ClusterIgnite";
+import HeatGrid from "./HeatGrid";
+import DataReadouts from "./DataReadouts";
 
 /** Announces readiness after the first real frame so the curtain can open on truth, not a timer. */
 function ReadySignal() {
@@ -78,10 +80,12 @@ export default function NeuralScene() {
         {/* Warm light parked at the active cluster; CameraRig moves it */}
         <pointLight ref={goldLightRef} color="#E6D3A3" intensity={60} distance={30} decay={2} />
 
+        <HeatGrid lowPower={lowPower} />
         <Network data={data} />
         <Pulses data={data} count={lowPower ? 36 : 90} />
         <ClusterIgnite lowPower={lowPower} />
         <WorldLabels />
+        <DataReadouts />
         <TheatreCamera lightRef={goldLightRef} />
         <ReadySignal />
 

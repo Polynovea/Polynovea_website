@@ -4,10 +4,77 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { NetworkData } from "./networkData";
+import { SECTION_COUNT } from "@/lib/depthStore";
+import { clusterCenter } from "./networkData";
+import { clusterFocus, journeyPosition } from "@/lib/clusterFocus";
 
-const VIOLET = new THREE.Color("#7C3AED");
-const VIOLET_DEEP = new THREE.Color("#3b1d7a");
-const GOLD = new THREE.Color("#E6D3A3");
+// ── Violet bloom cloud ──────────────────────────────────────────────────────
+
+const VIOLET_VERT = /* glsl */ `
+  attribute float aScale;
+  attribute float aColorT;
+  varying float vColorT;
+  varying float vAlpha;
+
+  void main() {
+    vColorT = aColorT;
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    float depth = max(-mv.z, 0.1);
+    // Perspective size with TDR-safe cap (same pattern as ClusterIgnite).
+    gl_PointSize = clamp(aScale * 280.0 / depth, 0.0, 18.0);
+    vAlpha = clamp(aScale * 6.0, 0.3, 0.9);
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+
+const VIOLET_FRAG = /* glsl */ `
+  precision mediump float;
+  uniform vec3 uColorA;
+  uniform vec3 uColorB;
+  varying float vColorT;
+  varying float vAlpha;
+
+  void main() {
+    vec2 c = gl_PointCoord - 0.5;
+    float d = length(c);
+    float a = smoothstep(0.5, 0.0, d) * vAlpha;
+    if (a < 0.01) discard;
+    gl_FragColor = vec4(mix(uColorA, uColorB, vColorT), a);
+  }
+`;
+
+// ── Gold bloom cloud ────────────────────────────────────────────────────────
+
+const GOLD_VERT = /* glsl */ `
+  attribute float aScale;
+  attribute float aPhase;
+  uniform float uTime;
+  varying float vAlpha;
+
+  void main() {
+    // Breathing pulse driven in the vertex shader.
+    float pulse = 1.0 + sin(uTime * 1.4 + aPhase) * 0.22;
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    float depth = max(-mv.z, 0.1);
+    gl_PointSize = clamp(aScale * pulse * 320.0 / depth, 0.0, 20.0);
+    vAlpha = clamp(aScale * 7.0, 0.4, 1.0);
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+
+const GOLD_FRAG = /* glsl */ `
+  precision mediump float;
+  uniform vec3 uColor;
+  varying float vAlpha;
+
+  void main() {
+    vec2 c = gl_PointCoord - 0.5;
+    float d = length(c);
+    float a = smoothstep(0.5, 0.0, d) * vAlpha;
+    if (a < 0.01) discard;
+    gl_FragColor = vec4(uColor, a);
+  }
+`;
 
 /** Soft radial texture used for volumetric glow sprites. */
 function makeGlowTexture(): THREE.CanvasTexture {
@@ -26,68 +93,106 @@ function makeGlowTexture(): THREE.CanvasTexture {
 }
 
 export default function Network({ data }: { data: NetworkData }) {
-  const violetRef = useRef<THREE.InstancedMesh>(null);
-  const goldRef = useRef<THREE.InstancedMesh>(null);
   const glowTexture = useMemo(() => makeGlowTexture(), []);
-  const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  // Static violet nodes: matrices set once.
-  useEffect(() => {
-    const mesh = violetRef.current;
-    if (!mesh) return;
+  // ── Violet Points geometry ──────────────────────────────────────────────
+  const violetGeo = useMemo(() => {
+    const count = data.nodes.length;
+    const positions = new Float32Array(count * 3);
+    const scales = new Float32Array(count);
+    const colorTs = new Float32Array(count);
     data.nodes.forEach((n, i) => {
-      dummy.position.copy(n.position);
-      dummy.scale.setScalar(n.scale);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(i, dummy.matrix);
-      // Slight per-node hue variation keeps the field from looking stamped.
-      const c = VIOLET_DEEP.clone().lerp(VIOLET, 0.25 + (i % 7) * 0.09);
-      mesh.setColorAt(i, c);
+      positions[i * 3] = n.position.x;
+      positions[i * 3 + 1] = n.position.y;
+      positions[i * 3 + 2] = n.position.z;
+      scales[i] = n.scale;
+      colorTs[i] = 0.25 + (i % 7) * 0.09;
     });
-    mesh.instanceMatrix.needsUpdate = true;
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  }, [data, dummy]);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    g.setAttribute("aScale", new THREE.BufferAttribute(scales, 1));
+    g.setAttribute("aColorT", new THREE.BufferAttribute(colorTs, 1));
+    return g;
+  }, [data]);
 
-  // Gold signal nodes breathe: a slow scale pulse, cheap at this count.
-  useFrame(({ clock }) => {
-    const mesh = goldRef.current;
-    if (!mesh) return;
-    const t = clock.elapsedTime;
+  const violetUniforms = useMemo(
+    () => ({
+      uColorA: { value: new THREE.Color("#3b1d7a") },
+      uColorB: { value: new THREE.Color("#7C3AED") },
+    }),
+    []
+  );
+
+  // ── Gold Points geometry ────────────────────────────────────────────────
+  const goldGeo = useMemo(() => {
+    const count = data.goldNodes.length;
+    const positions = new Float32Array(count * 3);
+    const scales = new Float32Array(count);
+    const phases = new Float32Array(count);
     data.goldNodes.forEach((n, i) => {
-      const pulse = 1 + Math.sin(t * 1.4 + n.phase) * 0.22;
-      dummy.position.copy(n.position);
-      dummy.scale.setScalar(n.scale * pulse);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(i, dummy.matrix);
+      positions[i * 3] = n.position.x;
+      positions[i * 3 + 1] = n.position.y;
+      positions[i * 3 + 2] = n.position.z;
+      scales[i] = n.scale;
+      phases[i] = n.phase;
     });
-    mesh.instanceMatrix.needsUpdate = true;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    g.setAttribute("aScale", new THREE.BufferAttribute(scales, 1));
+    g.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
+    return g;
+  }, [data]);
+
+  const goldMatRef = useRef<THREE.ShaderMaterial>(null);
+  const goldUniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uColor: { value: new THREE.Color("#E6D3A3") },
+    }),
+    []
+  );
+
+  // ── Cluster glow sprite refs ────────────────────────────────────────────
+  const spriteRefs = useRef<(THREE.Sprite | null)[]>([]);
+
+  useFrame(({ clock }) => {
+    if (goldMatRef.current) goldMatRef.current.uniforms.uTime.value = clock.elapsedTime;
+
+    const f = journeyPosition();
+    spriteRefs.current.forEach((s, i) => {
+      if (!s) return;
+      const mat = s.material as THREE.SpriteMaterial;
+      const base = i % 3 === 1 ? 0.07 : 0.12;
+      mat.opacity = base * (0.6 + 0.4 * clusterFocus(f, i));
+    });
   });
 
   return (
     <group>
-      {/* Structure nodes: lit, slightly rough, violet-cored */}
-      <instancedMesh ref={violetRef} args={[undefined, undefined, data.nodes.length]} frustumCulled={false}>
-        <icosahedronGeometry args={[1, 2]} />
-        <meshStandardMaterial
-          color="#241046"
-          emissive="#7C3AED"
-          emissiveIntensity={0.5}
-          roughness={0.35}
-          metalness={0.15}
+      {/* Density bloom cloud — violet nodes */}
+      <points geometry={violetGeo} frustumCulled={false}>
+        <shaderMaterial
+          uniforms={violetUniforms}
+          vertexShader={VIOLET_VERT}
+          fragmentShader={VIOLET_FRAG}
+          transparent
+          depthWrite={false}
+          blending={THREE.NormalBlending}
         />
-      </instancedMesh>
+      </points>
 
-      {/* Signal nodes: hot gold cores that feed the bloom pass */}
-      <instancedMesh ref={goldRef} args={[undefined, undefined, data.goldNodes.length]} frustumCulled={false}>
-        <icosahedronGeometry args={[1, 2]} />
-        <meshStandardMaterial
-          color="#3a3322"
-          emissive="#E6D3A3"
-          emissiveIntensity={1.6}
-          roughness={0.25}
-          metalness={0.3}
+      {/* Density bloom cloud — gold signal nodes */}
+      <points geometry={goldGeo} frustumCulled={false}>
+        <shaderMaterial
+          ref={goldMatRef}
+          uniforms={goldUniforms}
+          vertexShader={GOLD_VERT}
+          fragmentShader={GOLD_FRAG}
+          transparent
+          depthWrite={false}
+          blending={THREE.NormalBlending}
         />
-      </instancedMesh>
+      </points>
 
       {/* Synapse lines */}
       <lineSegments frustumCulled={false}>
@@ -103,12 +208,17 @@ export default function Network({ data }: { data: NetworkData }) {
         />
       </lineSegments>
 
-      {/* Volumetric haze: one soft additive glow per cluster */}
+      {/* Volumetric haze: one reactive soft glow per cluster */}
       {data.clusterCenters.map((c, i) => (
-        <sprite key={i} position={c} scale={[20, 14, 1]}>
+        <sprite
+          key={i}
+          ref={(el) => { spriteRefs.current[i] = el; }}
+          position={c}
+          scale={[20, 14, 1]}
+        >
           <spriteMaterial
             map={glowTexture}
-            color={i % 3 === 1 ? GOLD : VIOLET}
+            color={i % 3 === 1 ? "#E6D3A3" : "#7C3AED"}
             transparent
             opacity={i % 3 === 1 ? 0.07 : 0.12}
             blending={THREE.AdditiveBlending}
