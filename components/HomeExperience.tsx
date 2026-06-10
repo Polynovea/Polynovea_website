@@ -1,6 +1,7 @@
 "use client";
 
 import PageReveal from "@/components/PageReveal";
+import CursorTrail from "@/components/CursorTrail";
 import DepthRoot, { DepthPaneDef } from "@/components/depth/DepthRoot";
 import Hero from "@/components/Hero";
 import SystemPane from "@/components/panes/SystemPane";
@@ -31,6 +32,7 @@ const panes: DepthPaneDef[] = [
 export default function HomeExperience() {
   return (
     <>
+      <CursorTrail />
       <PageReveal />
       <main className="home-main">
         <DepthRoot panes={panes} />

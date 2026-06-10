@@ -144,10 +144,19 @@ export default function TheatreCamera({
     camera.position.lerp(tmpPos, 1 - Math.pow(0.0015, delta));
     camera.lookAt(tmpLook);
 
-    // Theatre overlay: authorable fov (default 58 = Canvas default).
+    // FOV punch at section crossings: widens ~11° at the mid-transition point,
+    // then snaps back as the new section settles. Journey mode only.
+    let fovBoost = 0;
+    if (depthState.sceneMode !== "ambient") {
+      const fJourney = depthState.progress * (SECTION_COUNT - 1);
+      const frac = fJourney - Math.floor(fJourney);
+      fovBoost = Math.max(0, 1 - Math.abs(frac - 0.5) * 5.5) * 11;
+    }
+    const targetFov = ov.fov + fovBoost;
+
     const perspective = camera as THREE.PerspectiveCamera;
-    if (perspective.isPerspectiveCamera && Math.abs(perspective.fov - ov.fov) > 0.01) {
-      perspective.fov = ov.fov;
+    if (perspective.isPerspectiveCamera) {
+      perspective.fov = THREE.MathUtils.lerp(perspective.fov, targetFov, 0.1);
       perspective.updateProjectionMatrix();
     }
 

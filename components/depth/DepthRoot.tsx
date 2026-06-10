@@ -49,6 +49,8 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
     let raf = 0;
     let activeIndex = -1;
 
+    document.body.classList.add("depth-mode");
+
     const update = () => {
       raf = requestAnimationFrame(update);
       const vh = window.innerHeight;
@@ -70,6 +72,8 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
         const dist = Math.abs(local);
         if (dist >= 1) {
           if (el.style.visibility !== "hidden") el.style.visibility = "hidden";
+          // Disassemble hidden panes so they re-animate on return.
+          if (el.classList.contains("pane-assembled")) el.classList.remove("pane-assembled");
           return;
         }
         if (el.style.visibility !== "visible") el.style.visibility = "visible";
@@ -93,10 +97,26 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
         el.style.opacity = opacity.toFixed(3);
         el.style.transform = `scale(${scale.toFixed(4)})`;
         el.style.filter = blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : "none";
+
+        // Card assembly: snap children in when the camera arrives.
+        const assembled = local > -0.38 && local < 0.18;
+        if (assembled !== el.classList.contains("pane-assembled")) {
+          if (assembled) el.classList.add("pane-assembled");
+          else el.classList.remove("pane-assembled");
+        }
+
+        // Lens opacity: scene bleeds through at the crossing midpoint.
+        const lensEl = el.querySelector<HTMLElement>(".depth-lens");
+        if (lensEl) {
+          lensEl.style.opacity = Math.max(0, 1 - dist * 1.6).toFixed(3);
+        }
       });
     };
     raf = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      document.body.classList.remove("depth-mode");
+    };
   }, [mode]);
 
   // Snap each scroll gesture to a whole section.
@@ -156,9 +176,11 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
         {panes.map((p, i) => (
           <div
             key={i}
-            className="depth-pane"
+            className={`depth-pane${i === 0 ? " pane-assembled" : ""}`}
             style={i === 0 ? undefined : { opacity: 0, visibility: "hidden" }}
           >
+            {/* Dynamic legibility lens — opacity driven by JS so scene bleeds through at crossings */}
+            <div className="depth-lens" />
             {p.node}
           </div>
         ))}

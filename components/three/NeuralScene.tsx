@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
-import { depthState, SCENE_READY_EVENT } from "@/lib/depthStore";
+import { depthState, SCENE_READY_EVENT, SECTION_COUNT } from "@/lib/depthStore";
 import { generateNetwork } from "./networkData";
 import Network from "./Network";
 import Pulses from "./Pulses";
@@ -23,6 +23,31 @@ function ReadySignal() {
     window.dispatchEvent(new Event(SCENE_READY_EVENT));
   });
   return null;
+}
+
+/** Bloom that surges at section-crossing boundaries. */
+function DynamicBloom() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const bloomRef = useRef<any>(null);
+
+  useFrame(() => {
+    if (!bloomRef.current) return;
+    const f = depthState.progress * (SECTION_COUNT - 1);
+    const frac = f - Math.floor(f);
+    const boundaryT = Math.max(0, 1 - Math.abs(frac - 0.5) * 5.5);
+    bloomRef.current.intensity = THREE.MathUtils.lerp(
+      bloomRef.current.intensity,
+      0.85 + boundaryT * 2.0,
+      0.06
+    );
+  });
+
+  return (
+    <EffectComposer multisampling={0}>
+      <Bloom ref={bloomRef} mipmapBlur intensity={0.85} luminanceThreshold={0.34} luminanceSmoothing={0.32} />
+      <Vignette offset={0.22} darkness={0.78} />
+    </EffectComposer>
+  );
 }
 
 /** Violet key light that follows the camera, so foreground nodes are always modelled. */
@@ -87,12 +112,7 @@ export default function NeuralScene() {
         <TheatreCamera lightRef={goldLightRef} />
         <ReadySignal />
 
-        {!lowPower && (
-          <EffectComposer multisampling={0}>
-            <Bloom mipmapBlur intensity={0.85} luminanceThreshold={0.34} luminanceSmoothing={0.32} />
-            <Vignette offset={0.22} darkness={0.78} />
-          </EffectComposer>
-        )}
+        {!lowPower && <DynamicBloom />}
       </Canvas>
 
       <style jsx>{`

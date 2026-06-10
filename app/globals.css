@@ -730,11 +730,9 @@ html.reveal-lock body {
   will-change: transform, opacity, filter;
 }
 
-/* Legibility lens: a focused dark pool behind content so copy stays readable
-   over the busier scene (labels + ignition particles), while the network stays
-   visible and bright at the edges. */
-.depth-pane::before {
-  content: "";
+/* Legibility lens: a real div (not ::before) so JS can set opacity dynamically,
+   letting the 3D scene bleed through during cross-section transitions. */
+.depth-lens {
   position: absolute;
   inset: 0;
   background: radial-gradient(
@@ -745,6 +743,8 @@ html.reveal-lock body {
     transparent 100%
   );
   pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.18s ease;
 }
 
 .depth-pane > * {
@@ -774,6 +774,47 @@ html.reveal-lock body {
 
 .depth-pane .section > .container {
   width: 100%;
+}
+
+/* ── Phase 3b: Card assembly ─────────────────────────────────────────────── */
+
+/* Default: children are invisible, collapsed, blurred — waiting to be born. */
+body.depth-mode .depth-pane .container > * {
+  opacity: 0;
+  transform: translateY(28px) scale(0.97);
+  filter: blur(8px);
+  transition:
+    opacity  0.15s ease-in,
+    transform 0.15s ease-in,
+    filter   0.15s ease-in;
+}
+
+/* Assembled: children cascade in with staggered elastic timing. */
+body.depth-mode .depth-pane.pane-assembled .container > * {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition:
+    opacity   0.75s var(--ease-enter),
+    transform 0.85s var(--ease-3d),
+    filter    0.65s ease-out;
+}
+body.depth-mode .depth-pane.pane-assembled .container > *:nth-child(2) { transition-delay: 0.08s; }
+body.depth-mode .depth-pane.pane-assembled .container > *:nth-child(3) { transition-delay: 0.16s; }
+body.depth-mode .depth-pane.pane-assembled .container > *:nth-child(4) { transition-delay: 0.24s; }
+body.depth-mode .depth-pane.pane-assembled .container > *:nth-child(5) { transition-delay: 0.32s; }
+body.depth-mode .depth-pane.pane-assembled .container > *:nth-child(n+6) { transition-delay: 0.38s; }
+
+/* Respect user's motion preference — never animate. */
+@media (prefers-reduced-motion: reduce) {
+  body.depth-mode .depth-pane .container > *,
+  body.depth-mode .depth-pane.pane-assembled .container > * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    transition-delay: 0s !important;
+  }
 }
 
 /* Flow mode (mobile / reduced motion): classic scroll */
