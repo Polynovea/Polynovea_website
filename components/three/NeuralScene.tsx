@@ -9,7 +9,6 @@ import { generateNetwork } from "./networkData";
 import Network from "./Network";
 import Pulses from "./Pulses";
 import TheatreCamera from "./TheatreCamera";
-import WorldLabels from "./WorldLabels";
 import ClusterIgnite from "./ClusterIgnite";
 import HeatGrid from "./HeatGrid";
 import DataReadouts from "./DataReadouts";
@@ -84,7 +83,6 @@ export default function NeuralScene() {
         <Network data={data} />
         <Pulses data={data} count={lowPower ? 36 : 90} />
         <ClusterIgnite lowPower={lowPower} />
-        <WorldLabels />
         <DataReadouts />
         <TheatreCamera lightRef={goldLightRef} />
         <ReadySignal />
