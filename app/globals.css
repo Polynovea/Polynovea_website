@@ -767,7 +767,7 @@ html.reveal-lock body {
   transition: opacity 0.18s ease;
 }
 
-.depth-pane > * {
+.depth-pane > *:not(.depth-lens) {
   position: relative;
   z-index: 1;
   width: 100%;

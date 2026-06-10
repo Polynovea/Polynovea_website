@@ -135,9 +135,9 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
         end: () => (SECTION_COUNT - 1) * window.innerHeight,
         snap: {
           snapTo: 1 / (SECTION_COUNT - 1),
-          duration: { min: 0.45, max: 0.95 },
+          duration: { min: 0.65, max: 1.1 },
           ease: "power3.out",
-          delay: 0.06,
+          delay: 0.22,
           directional: true,
         },
       });
