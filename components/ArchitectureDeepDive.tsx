@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { MeshTransmissionMaterial, Environment } from "@react-three/drei";
 import Link from "next/link";
 import * as THREE from "three";
 
@@ -172,7 +173,15 @@ const appliedSurfaces: Record<SurfaceKey, {
   },
 };
 
-function GradientOrb({
+// Real 3D positions — nodes distributed across x/y/z, not a flat line
+const NODE_POSITIONS: [number, number, number][] = [
+  [-2.0,  0.65,  0.7],
+  [-0.45, -0.55, -0.3],
+  [ 0.95,  0.72,  0.3],
+  [ 2.25, -0.42, -0.5],
+];
+
+function CrystalNode({
   milestone,
   active,
   hovered,
@@ -186,89 +195,138 @@ function GradientOrb({
   onHover: (key: MilestoneKey | null) => void;
 }) {
   const groupRef = useRef<THREE.Group>(null);
-  const shellRef = useRef<THREE.Mesh>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
+  const icoRef = useRef<THREE.Mesh>(null);
   const visual = milestoneVisuals[milestone.key];
 
   useFrame(({ clock }) => {
-    const time = clock.getElapsedTime();
-    const pulse = 1 + Math.sin(time * 1.7 + Number(milestone.number) * 0.35) * (active || hovered ? 0.085 : 0.035);
-    groupRef.current?.scale.setScalar(active ? pulse * 1.16 : hovered ? pulse * 1.08 : pulse);
-    if (shellRef.current?.material instanceof THREE.MeshBasicMaterial) {
-      shellRef.current.material.opacity = active ? 0.22 : hovered ? 0.18 : 0.1;
+    const t = clock.getElapsedTime();
+    const phase = Number(milestone.number) * 0.7;
+    const breathe = 1 + Math.sin(t * 1.3 + phase) * (active ? 0.055 : 0.022);
+    groupRef.current?.scale.setScalar(active ? breathe * 1.18 : hovered ? breathe * 1.09 : breathe);
+    if (ringRef.current) {
+      ringRef.current.rotation.z = t * (active ? 0.85 : 0.3);
+      ringRef.current.rotation.x = t * 0.28;
+    }
+    if (icoRef.current) {
+      icoRef.current.rotation.y = t * (active ? 0.55 : 0.18);
+      icoRef.current.rotation.x = t * 0.22;
+      if (icoRef.current.material instanceof THREE.MeshBasicMaterial) {
+        icoRef.current.material.opacity = THREE.MathUtils.lerp(
+          icoRef.current.material.opacity,
+          active ? 0.9 : hovered ? 0.6 : 0.32,
+          0.06
+        );
+      }
     }
   });
 
   return (
     <group ref={groupRef} position={position}>
+      {/* Glass transmission sphere */}
       <mesh
         onPointerOver={() => onHover(milestone.key)}
         onPointerOut={() => onHover(null)}
       >
-        <sphereGeometry args={[0.42, 48, 48]} />
-        <meshPhysicalMaterial
+        <sphereGeometry args={[0.44, 64, 64]} />
+        <MeshTransmissionMaterial
+          transmission={0.92}
+          roughness={0.08}
+          thickness={0.55}
+          ior={1.45}
+          chromaticAberration={active ? 0.06 : 0.02}
           color={visual.primary}
-          emissive={visual.secondary}
-          emissiveIntensity={active || hovered ? 1.05 : 0.62}
-          roughness={0.28}
-          metalness={0.18}
-          clearcoat={0.72}
-          transparent
-          opacity={active || hovered ? 1 : 0.86}
+          backside
+          samples={6}
+          distortionScale={active ? 0.18 : 0.06}
+          temporalDistortion={0.12}
         />
       </mesh>
-      <mesh position={[-0.12, 0.16, 0.28]}>
-        <sphereGeometry args={[0.26, 32, 32]} />
-        <meshBasicMaterial color={visual.secondary} transparent opacity={active || hovered ? 0.34 : 0.2} />
+
+      {/* Spinning inner icosahedron lattice */}
+      <mesh ref={icoRef}>
+        <icosahedronGeometry args={[0.22, 1]} />
+        <meshBasicMaterial color={visual.secondary} wireframe transparent opacity={0.32} />
       </mesh>
-      <mesh position={[0.12, -0.12, 0.3]}>
-        <sphereGeometry args={[0.18, 32, 32]} />
-        <meshBasicMaterial color="#FFFFFF" transparent opacity={active || hovered ? 0.22 : 0.12} />
+
+      {/* Orbital ring — grows in when active/hovered */}
+      <mesh ref={ringRef} rotation={[Math.PI / 2.3, 0, 0]}>
+        <torusGeometry args={[0.65, active ? 0.022 : 0.009, 16, 64]} />
+        <meshBasicMaterial
+          color={visual.secondary}
+          transparent
+          opacity={active ? 0.72 : hovered ? 0.38 : 0.14}
+        />
       </mesh>
-      <mesh ref={shellRef}>
-        <sphereGeometry args={[0.72, 48, 48]} />
-        <meshBasicMaterial color={visual.secondary} transparent opacity={0.12} blending={THREE.AdditiveBlending} />
+
+      {/* Outer glow halo */}
+      <mesh>
+        <sphereGeometry args={[0.78, 32, 32]} />
+        <meshBasicMaterial
+          color={visual.primary}
+          transparent
+          opacity={active ? 0.08 : 0.03}
+          side={THREE.BackSide}
+        />
       </mesh>
     </group>
   );
 }
 
-function FlowConnection({
+function ConnectionBeam({
   from,
   to,
   color,
   active,
+  speed,
 }: {
   from: [number, number, number];
   to: [number, number, number];
   color: string;
   active: boolean;
+  speed: number;
 }) {
-  const coreRef = useRef<THREE.Mesh>(null);
-  const glowRef = useRef<THREE.Mesh>(null);
-  const curve = useMemo(() => new THREE.LineCurve3(new THREE.Vector3(...from), new THREE.Vector3(...to)), [from, to]);
+  const pulseRef = useRef<THREE.Mesh>(null);
+  const tRef = useRef(Math.random());
+  const curve = useMemo(
+    () => new THREE.LineCurve3(new THREE.Vector3(...from), new THREE.Vector3(...to)),
+    [from, to]
+  );
 
-  useFrame(({ clock }) => {
-    const pulse = 0.6 + Math.sin(clock.getElapsedTime() * 1.8) * 0.18;
-    if (coreRef.current?.material instanceof THREE.MeshBasicMaterial) {
-      coreRef.current.material.opacity = active ? 0.9 : 0.44;
-    }
-    if (glowRef.current?.material instanceof THREE.MeshBasicMaterial) {
-      glowRef.current.material.opacity = active ? 0.34 + pulse * 0.12 : 0.16;
+  useFrame((_, delta) => {
+    tRef.current = (tRef.current + delta * speed) % 1;
+    if (pulseRef.current) {
+      const pos = curve.getPoint(tRef.current);
+      pulseRef.current.position.copy(pos);
     }
   });
 
   return (
     <>
-      <mesh ref={glowRef}>
-        <tubeGeometry args={[curve, 32, 0.045, 10, false]} />
-        <meshBasicMaterial color={color} transparent opacity={0.16} blending={THREE.AdditiveBlending} />
+      {/* Base wire */}
+      <mesh>
+        <tubeGeometry args={[curve, 20, active ? 0.018 : 0.008, 6, false]} />
+        <meshBasicMaterial color={color} transparent opacity={active ? 0.65 : 0.2} />
       </mesh>
-      <mesh ref={coreRef}>
-        <tubeGeometry args={[curve, 32, 0.012, 8, false]} />
-        <meshBasicMaterial color={color} transparent opacity={0.44} />
+      {/* Traveling pulse dot */}
+      <mesh ref={pulseRef}>
+        <sphereGeometry args={[active ? 0.058 : 0.028, 8, 8]} />
+        <meshBasicMaterial color={color} transparent opacity={active ? 0.95 : 0.5} />
       </mesh>
     </>
   );
+}
+
+function CameraShift({ activeKey }: { activeKey: MilestoneKey }) {
+  const { camera } = useThree();
+  const idx = milestones.findIndex((m) => m.key === activeKey);
+  const target = NODE_POSITIONS[idx];
+
+  useFrame(() => {
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, target[0] * 0.28, 0.025);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, target[1] * 0.18, 0.025);
+  });
+  return null;
 }
 
 function FlowObjects({
@@ -281,51 +339,55 @@ function FlowObjects({
   onHover: (key: MilestoneKey | null) => void;
 }) {
   const groupRef = useRef<THREE.Group>(null);
-  const positions = useMemo<[number, number, number][]>(
-    () => [
-      [-2.7, 0, 0],
-      [-0.9, 0, 0],
-      [0.9, 0, 0],
-      [2.7, 0, 0],
-    ],
-    []
-  );
 
   useFrame(({ clock, mouse }) => {
-    const time = clock.getElapsedTime();
-    if (groupRef.current) {
-      groupRef.current.rotation.y = mouse.x * 0.08;
-      groupRef.current.rotation.x = -mouse.y * 0.04;
-      groupRef.current.position.y = Math.sin(time * 0.45) * 0.04;
-    }
+    if (!groupRef.current) return;
+    groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, mouse.x * 0.12, 0.04);
+    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -mouse.y * 0.06, 0.04);
+    groupRef.current.position.y = Math.sin(clock.getElapsedTime() * 0.4) * 0.06;
   });
 
   return (
     <group ref={groupRef}>
-      {positions.slice(0, -1).map((position, index) => {
-        const from = milestones[index];
-        const to = milestones[index + 1];
-        const active = selected === from.key || selected === to.key || hovered === from.key || hovered === to.key;
+      {/* Beams between consecutive nodes */}
+      {NODE_POSITIONS.slice(0, -1).map((pos, idx) => {
+        const fromM = milestones[idx];
+        const toM = milestones[idx + 1];
+        const active = selected === fromM.key || selected === toM.key ||
+                       hovered === fromM.key || hovered === toM.key;
         return (
-          <FlowConnection
-            key={`${from.key}-${to.key}`}
-            from={position}
-            to={positions[index + 1]}
-            color={milestoneVisuals[to.key].line}
+          <ConnectionBeam
+            key={`beam-${idx}`}
+            from={pos}
+            to={NODE_POSITIONS[idx + 1]}
+            color={milestoneVisuals[toM.key].line}
             active={active}
+            speed={active ? 0.55 : 0.28}
           />
         );
       })}
+      {/* Cross-beams for network feel */}
+      <ConnectionBeam
+        from={NODE_POSITIONS[0]} to={NODE_POSITIONS[2]}
+        color={milestoneVisuals.m3.line} active={selected === "m1" || selected === "m3"}
+        speed={0.22}
+      />
+      <ConnectionBeam
+        from={NODE_POSITIONS[1]} to={NODE_POSITIONS[3]}
+        color={milestoneVisuals.m4.line} active={selected === "m2" || selected === "m4"}
+        speed={0.19}
+      />
 
-      {positions.map((position, index) => {
-        const milestone = milestones[index];
+      {/* Crystal nodes */}
+      {NODE_POSITIONS.map((pos, idx) => {
+        const m = milestones[idx];
         return (
-          <GradientOrb
-            key={milestone.key}
-            milestone={milestone}
-            active={milestone.key === selected}
-            hovered={milestone.key === hovered}
-            position={position}
+          <CrystalNode
+            key={m.key}
+            milestone={m}
+            active={m.key === selected}
+            hovered={m.key === hovered}
+            position={pos}
             onHover={onHover}
           />
         );
@@ -345,9 +407,12 @@ function FlowScene({
 }) {
   return (
     <Canvas camera={{ position: [0, 0, 7.5], fov: 46 }} gl={{ alpha: true, antialias: true }}>
-      <ambientLight intensity={0.62} />
-      <pointLight position={[-4, 3, 5]} intensity={16} color="#FFFFFF" />
-      <pointLight position={[4, -2, 4]} intensity={10} color="#7C3AED" />
+      <Environment preset="city" />
+      <ambientLight intensity={0.35} />
+      <pointLight position={[-4, 4, 5]} intensity={22} color="#9a6cff" />
+      <pointLight position={[4, -2, 3]} intensity={14} color="#E6D3A3" />
+      <pointLight position={[0, -4, 2]} intensity={8} color="#06B6D4" />
+      <CameraShift activeKey={selected} />
       <FlowObjects selected={selected} hovered={hovered} onHover={onHover} />
     </Canvas>
   );
@@ -538,8 +603,8 @@ export default function ArchitectureDeepDive() {
                   onClick={() => selectMilestone(m.key)}
                   type="button"
                 >
-                  <span>{m.number}</span>
-                  {m.title}
+                  <span aria-hidden="true" />
+                  {m.number} — {m.title}
                 </button>
               ))}
             </div>
@@ -842,11 +907,10 @@ export default function ArchitectureDeepDive() {
         }
 
         .flow-labels {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: var(--space-sm);
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
           margin-top: var(--space-md);
-          min-width: 0;
           position: relative;
           z-index: 2;
         }
@@ -914,38 +978,46 @@ export default function ArchitectureDeepDive() {
         .flow-label:hover,
         .surface-tabs button:hover {
           color: var(--text-primary);
+          border-color: rgba(255,255,255,0.15);
           transform: translateY(-1px);
         }
 
+        /* Refined chip — pill shape with colored dot, no min-height box */
         .flow-label {
-          border-radius: var(--radius-md);
-          min-width: 0;
-          min-height: 66px;
-          padding: var(--space-sm);
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          border-radius: var(--radius-pill);
+          padding: 7px 14px 7px 10px;
           font-size: 12px;
-          line-height: 1.3;
-          overflow-wrap: anywhere;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+          line-height: 1;
+          white-space: nowrap;
+        }
+
+        .flow-label span {
+          display: inline-block;
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: var(--node-color);
+          box-shadow: 0 0 6px var(--node-color);
+          flex-shrink: 0;
+        }
+
+        .flow-label.active {
+          background: color-mix(in srgb, var(--node-color) 14%, transparent);
+          color: var(--text-primary);
+          border-color: color-mix(in srgb, var(--node-color) 55%, transparent);
+          box-shadow: 0 0 18px color-mix(in srgb, var(--node-color) 22%, transparent);
         }
 
         @media (max-width: 768px) {
           .flow-label {
-            min-height: 56px;
-            padding: var(--space-xs) var(--space-sm);
             font-size: 11px;
+            padding: 6px 12px 6px 9px;
           }
-        }
-
-        .flow-label span {
-          display: block;
-          color: var(--node-color);
-          font-weight: 700;
-          margin-bottom: 4px;
-        }
-
-        .flow-label.active {
-          color: var(--text-primary);
-          border-color: var(--node-color);
-          box-shadow: 0 0 24px color-mix(in srgb, var(--node-color) 28%, transparent);
         }
 
         .hero-visual.compact {
@@ -955,7 +1027,7 @@ export default function ArchitectureDeepDive() {
         }
 
         .hero-visual.compact .flow-labels {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 5px;
         }
 
         .cta-card {
