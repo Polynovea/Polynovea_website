@@ -116,6 +116,9 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {/* Skip-to-content for keyboard / screen-reader users */}
+        <a href="#main-content" className="skip-link">Skip to content</a>
+
         {/* Persistent WebGL backdrop: must render before content so positioned content paints above it */}
         <ExperienceLayer />
         <CustomCursor />

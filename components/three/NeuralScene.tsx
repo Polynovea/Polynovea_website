@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
+import { PerformanceMonitor, AdaptiveDpr } from "@react-three/drei";
 import * as THREE from "three";
 import { depthState, SCENE_READY_EVENT, SECTION_COUNT } from "@/lib/depthStore";
 import { generateNetwork } from "./networkData";
@@ -50,6 +51,13 @@ function DynamicBloom() {
   );
 }
 
+/** Disposes the GL renderer when the Canvas unmounts (e.g. route navigation). */
+function GlDispose() {
+  const { gl } = useThree();
+  useEffect(() => () => { gl.dispose(); }, [gl]);
+  return null;
+}
+
 /** Violet key light that follows the camera, so foreground nodes are always modelled. */
 function CameraLight() {
   const ref = useRef<THREE.PointLight>(null);
@@ -65,6 +73,8 @@ function CameraLight() {
 
 export default function NeuralScene() {
   const [lowPower, setLowPower] = useState<boolean | null>(null);
+  // After 3 consecutive FPS flipflops, drop post-processing entirely.
+  const [degraded, setDegraded] = useState(false);
   const goldLightRef = useRef<THREE.PointLight>(null);
 
   useEffect(() => {
@@ -96,6 +106,15 @@ export default function NeuralScene() {
           );
         }}
       >
+        {/* Phase 6: adaptive DPR + performance safety valve */}
+        <PerformanceMonitor
+          flipflops={3}
+          onFallback={() => setDegraded(true)}
+        >
+          <AdaptiveDpr pixelated />
+        </PerformanceMonitor>
+        <GlDispose />
+
         <color attach="background" args={["#0a0912"]} />
         <fogExp2 attach="fog" args={["#0a0912", 0.02]} />
 
@@ -112,7 +131,7 @@ export default function NeuralScene() {
         <TheatreCamera lightRef={goldLightRef} />
         <ReadySignal />
 
-        {!lowPower && <DynamicBloom />}
+        {!lowPower && !degraded && <DynamicBloom />}
       </Canvas>
 
       <style jsx>{`

@@ -34,7 +34,7 @@ export default function HomeExperience() {
     <>
       <CursorTrail />
       <PageReveal />
-      <main className="home-main">
+      <main id="main-content" className="home-main">
         <DepthRoot panes={panes} />
       </main>
     </>

@@ -80,7 +80,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav ref={navRef} className={`navbar${scrolled ? " scrolled" : ""}`}>
+      <nav ref={navRef} className={`navbar${scrolled ? " scrolled" : ""}`} aria-label="Primary navigation">
         <div className="nav-inner">
           <Link href="/" className="nav-logo">
             {/* eslint-disable-next-line @next/next/no-img-element */}
