@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { MeshTransmissionMaterial, Environment } from "@react-three/drei";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import Link from "next/link";
-import * as THREE from "three";
 
 type MilestoneKey = "m1" | "m2" | "m3" | "m4";
 type SurfaceKey = "venues" | "music";
@@ -17,13 +15,6 @@ const milestoneColors: Record<MilestoneKey, string> = {
   m4: "#EC4899",
 };
 
-const milestoneVisuals: Record<MilestoneKey, { primary: string; secondary: string; line: string }> = {
-  m1: { primary: "#7C3AED", secondary: "#A78BFA", line: "#8B5CF6" },
-  m2: { primary: "#FBBF24", secondary: "#F59E0B", line: "#FACC15" },
-  m3: { primary: "#06B6D4", secondary: "#14B8A6", line: "#22D3EE" },
-  m4: { primary: "#EC4899", secondary: "#D946EF", line: "#F472B6" },
-};
-
 const milestones = [
   {
     key: "m1" as const,
@@ -32,7 +23,7 @@ const milestones = [
     title: "Intelligence Infrastructure",
     summary:
       "Raw behavior becomes measurable insight through decision frameworks, acquisition systems, and optimization loops.",
-    flow: "Behavior patterns + raw signals -> intelligence insights",
+    flow: "Behavior patterns + raw signals → intelligence insights",
     items: [
       {
         title: "Module 1: Decision Framework",
@@ -43,8 +34,13 @@ const milestones = [
       {
         title: "Module 2: Acquisition System",
         what: "Map the behavioural mechanics of commercial environments — not categories, not sentiment, but the operating mechanisms that determine why customers return, spend, and refer.",
-        how: ["Extract multi-source behavioural signals and structure them through an ontology layer", "Score venues across fitness dimensions and audience archetypes using Bayesian inference", "Convert intelligence into a field execution framework — 8-phase acquisition system deployed live at each venue"],
-        output: "Behavioural fitness profiles, audience archetype maps, competitor intelligence by behavioural similarity, and a proven acquisition playbook per venue",
+        how: [
+          "Extract multi-source behavioural signals and structure them through an ontology layer",
+          "Score venues across fitness dimensions and audience archetypes using Bayesian inference",
+          "Convert intelligence into a field execution framework — 8-phase acquisition system deployed live at each venue",
+        ],
+        output:
+          "Behavioural fitness profiles, audience archetype maps, competitor intelligence by behavioural similarity, and a proven acquisition playbook per venue",
       },
       {
         title: "Module 3: Optimization System",
@@ -61,7 +57,7 @@ const milestones = [
     title: "IP & Records Layer",
     summary:
       "The cultural execution surface where intelligence informs creator development, owned IP, and audience relationships.",
-    flow: "Intelligence insights -> records execution",
+    flow: "Intelligence insights → records execution",
     items: [
       {
         title: "Artist Discovery & Development",
@@ -90,7 +86,7 @@ const milestones = [
     title: "External Services",
     summary:
       "The infrastructure becomes commercially useful through creator services, licensing, and implementation work.",
-    flow: "IP + audience data -> external services leverage",
+    flow: "IP + audience data → external services leverage",
     items: [
       {
         title: "Creator / Artist Services",
@@ -119,7 +115,7 @@ const milestones = [
     title: "Distribution & Ownership",
     summary:
       "The final layer: distribution control, rights leverage, and long-term ecosystem sovereignty.",
-    flow: "Service revenue + margin -> distribution control",
+    flow: "Service revenue + margin → distribution control",
     items: [
       {
         title: "Distribution Infrastructure",
@@ -173,430 +169,207 @@ const appliedSurfaces: Record<SurfaceKey, {
   },
 };
 
-// Real 3D positions — nodes distributed across x/y/z, not a flat line
-const NODE_POSITIONS: [number, number, number][] = [
-  [-2.0,  0.65,  0.7],
-  [-0.45, -0.55, -0.3],
-  [ 0.95,  0.72,  0.3],
-  [ 2.25, -0.42, -0.5],
-];
+// ─── Timeline ──────────────────────────────────────────────────────────────
 
-function CrystalNode({
+function TimelineEntry({
   milestone,
-  active,
-  hovered,
-  position,
+  expandedModules,
+  hoveredModule,
+  onToggle,
   onHover,
 }: {
   milestone: (typeof milestones)[number];
-  active: boolean;
-  hovered: boolean;
-  position: [number, number, number];
-  onHover: (key: MilestoneKey | null) => void;
+  expandedModules: Set<string>;
+  hoveredModule: { milestone: MilestoneKey; index: number } | null;
+  onToggle: (key: string) => void;
+  onHover: (v: { milestone: MilestoneKey; index: number } | null) => void;
 }) {
-  const groupRef = useRef<THREE.Group>(null);
-  const ringRef = useRef<THREE.Mesh>(null);
-  const icoRef = useRef<THREE.Mesh>(null);
-  const visual = milestoneVisuals[milestone.key];
-
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
-    const phase = Number(milestone.number) * 0.7;
-    const breathe = 1 + Math.sin(t * 1.3 + phase) * (active ? 0.055 : 0.022);
-    groupRef.current?.scale.setScalar(active ? breathe * 1.18 : hovered ? breathe * 1.09 : breathe);
-    if (ringRef.current) {
-      ringRef.current.rotation.z = t * (active ? 0.85 : 0.3);
-      ringRef.current.rotation.x = t * 0.28;
-    }
-    if (icoRef.current) {
-      icoRef.current.rotation.y = t * (active ? 0.55 : 0.18);
-      icoRef.current.rotation.x = t * 0.22;
-      if (icoRef.current.material instanceof THREE.MeshBasicMaterial) {
-        icoRef.current.material.opacity = THREE.MathUtils.lerp(
-          icoRef.current.material.opacity,
-          active ? 0.9 : hovered ? 0.6 : 0.32,
-          0.06
-        );
-      }
-    }
-  });
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-15% 0px" });
+  const color = milestoneColors[milestone.key];
 
   return (
-    <group ref={groupRef} position={position}>
-      {/* Glass transmission sphere */}
-      <mesh
-        onPointerOver={() => onHover(milestone.key)}
-        onPointerOut={() => onHover(null)}
-      >
-        <sphereGeometry args={[0.44, 64, 64]} />
-        <MeshTransmissionMaterial
-          transmission={0.92}
-          roughness={0.08}
-          thickness={0.55}
-          ior={1.45}
-          chromaticAberration={active ? 0.06 : 0.02}
-          color={visual.primary}
-          backside
-          samples={6}
-          distortionScale={active ? 0.18 : 0.06}
-          temporalDistortion={0.12}
-        />
-      </mesh>
+    <motion.div
+      ref={ref}
+      className="tl-entry"
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {/* Timeline dot */}
+      <div className="tl-dot-wrap">
+        <div className="tl-dot" style={{ background: color, boxShadow: `0 0 16px ${color}88` }} />
+      </div>
 
-      {/* Spinning inner icosahedron lattice */}
-      <mesh ref={icoRef}>
-        <icosahedronGeometry args={[0.22, 1]} />
-        <meshBasicMaterial color={visual.secondary} wireframe transparent opacity={0.32} />
-      </mesh>
+      {/* Content */}
+      <div className="tl-content" id={`milestone-${milestone.key}`}>
+        <div className="tl-header">
+          <span className="tl-stage" style={{ color }}>{milestone.stage}</span>
+          <span className="tl-number">{milestone.number}</span>
+        </div>
+        <h3 className="tl-title">{milestone.title}</h3>
+        <p className="tl-summary">{milestone.summary}</p>
 
-      {/* Orbital ring — grows in when active/hovered */}
-      <mesh ref={ringRef} rotation={[Math.PI / 2.3, 0, 0]}>
-        <torusGeometry args={[0.65, active ? 0.022 : 0.009, 16, 64]} />
-        <meshBasicMaterial
-          color={visual.secondary}
-          transparent
-          opacity={active ? 0.72 : hovered ? 0.38 : 0.14}
-        />
-      </mesh>
+        <div className="module-grid">
+          {milestone.items.map((item, index) => {
+            const moduleKey = `${milestone.key}-${index}`;
+            const expanded = expandedModules.has(moduleKey);
+            const hovered =
+              hoveredModule?.milestone === milestone.key && hoveredModule.index === index;
 
-      {/* Outer glow halo */}
-      <mesh>
-        <sphereGeometry args={[0.78, 32, 32]} />
-        <meshBasicMaterial
-          color={visual.primary}
-          transparent
-          opacity={active ? 0.08 : 0.03}
-          side={THREE.BackSide}
-        />
-      </mesh>
-    </group>
+            return (
+              <div
+                key={item.title}
+                className={`module-card card${expanded || hovered ? " expanded" : ""}`}
+                style={{ "--milestone-color": color } as CSSProperties}
+                onMouseEnter={() => onHover({ milestone: milestone.key, index })}
+                onMouseLeave={() => onHover(null)}
+              >
+                <button
+                  type="button"
+                  aria-expanded={expanded}
+                  onClick={() => onToggle(moduleKey)}
+                >
+                  <span>{item.title}</span>
+                </button>
+                <div className="module-body">
+                  <div className="module-body-inner">
+                    <p>{item.what}</p>
+                    <ul>
+                      {item.how.map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                    <div className="output">Output: {item.output}</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="tl-flow">{milestone.flow}</div>
+      </div>
+    </motion.div>
   );
 }
 
-function ConnectionBeam({
-  from,
-  to,
-  color,
-  active,
-  speed,
-}: {
-  from: [number, number, number];
-  to: [number, number, number];
-  color: string;
-  active: boolean;
-  speed: number;
-}) {
-  const pulseRef = useRef<THREE.Mesh>(null);
-  const tRef = useRef(Math.random());
-  const curve = useMemo(
-    () => new THREE.LineCurve3(new THREE.Vector3(...from), new THREE.Vector3(...to)),
-    [from, to]
-  );
-
-  useFrame((_, delta) => {
-    tRef.current = (tRef.current + delta * speed) % 1;
-    if (pulseRef.current) {
-      const pos = curve.getPoint(tRef.current);
-      pulseRef.current.position.copy(pos);
-    }
-  });
-
-  return (
-    <>
-      {/* Base wire */}
-      <mesh>
-        <tubeGeometry args={[curve, 20, active ? 0.018 : 0.008, 6, false]} />
-        <meshBasicMaterial color={color} transparent opacity={active ? 0.65 : 0.2} />
-      </mesh>
-      {/* Traveling pulse dot */}
-      <mesh ref={pulseRef}>
-        <sphereGeometry args={[active ? 0.058 : 0.028, 8, 8]} />
-        <meshBasicMaterial color={color} transparent opacity={active ? 0.95 : 0.5} />
-      </mesh>
-    </>
-  );
-}
-
-function CameraShift({ activeKey }: { activeKey: MilestoneKey }) {
-  const { camera } = useThree();
-  const idx = milestones.findIndex((m) => m.key === activeKey);
-  const target = NODE_POSITIONS[idx];
-
-  useFrame(() => {
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, target[0] * 0.28, 0.025);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, target[1] * 0.18, 0.025);
-  });
-  return null;
-}
-
-function FlowObjects({
-  selected,
-  hovered,
+function MilestoneTimeline({
+  expandedModules,
+  hoveredModule,
+  onToggle,
   onHover,
 }: {
-  selected: MilestoneKey;
-  hovered: MilestoneKey | null;
-  onHover: (key: MilestoneKey | null) => void;
+  expandedModules: Set<string>;
+  hoveredModule: { milestone: MilestoneKey; index: number } | null;
+  onToggle: (key: string) => void;
+  onHover: (v: { milestone: MilestoneKey; index: number } | null) => void;
 }) {
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame(({ clock, mouse }) => {
-    if (!groupRef.current) return;
-    groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, mouse.x * 0.12, 0.04);
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -mouse.y * 0.06, 0.04);
-    groupRef.current.position.y = Math.sin(clock.getElapsedTime() * 0.4) * 0.06;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 12%", "end 68%"],
   });
+  const beamHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <group ref={groupRef}>
-      {/* Beams between consecutive nodes */}
-      {NODE_POSITIONS.slice(0, -1).map((pos, idx) => {
-        const fromM = milestones[idx];
-        const toM = milestones[idx + 1];
-        const active = selected === fromM.key || selected === toM.key ||
-                       hovered === fromM.key || hovered === toM.key;
-        return (
-          <ConnectionBeam
-            key={`beam-${idx}`}
-            from={pos}
-            to={NODE_POSITIONS[idx + 1]}
-            color={milestoneVisuals[toM.key].line}
-            active={active}
-            speed={active ? 0.55 : 0.28}
-          />
-        );
-      })}
-      {/* Cross-beams for network feel */}
-      <ConnectionBeam
-        from={NODE_POSITIONS[0]} to={NODE_POSITIONS[2]}
-        color={milestoneVisuals.m3.line} active={selected === "m1" || selected === "m3"}
-        speed={0.22}
-      />
-      <ConnectionBeam
-        from={NODE_POSITIONS[1]} to={NODE_POSITIONS[3]}
-        color={milestoneVisuals.m4.line} active={selected === "m2" || selected === "m4"}
-        speed={0.19}
-      />
+    <div ref={containerRef} className="tl-container">
+      {/* Track */}
+      <div className="tl-track" aria-hidden="true">
+        <div className="tl-track-line" />
+        <motion.div className="tl-track-beam" style={{ height: beamHeight }} />
+      </div>
 
-      {/* Crystal nodes */}
-      {NODE_POSITIONS.map((pos, idx) => {
-        const m = milestones[idx];
-        return (
-          <CrystalNode
+      {/* Entries */}
+      <div className="tl-entries">
+        {milestones.map((m) => (
+          <TimelineEntry
             key={m.key}
             milestone={m}
-            active={m.key === selected}
-            hovered={m.key === hovered}
-            position={pos}
+            expandedModules={expandedModules}
+            hoveredModule={hoveredModule}
+            onToggle={onToggle}
             onHover={onHover}
           />
-        );
-      })}
-    </group>
+        ))}
+      </div>
+    </div>
   );
 }
 
-function FlowScene({
-  selected,
-  hovered,
-  onHover,
-}: {
-  selected: MilestoneKey;
-  hovered: MilestoneKey | null;
-  onHover: (key: MilestoneKey | null) => void;
-}) {
-  return (
-    <Canvas camera={{ position: [0, 0, 7.5], fov: 46 }} gl={{ alpha: true, antialias: true }}>
-      <Environment preset="city" />
-      <ambientLight intensity={0.35} />
-      <pointLight position={[-4, 4, 5]} intensity={22} color="#9a6cff" />
-      <pointLight position={[4, -2, 3]} intensity={14} color="#E6D3A3" />
-      <pointLight position={[0, -4, 2]} intensity={8} color="#06B6D4" />
-      <CameraShift activeKey={selected} />
-      <FlowObjects selected={selected} hovered={hovered} onHover={onHover} />
-    </Canvas>
-  );
-}
-
-/** Per-milestone SVG glyphs — no canvas overhead, visually distinctive. */
-function MilestoneGlyph({ milestoneKey, color }: { milestoneKey: MilestoneKey; color: string }) {
-  const c = color;
-  if (milestoneKey === "m1") return (
-    <svg viewBox="0 0 240 200" className="mg" aria-hidden="true">
-      {/* Concentric signal arcs */}
-      <circle cx="120" cy="115" r="30" stroke={c} strokeWidth="1.5" fill="none" opacity="0.25" className="mg-ring mg-r1" />
-      <circle cx="120" cy="115" r="55" stroke={c} strokeWidth="1" fill="none" opacity="0.15" className="mg-ring mg-r2" />
-      <circle cx="120" cy="115" r="82" stroke={c} strokeWidth="0.7" fill="none" opacity="0.08" className="mg-ring mg-r3" />
-      {/* Radar sweep line */}
-      <line x1="120" y1="115" x2="120" y2="33" stroke={c} strokeWidth="1.5" opacity="0.7" className="mg-sweep" style={{ transformOrigin: "120px 115px" }} />
-      {/* Data nodes */}
-      <circle cx="162" cy="72" r="5.5" fill={c} opacity="0.9" className="mg-dot" />
-      <circle cx="82" cy="88" r="4" fill={c} opacity="0.7" className="mg-dot" style={{ animationDelay: "0.3s" }} />
-      <circle cx="148" cy="152" r="6.5" fill={c} opacity="1" className="mg-dot mg-dot-active" style={{ animationDelay: "0.6s" }} />
-      <circle cx="66" cy="145" r="3.5" fill={c} opacity="0.55" className="mg-dot" style={{ animationDelay: "0.9s" }} />
-      {/* Connection lines */}
-      <line x1="162" y1="72" x2="148" y2="152" stroke={c} strokeWidth="0.8" opacity="0.3" />
-      <line x1="82" y1="88" x2="148" y2="152" stroke={c} strokeWidth="0.8" opacity="0.3" />
-    </svg>
-  );
-  if (milestoneKey === "m2") return (
-    <svg viewBox="0 0 240 200" className="mg" aria-hidden="true">
-      {/* Stacked catalog bars */}
-      <rect x="40" y="148" width="160" height="9" rx="4.5" fill={c} opacity="0.85" className="mg-bar" />
-      <rect x="40" y="131" width="126" height="9" rx="4.5" fill={c} opacity="0.65" className="mg-bar" style={{ animationDelay: "0.1s" }} />
-      <rect x="40" y="114" width="98" height="9" rx="4.5" fill={c} opacity="0.45" className="mg-bar" style={{ animationDelay: "0.2s" }} />
-      <rect x="40" y="97" width="72" height="9" rx="4.5" fill={c} opacity="0.28" className="mg-bar" style={{ animationDelay: "0.3s" }} />
-      {/* IP ring + label */}
-      <circle cx="120" cy="56" r="26" stroke={c} strokeWidth="1.5" fill="none" opacity="0.55" className="mg-ring mg-r1" />
-      <circle cx="120" cy="56" r="14" fill={c} opacity="0.12" />
-      <circle cx="120" cy="56" r="5" fill={c} opacity="0.9" />
-      {/* IP anchor lines */}
-      <line x1="120" y1="82" x2="120" y2="97" stroke={c} strokeWidth="1" opacity="0.4" />
-      <line x1="120" y1="82" x2="80" y2="97" stroke={c} strokeWidth="0.8" opacity="0.25" />
-      <line x1="120" y1="82" x2="160" y2="97" stroke={c} strokeWidth="0.8" opacity="0.25" />
-    </svg>
-  );
-  if (milestoneKey === "m3") return (
-    <svg viewBox="0 0 240 200" className="mg" aria-hidden="true">
-      {/* Central hub */}
-      <circle cx="120" cy="100" r="16" fill={c} opacity="0.15" />
-      <circle cx="120" cy="100" r="8" fill={c} opacity="0.9" className="mg-dot mg-dot-active" />
-      {/* Spoke nodes */}
-      {([[-1.1, -0.85], [1.1, -0.85], [-1.4, 0.15], [1.4, 0.15], [-0.8, 1.1], [0.8, 1.1]] as [number, number][]).map(([dx, dy], i) => {
-        const nx = 120 + dx * 62, ny = 100 + dy * 52;
-        return (
-          <g key={i}>
-            <line x1="120" y1="100" x2={nx} y2={ny} stroke={c} strokeWidth="0.9" opacity="0.35" />
-            <circle cx={nx} cy={ny} r="5" fill={c} opacity="0.7" className="mg-dot" style={{ animationDelay: `${i * 0.15}s` }} />
-          </g>
-        );
-      })}
-      {/* Outer ring */}
-      <circle cx="120" cy="100" r="72" stroke={c} strokeWidth="0.6" fill="none" opacity="0.12" strokeDasharray="4 6" />
-    </svg>
-  );
-  // m4
-  return (
-    <svg viewBox="0 0 240 200" className="mg" aria-hidden="true">
-      {/* Root node */}
-      <circle cx="120" cy="32" r="8" fill={c} opacity="0.9" className="mg-dot mg-dot-active" />
-      {/* Level 2 */}
-      <line x1="120" y1="40" x2="80" y2="88" stroke={c} strokeWidth="1" opacity="0.5" />
-      <line x1="120" y1="40" x2="160" y2="88" stroke={c} strokeWidth="1" opacity="0.5" />
-      <circle cx="80" cy="92" r="6" fill={c} opacity="0.75" className="mg-dot" style={{ animationDelay: "0.2s" }} />
-      <circle cx="160" cy="92" r="6" fill={c} opacity="0.75" className="mg-dot" style={{ animationDelay: "0.3s" }} />
-      {/* Level 3 */}
-      {([[80, 100, 52, 148], [80, 100, 108, 148], [160, 100, 132, 148], [160, 100, 188, 148]] as number[][]).map(([x1, y1, x2, y2], i) => (
-        <g key={i}>
-          <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={c} strokeWidth="0.8" opacity="0.35" />
-          <circle cx={x2} cy={y2 + 5} r="4.5" fill={c} opacity="0.6" className="mg-dot" style={{ animationDelay: `${0.4 + i * 0.12}s` }} />
-        </g>
-      ))}
-      {/* Sovereign base line */}
-      <line x1="44" y1="168" x2="196" y2="168" stroke={c} strokeWidth="1.5" opacity="0.35" />
-      <rect x="44" y="165" width="152" height="3" rx="1.5" fill={c} opacity="0.2" />
-    </svg>
-  );
-}
+// ─── Main component ─────────────────────────────────────────────────────────
 
 export default function ArchitectureDeepDive() {
-  const [visibleMilestone, setVisibleMilestone] = useState<MilestoneKey>("m1");
-  const [manualSelectedMilestone, setManualSelectedMilestone] = useState<MilestoneKey | null>(null);
   const [hoveredModule, setHoveredModule] = useState<{ milestone: MilestoneKey; index: number } | null>(null);
-  const [hoveredMilestoneNode, setHoveredMilestoneNode] = useState<MilestoneKey | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(() => new Set());
   const [selectedSurface, setSelectedSurface] = useState<SurfaceKey>("venues");
-  const selectedMilestone = manualSelectedMilestone ?? visibleMilestone;
-  const activeMilestone = milestones.find((m) => m.key === selectedMilestone) ?? milestones[0];
   const surface = appliedSurfaces[selectedSurface];
-  const hoveredMilestone = hoveredModule?.milestone ?? hoveredMilestoneNode;
-
-  useEffect(() => {
-    const rows = Array.from(document.querySelectorAll<HTMLElement>("[data-milestone-key]"));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        const key = visible?.target.getAttribute("data-milestone-key") as MilestoneKey | null;
-        if (key) setVisibleMilestone(key);
-      },
-      { rootMargin: "-30% 0px -45% 0px", threshold: [0.2, 0.45, 0.7] }
-    );
-
-    rows.forEach((row) => observer.observe(row));
-    return () => observer.disconnect();
-  }, []);
-
-
-  useEffect(() => {
-    const releaseManualSelection = () => {
-      setManualSelectedMilestone(null);
-    };
-
-    window.addEventListener("scroll", releaseManualSelection, { passive: true });
-    return () => window.removeEventListener("scroll", releaseManualSelection);
-  }, []);
-
-  const selectMilestone = (key: MilestoneKey) => setManualSelectedMilestone(key);
 
   const toggleModule = (moduleKey: string) => {
     setExpandedModules((current) => {
       const next = new Set(current);
-      if (next.has(moduleKey)) {
-        next.delete(moduleKey);
-      } else {
-        next.add(moduleKey);
-      }
+      if (next.has(moduleKey)) next.delete(moduleKey);
+      else next.add(moduleKey);
       return next;
     });
   };
 
   return (
     <main className="architecture-page">
-      <section className="architecture-hero">
-        {/* Full-bleed 3D canvas — fills the entire viewport */}
-        <div className="hero-canvas-wrap" aria-hidden="true">
-          <FlowScene
-            selected={selectedMilestone}
-            hovered={hoveredMilestone}
-            onHover={setHoveredMilestoneNode}
-          />
-        </div>
-        {/* Bottom vignette so copy stays readable */}
-        <div className="hero-fade" />
 
-        {/* Overlaid content anchored to the bottom */}
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section className="architecture-hero">
+        <div className="hero-aurora" aria-hidden="true" />
+        <div className="hero-grid-overlay" aria-hidden="true" />
         <div className="container hero-content">
-          <span className="t-label" style={{ color: "var(--accent-authority)" }}>
+          <motion.span
+            className="t-label hero-eyebrow"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             The Behavioral Intelligence Stack
-          </span>
-          <h1 className="hero-title">The ecosystem flow<br />from behavior to ownership.</h1>
-          <p className="t-body-lg hero-desc">
-            Polynovea turns fragmented human behavior into intelligence, uses that intelligence to create IP,
-            commercializes the infrastructure, and compounds toward distribution control.
-          </p>
-          <div className="flow-labels">
+          </motion.span>
+          <motion.h1
+            className="hero-title"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            From behavior<br />to ownership.
+          </motion.h1>
+          <motion.p
+            className="hero-desc"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.22, ease: "easeOut" }}
+          >
+            Polynovea turns fragmented human behavior into intelligence, uses that intelligence
+            to create IP, commercializes the infrastructure, and compounds toward distribution control.
+          </motion.p>
+          <motion.div
+            className="hero-chips"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.38 }}
+          >
             {milestones.map((m) => (
-              <button
+              <a
                 key={m.key}
-                className={`flow-label ${m.key === selectedMilestone ? "active" : ""}`}
-                style={{ "--node-color": milestoneColors[m.key] } as CSSProperties}
-                onClick={() => selectMilestone(m.key)}
-                type="button"
+                href={`#milestone-${m.key}`}
+                className="hero-chip"
+                style={{ "--chip-color": milestoneColors[m.key] } as CSSProperties}
               >
-                <span aria-hidden="true" />
+                <span className="chip-dot" aria-hidden="true" />
                 {m.number} — {m.title}
-              </button>
+              </a>
             ))}
-          </div>
-          <p className="hero-active-flow">
-            <span style={{ color: milestoneColors[activeMilestone.key] }}>{activeMilestone.stage} · </span>
-            {activeMilestone.flow}
-          </p>
+          </motion.div>
         </div>
+        <div className="hero-fade" aria-hidden="true" />
       </section>
 
+      {/* ── Timeline breakdown ───────────────────────────────────────── */}
       <section className="section breakdown-section">
         <div className="container">
           <div className="section-heading" data-reveal>
@@ -605,82 +378,16 @@ export default function ArchitectureDeepDive() {
             </span>
             <h2 className="t-display-md">Four compounding layers.</h2>
           </div>
-
-          <div className="milestone-stack">
-            {milestones.map((milestone) => (
-              <article
-                key={milestone.key}
-                id={`milestone-${milestone.key}`}
-                className="milestone-row"
-                data-milestone-key={milestone.key}
-                data-reveal
-              >
-                <div
-                  className="sticky-visual"
-                  style={{ "--mg-color": milestoneColors[milestone.key] } as CSSProperties}
-                >
-                  <MilestoneGlyph
-                    milestoneKey={milestone.key}
-                    color={milestoneColors[milestone.key]}
-                  />
-                  <div className="sticky-caption">
-                    <span>{milestone.number}</span>
-                    <strong>{milestone.title}</strong>
-                  </div>
-                </div>
-                <div className="milestone-content">
-                  <span className="t-label" style={{ color: milestoneColors[milestone.key] }}>
-                    {milestone.stage}
-                  </span>
-                  <h3>{milestone.title}</h3>
-                  <p className="t-body">{milestone.summary}</p>
-                  <div className="module-grid">
-                    {milestone.items.map((item, index) => {
-                      const moduleKey = `${milestone.key}-${index}`;
-                      const expanded = expandedModules.has(moduleKey);
-                      const hovered =
-                        hoveredModule?.milestone === milestone.key && hoveredModule.index === index;
-
-                      return (
-                        <div
-                          key={item.title}
-                          className={`module-card card${expanded || hovered ? " expanded" : ""}`}
-                          style={{ "--milestone-color": milestoneColors[milestone.key] } as CSSProperties}
-                          onMouseEnter={() => setHoveredModule({ milestone: milestone.key, index })}
-                          onMouseLeave={() => setHoveredModule(null)}
-                          onFocus={() => setHoveredModule({ milestone: milestone.key, index })}
-                          onBlur={() => setHoveredModule(null)}
-                        >
-                          <button
-                            type="button"
-                            aria-expanded={expanded}
-                            onClick={() => toggleModule(moduleKey)}
-                          >
-                            <span>{item.title}</span>
-                          </button>
-                          <div className="module-body">
-                            <div className="module-body-inner">
-                              <p>{item.what}</p>
-                              <ul>
-                                {item.how.map((line) => (
-                                  <li key={line}>{line}</li>
-                                ))}
-                              </ul>
-                              <div className="output">Output: {item.output}</div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="next-flow">{milestone.flow}</div>
-                </div>
-              </article>
-            ))}
-          </div>
+          <MilestoneTimeline
+            expandedModules={expandedModules}
+            hoveredModule={hoveredModule}
+            onToggle={toggleModule}
+            onHover={setHoveredModule}
+          />
         </div>
       </section>
 
+      {/* ── Applied Surfaces ─────────────────────────────────────────── */}
       <section className="section surface-section">
         <div className="container">
           <div className="section-heading" data-reveal>
@@ -710,9 +417,7 @@ export default function ArchitectureDeepDive() {
 
           <div className="surface-card card" style={{ "--surface-color": surface.color } as CSSProperties} data-reveal>
             <div>
-              <span className="t-label" style={{ color: surface.color }}>
-                {surface.eyebrow}
-              </span>
+              <span className="t-label" style={{ color: surface.color }}>{surface.eyebrow}</span>
               <h3>{surface.label}</h3>
             </div>
             <div className="surface-flow">
@@ -727,6 +432,7 @@ export default function ArchitectureDeepDive() {
         </div>
       </section>
 
+      {/* ── Intelligence Flow ────────────────────────────────────────── */}
       <section className="section data-section">
         <div className="container">
           <div className="section-heading" data-reveal>
@@ -756,6 +462,7 @@ export default function ArchitectureDeepDive() {
         </div>
       </section>
 
+      {/* ── CTA ─────────────────────────────────────────────────────── */}
       <section className="section architecture-cta">
         <div className="container cta-card card">
           <span className="t-label" style={{ color: "var(--accent-authority)" }}>
@@ -763,8 +470,8 @@ export default function ArchitectureDeepDive() {
           </span>
           <h2>Bring behavioral intelligence into your ecosystem.</h2>
           <p>
-            Partner with Polynovea to define the signals, build the measurement layer, and turn behavior into a
-            compounding operating advantage.
+            Partner with Polynovea to define the signals, build the measurement layer, and turn
+            behavior into a compounding operating advantage.
           </p>
           <div className="cta-actions">
             <Link href="/#contact" className="btn btn-primary">Partner with us</Link>
@@ -775,94 +482,99 @@ export default function ArchitectureDeepDive() {
 
       <style jsx>{`
         .architecture-page {
-          background: rgba(9, 8, 16, 0.62); /* veil over the global neural scene */
+          background: rgba(9, 8, 16, 0.62);
           color: var(--text-primary);
         }
 
-        /* ─── Hero ──────────────────────────────────────────────────── */
+        /* ─── Hero ─────────────────────────────────────────────────── */
         .architecture-hero {
           position: relative;
-          height: 100vh;
-          min-height: 680px;
+          min-height: 100vh;
           display: flex;
-          align-items: flex-end;
+          align-items: center;
           overflow: hidden;
+          padding-top: var(--nav-height);
         }
 
-        .hero-canvas-wrap {
+        /* Aurora gradient layer */
+        .hero-aurora {
           position: absolute;
           inset: 0;
-          z-index: 0;
+          background:
+            radial-gradient(ellipse 80% 60% at 20% 20%, rgba(124, 58, 237, 0.28) 0%, transparent 55%),
+            radial-gradient(ellipse 60% 50% at 80% 70%, rgba(6, 182, 212, 0.14) 0%, transparent 50%),
+            radial-gradient(ellipse 50% 40% at 55% 40%, rgba(236, 72, 153, 0.1) 0%, transparent 45%);
+          animation: auroraShift 12s ease-in-out infinite alternate;
         }
 
-        /* Vignette at bottom so copy is always readable */
+        @keyframes auroraShift {
+          0%   { opacity: 0.85; transform: scale(1) translate(0, 0); }
+          33%  { opacity: 1;    transform: scale(1.04) translate(-1%, 1%); }
+          66%  { opacity: 0.9;  transform: scale(1.02) translate(1%, -1%); }
+          100% { opacity: 0.85; transform: scale(1) translate(0, 0); }
+        }
+
+        /* Subtle dot grid */
+        .hero-grid-overlay {
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+          background-size: 36px 36px;
+          mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+        }
+
         .hero-fade {
           position: absolute;
           bottom: 0;
           left: 0;
           right: 0;
-          height: 55%;
-          background: linear-gradient(to bottom, transparent, rgba(9, 8, 16, 0.88) 55%, #090810 100%);
-          z-index: 1;
+          height: 38%;
+          background: linear-gradient(to bottom, transparent, #090810);
           pointer-events: none;
+          z-index: 1;
         }
 
         .hero-content {
           position: relative;
           z-index: 2;
-          padding-bottom: var(--space-3xl);
-          max-width: 800px;
+          max-width: 860px;
+          padding-bottom: var(--space-4xl);
+        }
+
+        .hero-eyebrow {
+          display: block;
+          color: var(--accent-authority);
+          margin-bottom: var(--space-lg);
         }
 
         .hero-title {
           font-family: var(--font-display);
-          font-size: clamp(42px, 5.5vw, 82px);
+          font-size: clamp(52px, 7vw, 104px);
           font-weight: 700;
-          line-height: 1.03;
-          letter-spacing: -0.02em;
-          margin: var(--space-md) 0 var(--space-lg);
+          line-height: 0.97;
+          letter-spacing: -0.03em;
+          margin: 0 0 var(--space-xl);
+          background: linear-gradient(135deg, #fff 60%, rgba(168, 132, 255, 0.7));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
 
         .hero-desc {
-          max-width: 560px;
-          margin-bottom: var(--space-xl);
-        }
-
-        .hero-active-flow {
-          margin-top: var(--space-md);
-          font-size: 13px;
           color: var(--text-secondary);
-          letter-spacing: 0.02em;
+          max-width: 520px;
+          margin-bottom: var(--space-2xl);
+          font-size: clamp(15px, 1.6vw, 18px);
+          line-height: 1.6;
         }
 
-        .flow-labels {
+        .hero-chips {
           display: flex;
           flex-wrap: wrap;
-          gap: 6px;
-          margin-top: var(--space-md);
-          position: relative;
-          z-index: 2;
+          gap: 8px;
         }
 
-
-        .flow-label,
-        .surface-tabs button {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid var(--border-muted);
-          color: var(--text-secondary);
-          cursor: pointer;
-          transition: all var(--duration-default) ease;
-        }
-
-        .flow-label:hover,
-        .surface-tabs button:hover {
-          color: var(--text-primary);
-          border-color: rgba(255,255,255,0.15);
-          transform: translateY(-1px);
-        }
-
-        /* Refined chip — pill shape with colored dot, no min-height box */
-        .flow-label {
+        .hero-chip {
           display: inline-flex;
           align-items: center;
           gap: 7px;
@@ -873,221 +585,175 @@ export default function ArchitectureDeepDive() {
           letter-spacing: 0.01em;
           line-height: 1;
           white-space: nowrap;
+          text-decoration: none;
+          color: var(--text-secondary);
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid var(--border-muted);
+          transition: all 0.2s ease;
         }
 
-        .flow-label span {
+        .hero-chip:hover {
+          color: var(--text-primary);
+          border-color: var(--chip-color);
+          background: color-mix(in srgb, var(--chip-color) 10%, transparent);
+          box-shadow: 0 0 18px color-mix(in srgb, var(--chip-color) 22%, transparent);
+          transform: translateY(-1px);
+        }
+
+        .chip-dot {
           display: inline-block;
           width: 7px;
           height: 7px;
           border-radius: 50%;
-          background: var(--node-color);
-          box-shadow: 0 0 6px var(--node-color);
+          background: var(--chip-color);
+          box-shadow: 0 0 6px var(--chip-color);
           flex-shrink: 0;
         }
 
-        .flow-label.active {
-          background: color-mix(in srgb, var(--node-color) 14%, transparent);
-          color: var(--text-primary);
-          border-color: color-mix(in srgb, var(--node-color) 55%, transparent);
-          box-shadow: 0 0 18px color-mix(in srgb, var(--node-color) 22%, transparent);
+        /* ─── Timeline ─────────────────────────────────────────────── */
+        .tl-container {
+          display: grid;
+          grid-template-columns: 48px 1fr;
+          gap: 0 var(--space-2xl);
+          position: relative;
         }
 
-        @media (max-width: 768px) {
-          .flow-label {
-            font-size: 11px;
-            padding: 6px 12px 6px 9px;
-          }
+        .tl-track {
+          position: relative;
+          grid-column: 1;
+          grid-row: 1 / -1;
         }
 
-
-        .cta-card {
-          padding: var(--space-xl);
+        .tl-track-line {
+          position: absolute;
+          left: 50%;
+          top: 16px;
+          bottom: 16px;
+          width: 2px;
+          transform: translateX(-50%);
+          background: rgba(255, 255, 255, 0.06);
+          border-radius: 1px;
         }
 
-        .cta-card h2 {
-          font-family: var(--font-display);
-          font-size: clamp(28px, 4vw, 48px);
-          line-height: 1.1;
-          margin: var(--space-sm) 0 var(--space-md);
+        .tl-track-beam {
+          position: absolute;
+          left: 50%;
+          top: 16px;
+          width: 2px;
+          transform: translateX(-50%);
+          background: linear-gradient(to bottom, #7C3AED, #06B6D4, #EC4899);
+          border-radius: 1px;
+          will-change: height;
         }
 
-        @media (max-width: 768px) {
-          .cta-card {
-            padding: var(--space-lg);
-          }
-
-          .cta-card h2 {
-            font-size: clamp(24px, 5vw, 36px);
-          }
-
-          .cta-card p {
-            font-size: 14px;
-          }
-
-          .cta-actions {
-            flex-direction: column;
-            gap: var(--space-sm);
-          }
-
-          .cta-actions a,
-          .cta-actions button {
-            width: 100%;
-          }
-        }
-
-        .cta-card p {
-          color: var(--text-secondary);
-        }
-
-        .section-heading {
-          max-width: 820px;
-          margin-bottom: var(--space-3xl);
-        }
-
-        .section-heading h2 {
-          color: var(--text-primary);
-          margin-top: var(--space-md);
-        }
-
-        .section-heading p {
-          margin-top: var(--space-md);
-        }
-
-        .milestone-stack {
+        .tl-entries {
+          grid-column: 2;
           display: flex;
           flex-direction: column;
           gap: var(--space-5xl);
+          padding-bottom: var(--space-5xl);
         }
 
-        .milestone-row {
-          display: grid;
-          grid-template-columns: 360px 1fr;
-          gap: var(--space-3xl);
-          align-items: start;
-          scroll-margin-top: calc(var(--nav-height) + var(--space-xl));
+        .tl-entry {
+          display: contents;
         }
 
-        @media (max-width: 1024px) {
-          .milestone-row {
-            gap: var(--space-2xl);
-          }
-        }
-
-        @media (max-width: 768px) {
-          .milestone-row {
-            gap: var(--space-lg);
-          }
-        }
-
-        /* ─── Milestone glyph (SVG visual in sticky card) ─────────── */
-        .sticky-visual {
-          position: sticky;
-          top: calc(var(--nav-height) + var(--space-xl));
-          height: 340px;
-          overflow: hidden;
-          border-radius: var(--radius-lg);
-          background: rgba(10, 9, 18, 0.7);
-          border: 1px solid rgba(255, 255, 255, 0.06);
+        /* Dot positioned on the track */
+        .tl-dot-wrap {
+          grid-column: 1;
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           justify-content: center;
+          padding-top: 10px;
+          position: relative;
+          z-index: 1;
         }
 
-        .mg {
-          width: 68%;
-          height: 68%;
-          overflow: visible;
+        .tl-dot {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 2px solid rgba(9, 8, 16, 0.8);
+          flex-shrink: 0;
         }
 
-        /* Pulsing dots */
-        @keyframes mgDotPulse {
-          0%, 100% { opacity: 0.55; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.35); }
-        }
-        .mg-dot { animation: mgDotPulse 2.8s ease-in-out infinite; }
-        .mg-dot-active { animation: mgDotPulse 1.6s ease-in-out infinite; }
-
-        /* Concentric ring breathe */
-        @keyframes mgRingBreathe {
-          0%, 100% { opacity: 0.25; }
-          50% { opacity: 0.55; }
-        }
-        .mg-ring { animation: mgRingBreathe 3.5s ease-in-out infinite; }
-        .mg-r2 { animation-delay: 0.6s; }
-        .mg-r3 { animation-delay: 1.2s; }
-
-        /* Radar sweep rotation */
-        @keyframes mgSweep {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .mg-sweep { animation: mgSweep 4s linear infinite; }
-
-        /* Bars grow in */
-        @keyframes mgBarGrow {
-          from { transform: scaleX(0); opacity: 0; }
-          to { transform: scaleX(1); opacity: 1; }
-        }
-        .mg-bar {
-          transform-origin: left center;
-          animation: mgBarGrow 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+        /* Entry content */
+        .tl-content {
+          grid-column: 2;
+          padding-bottom: var(--space-4xl);
         }
 
-        @media (max-width: 1024px) {
-          .sticky-visual { height: 300px; }
-        }
-        @media (max-width: 768px) {
-          .sticky-visual { height: 240px; position: relative; top: 0; }
-          .mg { width: 55%; height: 55%; }
-        }
-
-        .sticky-caption {
-          position: absolute;
-          left: var(--space-lg);
-          right: var(--space-lg);
-          bottom: var(--space-lg);
+        .tl-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: var(--space-md);
+          margin-bottom: var(--space-md);
         }
 
-        .sticky-caption span,
-        .milestone-content h3 {
+        .tl-stage {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .tl-number {
           font-family: var(--font-display);
-        }
-
-        .sticky-caption span {
-          font-size: 44px;
-          color: var(--accent-authority);
-          opacity: 0.5;
+          font-size: 72px;
+          font-weight: 700;
           line-height: 1;
+          color: rgba(255, 255, 255, 0.04);
+          letter-spacing: -0.02em;
+          user-select: none;
         }
 
-        .milestone-content h3 {
-          font-size: clamp(28px, 4vw, 48px);
-          line-height: 1.1;
-          margin: var(--space-md) 0;
+        .tl-title {
+          font-family: var(--font-display);
+          font-size: clamp(30px, 4vw, 52px);
+          font-weight: 700;
+          line-height: 1.07;
+          letter-spacing: -0.02em;
+          margin: 0 0 var(--space-md);
+          color: var(--text-primary);
         }
 
+        .tl-summary {
+          color: var(--text-secondary);
+          font-size: 15px;
+          line-height: 1.65;
+          max-width: 640px;
+          margin: 0 0 var(--space-xl);
+        }
+
+        .tl-flow {
+          margin-top: var(--space-xl);
+          padding-top: var(--space-md);
+          border-top: 1px solid var(--border-muted);
+          color: var(--accent-authority);
+          font-weight: 600;
+          font-size: 14px;
+          letter-spacing: 0.01em;
+        }
+
+        /* ─── Module cards ─────────────────────────────────────────── */
         .module-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: var(--space-md);
-          margin-top: var(--space-xl);
         }
 
         @media (max-width: 1024px) {
-          .module-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
+          .module-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+          .module-grid { grid-template-columns: 1fr; }
         }
 
         .module-card {
           position: relative;
           padding: 0;
           overflow: hidden;
-          transform-origin: center;
           transition:
             border-color var(--duration-default) ease,
             box-shadow var(--duration-default) ease,
@@ -1136,9 +802,7 @@ export default function ArchitectureDeepDive() {
           }
         }
 
-        .module-card button span {
-          display: block;
-        }
+        .module-card button span { display: block; }
 
         .module-card p,
         .module-card li,
@@ -1173,9 +837,7 @@ export default function ArchitectureDeepDive() {
           padding-bottom: var(--space-lg);
         }
 
-        .module-card p {
-          margin-top: 0;
-        }
+        .module-card p { margin-top: 0; }
 
         .module-card ul {
           margin: var(--space-md) 0;
@@ -1196,18 +858,25 @@ export default function ArchitectureDeepDive() {
           color: var(--accent-intelligence);
         }
 
-        .output,
-        .next-flow {
+        .output {
           border-top: 1px solid var(--border-muted);
           padding-top: var(--space-md);
         }
 
-        .next-flow {
-          margin-top: var(--space-xl);
-          color: var(--accent-authority);
-          font-weight: 600;
+        /* ─── Section headings ─────────────────────────────────────── */
+        .section-heading {
+          max-width: 820px;
+          margin-bottom: var(--space-3xl);
         }
 
+        .section-heading h2 {
+          color: var(--text-primary);
+          margin-top: var(--space-md);
+        }
+
+        .section-heading p { margin-top: var(--space-md); }
+
+        /* ─── Applied surfaces ─────────────────────────────────────── */
         .surface-tabs {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
@@ -1221,6 +890,10 @@ export default function ArchitectureDeepDive() {
           text-align: left;
           color: var(--text-primary);
           font-weight: 700;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid var(--border-muted);
+          cursor: pointer;
+          transition: all var(--duration-default) ease;
         }
 
         .surface-tabs button span {
@@ -1255,15 +928,12 @@ export default function ArchitectureDeepDive() {
         }
 
         @media (max-width: 1024px) {
-          .surface-flow {
-            grid-template-columns: repeat(2, 1fr);
-          }
+          .surface-flow { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 768px) {
-          .surface-flow {
-            grid-template-columns: 1fr;
-          }
+          .surface-flow { grid-template-columns: 1fr; }
+          .surface-tabs { grid-template-columns: 1fr; }
         }
 
         .surface-step {
@@ -1284,6 +954,7 @@ export default function ArchitectureDeepDive() {
           font-size: 14px;
         }
 
+        /* ─── Intelligence flow ────────────────────────────────────── */
         .sankey-card {
           padding: var(--space-xl);
           display: grid;
@@ -1292,108 +963,65 @@ export default function ArchitectureDeepDive() {
         }
 
         @media (max-width: 1024px) {
-          .sankey-card {
-            grid-template-columns: repeat(4, 1fr);
-          }
+          .sankey-card { grid-template-columns: repeat(4, 1fr); }
         }
 
-        @media (max-width: 768px) {
-          .sankey-card {
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-xs);
-            padding: var(--space-lg);
-          }
+        @media (max-width: 600px) {
+          .sankey-card { grid-template-columns: repeat(2, 1fr); }
         }
 
         .sankey-step {
           position: relative;
-          min-height: 150px;
-          border: 1.5px solid color-mix(in srgb, var(--node-color) 34%, var(--border-muted));
-          border-radius: var(--radius-md);
           padding: var(--space-md);
-          background:
-            linear-gradient(135deg,
-              color-mix(in srgb, var(--node-color) 8%, rgba(24,24,27,0.4)),
-              color-mix(in srgb, var(--node-color) 4%, rgba(24,24,27,0.6))),
-            rgba(255,255,255,0.015);
-          box-shadow:
-            0 0 1px color-mix(in srgb, var(--node-color) 16%, transparent),
-            inset 0 1px 2px color-mix(in srgb, var(--node-color) 12%, rgba(255,255,255,0.1));
-          transition: all var(--duration-default) ease;
-        }
-
-        .sankey-step:hover {
-          border-color: color-mix(in srgb, var(--node-color) 56%, var(--border-muted));
-          box-shadow:
-            0 0 12px color-mix(in srgb, var(--node-color) 24%, transparent),
-            inset 0 1px 2px color-mix(in srgb, var(--node-color) 12%, rgba(255,255,255,0.1));
-          transform: translateY(-2px);
+          border-radius: var(--radius-md);
+          background: rgba(255,255,255,0.03);
+          border: 1px solid var(--border-muted);
+          min-height: 110px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
         }
 
         .sankey-step span {
-          color: var(--node-color);
-          font-weight: 800;
-          font-size: 20px;
-          text-shadow: 0 0 8px color-mix(in srgb, var(--node-color) 28%, transparent);
+          color: var(--accent-authority);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
         }
 
         .sankey-step strong {
-          display: block;
-          margin-top: var(--space-md);
-          font-size: 14px;
-          line-height: 1.4;
-        }
-
-        @media (max-width: 1024px) {
-          .sankey-step {
-            min-height: 120px;
-            padding: var(--space-md);
-          }
-
-          .sankey-step span {
-            font-size: 18px;
-          }
-
-          .sankey-step strong {
-            font-size: 13px;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .sankey-step {
-            min-height: 100px;
-            padding: var(--space-sm);
-          }
-
-          .sankey-step span {
-            font-size: 16px;
-          }
-
-          .sankey-step strong {
-            font-size: 12px;
-            margin-top: 4px;
-          }
+          color: var(--text-primary);
+          font-size: 13px;
+          line-height: 1.35;
         }
 
         .sankey-step i {
           position: absolute;
+          right: -1px;
           top: 50%;
-          right: -14px;
-          width: 18px;
-          height: 1px;
-          background: var(--accent-intelligence);
-          z-index: 2;
+          width: 0;
+          height: 0;
+          border-top: 7px solid transparent;
+          border-bottom: 7px solid transparent;
+          border-left: 8px solid var(--border-muted);
+          transform: translateY(-50%);
+          z-index: 1;
         }
 
-        .architecture-cta {
-          padding-top: 0;
-        }
-
+        /* ─── CTA ──────────────────────────────────────────────────── */
         .cta-card {
+          padding: var(--space-xl);
           text-align: center;
-          max-width: 900px;
-          margin-inline: auto;
         }
+
+        .cta-card h2 {
+          font-family: var(--font-display);
+          font-size: clamp(28px, 4vw, 48px);
+          line-height: 1.1;
+          margin: var(--space-sm) 0 var(--space-md);
+        }
+
+        .cta-card p { color: var(--text-secondary); }
 
         .cta-actions {
           display: flex;
@@ -1403,41 +1031,36 @@ export default function ArchitectureDeepDive() {
           margin-top: var(--space-xl);
         }
 
-        @media (max-width: 1024px) {
-          .milestone-row {
-            grid-template-columns: 1fr;
+        /* ─── Timeline responsive ──────────────────────────────────── */
+        @media (max-width: 900px) {
+          .tl-container {
+            grid-template-columns: 32px 1fr;
+            gap: 0 var(--space-lg);
           }
 
-          .sticky-visual {
-            position: relative;
-            top: 0;
-          }
-
-          .module-grid,
-          .surface-flow {
-            grid-template-columns: 1fr;
-          }
-
-          .surface-tabs,
-          .sankey-card {
-            grid-template-columns: repeat(2, 1fr);
-          }
+          .tl-number { font-size: 48px; }
         }
 
-        @media (max-width: 768px) {
-          .surface-tabs,
-          .sankey-card {
-            grid-template-columns: 1fr;
+        @media (max-width: 600px) {
+          .tl-container {
+            grid-template-columns: 24px 1fr;
+            gap: 0 var(--space-md);
           }
 
+          .tl-dot { width: 12px; height: 12px; }
 
-          .sankey-step {
-            min-height: auto;
+          .architecture-hero { min-height: 85vh; }
+
+          .hero-title { font-size: clamp(44px, 12vw, 72px); }
+
+          .cta-card {
+            padding: var(--space-lg);
           }
 
-          .sankey-step i {
-            display: none;
-          }
+          .cta-card h2 { font-size: clamp(24px, 5vw, 36px); }
+
+          .cta-actions { flex-direction: column; gap: var(--space-sm); }
+          .cta-actions a { width: 100%; }
         }
       `}</style>
     </main>
