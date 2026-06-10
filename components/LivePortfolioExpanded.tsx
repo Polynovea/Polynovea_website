@@ -180,10 +180,6 @@ function EventCard({ event, delay }: EventCardProps) {
     <article className="event-card card" data-reveal="true" data-reveal-delay={String(delay)}>
       <div className="event-header">
         {event.dateLabel ? <span className="date-badge">{event.dateLabel}</span> : <span className="date-badge date-badge-muted">Past Show</span>}
-        <span className={`status-badge badge-${event.statusType}`}>
-          <span className="status-dot" />
-          {event.status || (event.statusType === "active" ? "Completed" : "Archive")}
-        </span>
       </div>
       <h3>{event.title}</h3>
       <div className="event-meta">
@@ -367,10 +363,6 @@ function VenueCard({ venue, delay }: VenueCardProps) {
       <div className="venue-body">
         <div className="venue-top">
           <span className="type-badge">{venue.type}</span>
-          <span className={`status-badge badge-${venue.statusType}`}>
-            <span className="status-dot" />
-            {venue.contactStatus}
-          </span>
         </div>
         <h3>{venue.name}</h3>
         <div className="venue-meta">

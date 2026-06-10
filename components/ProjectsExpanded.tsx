@@ -130,10 +130,6 @@ function ModuleCard({ module, delay }: ModuleCardProps) {
     <article className="module-card card" data-reveal="true" data-reveal-delay={String(delay)}>
       <div className="module-top">
         <span className="module-tag">{module.tag}</span>
-        <span className={`status-badge badge-${module.statusType}`}>
-          <span className="status-dot" aria-hidden="true" />
-          {module.status}
-        </span>
       </div>
       <h3>{module.title}</h3>
       <p>{module.desc}</p>
