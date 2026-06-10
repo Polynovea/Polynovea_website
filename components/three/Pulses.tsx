@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { NetworkData } from "./networkData";
@@ -14,12 +14,9 @@ interface PulseState {
 }
 
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
+const NEG_Y_AXIS = new THREE.Vector3(0, -1, 0);
+const GOLD_BASE = new THREE.Color("#F5E9C8");
 
-/**
- * Signal streaks travelling along synapse edges. Elongated waveform geometry
- * replaces the original spheres: each streak aligns to its edge direction and
- * pulses in brightness (via instanceColor) mid-flight rather than scale.
- */
 export default function Pulses({ data, count }: { data: NetworkData; count: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -40,7 +37,14 @@ export default function Pulses({ data, count }: { data: NetworkData; count: numb
     });
   }, [data, count]);
 
-  // Reused temp objects — allocated once, mutated per frame (intentional hot path).
+  // Pre-warm instanceColor to gold so the first frame isn't black.
+  useEffect(() => {
+    const mesh = meshRef.current;
+    if (!mesh) return;
+    for (let i = 0; i < count; i++) mesh.setColorAt(i, GOLD_BASE);
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  }, [count]);
+
   const _color = useMemo(() => new THREE.Color(), []);
   const _q = useMemo(() => new THREE.Quaternion(), []);
 
@@ -64,20 +68,21 @@ export default function Pulses({ data, count }: { data: NetworkData; count: numb
       const e = data.edges[p.edge];
       dummy.position.lerpVectors(e.a, e.b, p.t);
 
-      // Align the cylinder (default Y-axis) to edge direction.
-      _q.setFromUnitVectors(Y_AXIS, p.edgeDir);
+      // Guard: setFromUnitVectors breaks when vectors are antiparallel.
+      if (p.edgeDir.dot(Y_AXIS) < -0.9999) {
+        _q.setFromUnitVectors(NEG_Y_AXIS, Y_AXIS);
+      } else {
+        _q.setFromUnitVectors(Y_AXIS, p.edgeDir);
+      }
       dummy.quaternion.copy(_q);
 
-      // Streak length = 18% of edge, clamped for short edges.
       const streakLen = Math.min(p.edgeLen * 0.18, 1.2);
       dummy.scale.set(1, streakLen, 1);
-
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
 
-      // Waveform brightness: flare pulses via instanceColor instead of scale.
+      // Waveform brightness via instanceColor.
       const flare = 0.55 + Math.sin(p.t * Math.PI) * 0.85;
-      // Gold base (#F5E9C8) brightened toward white at peak flare.
       _color.setRGB(
         0.96 + flare * 0.04,
         0.91 + flare * 0.09,
@@ -92,7 +97,6 @@ export default function Pulses({ data, count }: { data: NetworkData; count: numb
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, count]} frustumCulled={false}>
-      {/* Thin elongated cylinder oriented along Y, rotated per-instance to edge dir. */}
       <cylinderGeometry args={[0.022, 0.022, 1, 5]} />
       <meshBasicMaterial color="#F5E9C8" toneMapped={false} vertexColors />
     </instancedMesh>

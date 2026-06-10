@@ -11,7 +11,7 @@ import { clusterFocus, journeyPosition } from "@/lib/clusterFocus";
 /** Short chapter titles that float in the network — one per cluster. These are
  *  environment, NOT the DOM copy: they label the "place" the camera arrives at. */
 const LABELS = [
-  "POLYNOVEA",
+  "", // cluster 0 (hero) — no label, it fights the hero copy
   "THE SYSTEM",
   "MILESTONES",
   "WHY DIFFERENT",
@@ -69,9 +69,9 @@ function WorldLabel({ index, text }: { index: number; text: string }) {
 export default function WorldLabels() {
   return (
     <group>
-      {Array.from({ length: SECTION_COUNT }, (_, i) => (
-        <WorldLabel key={i} index={i} text={LABELS[i] ?? ""} />
-      ))}
+      {Array.from({ length: SECTION_COUNT }, (_, i) =>
+        LABELS[i] ? <WorldLabel key={i} index={i} text={LABELS[i]} /> : null
+      )}
     </group>
   );
 }
