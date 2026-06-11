@@ -98,6 +98,19 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
         el.style.transform = `scale(${scale.toFixed(4)})`;
         el.style.filter = blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : "none";
 
+        // Born from the network: the legibility well + scale origin sit on this
+        // cluster's projected point (the camera tracks it, so ~centre — correct
+        // for readability). The card's children stream in from the *incoming*
+        // cluster's direction (i+1, off-centre as it drifts in from the depths),
+        // so content arrives along the synapse the camera is flying down.
+        const cs = depthState.clusterScreen[i];
+        const src = depthState.clusterScreen[Math.min(i + 1, SECTION_COUNT - 1)];
+        const ox = (cs.x * 100).toFixed(1);
+        const oy = (cs.y * 100).toFixed(1);
+        el.style.transformOrigin = `${ox}% ${oy}%`;
+        el.style.setProperty("--birth-x", `${((src.x - 0.5) * 140).toFixed(1)}px`);
+        el.style.setProperty("--birth-y", `${((src.y - 0.5) * 120 + 26).toFixed(1)}px`);
+
         // Card assembly: snap children in when the camera arrives.
         const assembled = local > -0.38 && local < 0.18;
         if (assembled !== el.classList.contains("pane-assembled")) {
@@ -108,6 +121,8 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
         // Lens opacity: scene bleeds through at the crossing midpoint.
         const lensEl = el.querySelector<HTMLElement>(".depth-lens");
         if (lensEl) {
+          lensEl.style.setProperty("--lens-x", `${ox}%`);
+          lensEl.style.setProperty("--lens-y", `${oy}%`);
           lensEl.style.opacity = Math.max(0, 1 - dist * 1.6).toFixed(3);
         }
       });

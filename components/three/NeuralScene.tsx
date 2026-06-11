@@ -6,7 +6,7 @@ import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { PerformanceMonitor, AdaptiveDpr } from "@react-three/drei";
 import * as THREE from "three";
 import { depthState, SCENE_READY_EVENT, SECTION_COUNT } from "@/lib/depthStore";
-import { generateNetwork } from "./networkData";
+import { generateNetwork, clusterCenter } from "./networkData";
 import Network from "./Network";
 import Pulses from "./Pulses";
 import TheatreCamera from "./TheatreCamera";
@@ -22,6 +22,28 @@ function ReadySignal() {
     announced.current = true;
     depthState.sceneReady = true;
     window.dispatchEvent(new Event(SCENE_READY_EVENT));
+  });
+  return null;
+}
+
+/**
+ * Publishes each cluster's projected screen position into depthState every
+ * frame, so the DOM pager can anchor card "birth" to the exact point in the
+ * network the camera is arriving at. The bridge between the WebGL scene and the
+ * DOM cards — the connective tissue the removed floating labels never gave us.
+ */
+function ClusterProjector() {
+  const { camera } = useThree();
+  const v = useRef(new THREE.Vector3());
+  useFrame(() => {
+    for (let i = 0; i < SECTION_COUNT; i++) {
+      v.current.copy(clusterCenter(i)).project(camera);
+      const point = depthState.clusterScreen[i];
+      // NDC (-1..1) → screen fraction (0..1, top-left origin), clamped so a
+      // cluster drifting off-frame still anchors to a sane on-card position.
+      point.x = Math.min(0.84, Math.max(0.16, v.current.x * 0.5 + 0.5));
+      point.y = Math.min(0.82, Math.max(0.22, -v.current.y * 0.5 + 0.5));
+    }
   });
   return null;
 }
@@ -129,6 +151,7 @@ export default function NeuralScene() {
         <ClusterIgnite lowPower={lowPower} />
         <DataReadouts />
         <TheatreCamera lightRef={goldLightRef} />
+        <ClusterProjector />
         <ReadySignal />
 
         {!lowPower && !degraded && <DynamicBloom />}

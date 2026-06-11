@@ -9,6 +9,12 @@ export const SECTION_COUNT = 9;
 
 export type SceneMode = "journey" | "ambient";
 
+/** A cluster's projected position on screen, normalized 0..1 (top-left origin). */
+export interface ScreenPoint {
+  x: number;
+  y: number;
+}
+
 export interface DepthState {
   /** 0..1 across the whole journey */
   progress: number;
@@ -22,6 +28,12 @@ export interface DepthState {
   ambientIndex: number;
   /** set once the WebGL scene has rendered its first frame */
   sceneReady: boolean;
+  /**
+   * Each cluster's projected screen position (0..1), written every frame by the
+   * WebGL scene and read by the DOM pager so cards can be "born" from the exact
+   * spot in the network the camera arrives at. Preallocated; mutated in place.
+   */
+  clusterScreen: ScreenPoint[];
 }
 
 export const depthState: DepthState = {
@@ -31,6 +43,7 @@ export const depthState: DepthState = {
   sceneMode: "journey",
   ambientIndex: 0,
   sceneReady: false,
+  clusterScreen: Array.from({ length: SECTION_COUNT }, () => ({ x: 0.5, y: 0.5 })),
 };
 
 export const SCENE_READY_EVENT = "polynovea:scene-ready";

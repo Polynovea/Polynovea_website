@@ -755,8 +755,10 @@ html.reveal-lock body {
 .depth-lens {
   position: absolute;
   inset: 0;
+  /* Centered on the active cluster's projected point (set per-frame by JS) so
+     the legibility "well" sits exactly where the card is born in the network. */
   background: radial-gradient(
-    ellipse 80% 70% at 50% 50%,
+    ellipse 80% 70% at var(--lens-x, 50%) var(--lens-y, 50%),
     rgba(8, 7, 15, 0.74) 0%,
     rgba(8, 7, 15, 0.52) 38%,
     rgba(8, 7, 15, 0.18) 68%,
@@ -798,10 +800,12 @@ html.reveal-lock body {
 
 /* ── Phase 3b: Card assembly ─────────────────────────────────────────────── */
 
-/* Default: children are invisible, collapsed, blurred — waiting to be born. */
+/* Default: children are invisible, collapsed, blurred — waiting to be born.
+   --birth-x/y (set per-frame by DepthRoot) point back toward the cluster's
+   on-screen position, so content streams in *from* the network, not just up. */
 body.depth-mode .depth-pane .container > * {
   opacity: 0;
-  transform: translateY(28px) scale(0.97);
+  transform: translate(var(--birth-x, 0px), var(--birth-y, 28px)) scale(0.95);
   filter: blur(8px);
   transition:
     opacity  0.15s ease-in,
