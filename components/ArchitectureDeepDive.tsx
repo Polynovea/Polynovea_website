@@ -1,19 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
-import type { CSSProperties } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { useState } from "react";
 import Link from "next/link";
 
 type MilestoneKey = "m1" | "m2" | "m3" | "m4";
 type SurfaceKey = "venues" | "music";
-
-const milestoneColors: Record<MilestoneKey, string> = {
-  m1: "#7C3AED",
-  m2: "#FBBF24",
-  m3: "#06B6D4",
-  m4: "#EC4899",
-};
 
 const milestones = [
   {
@@ -135,11 +126,10 @@ const milestones = [
   },
 ];
 
-const appliedSurfaces: Record<SurfaceKey, { label: string; eyebrow: string; color: string; examples: string[] }> = {
+const appliedSurfaces: Record<SurfaceKey, { label: string; eyebrow: string; examples: string[] }> = {
   venues: {
     label: "Venue Revenue Optimisation",
     eyebrow: "Live environments",
-    color: "#7C3AED",
     examples: [
       "Measure baseline venue behavior before changing the experience.",
       "Track sales timing, dwell time, audience retention, and response quality.",
@@ -150,7 +140,6 @@ const appliedSurfaces: Record<SurfaceKey, { label: string; eyebrow: string; colo
   music: {
     label: "Music Creation & Production",
     eyebrow: "Cultural output",
-    color: "#FBBF24",
     examples: [
       "Study how structure, lyric, emotion, and production choices shape listener response.",
       "Use audience and context signals to guide creative decisions without flattening taste.",
@@ -171,31 +160,19 @@ function TimelineEntry({
   expandedModules: Set<string>;
   onToggle: (key: string) => void;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
-  const color = milestoneColors[milestone.key];
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   return (
-    <motion.div
-      ref={ref}
-      className="entry"
-      id={`milestone-${milestone.key}`}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <div className="entry" id={`milestone-${milestone.key}`} data-reveal>
       {/* Dot on the timeline track */}
-      <div
-        className="entry-dot"
-        style={{ background: color, boxShadow: `0 0 14px ${color}99` }}
-        aria-hidden="true"
-      />
+      <div className="entry-dot" aria-hidden="true" />
+
+      {/* Oversized ghost numeral anchoring the layer */}
+      <span className="entry-num" aria-hidden="true">{milestone.number}</span>
 
       {/* Header row */}
       <div className="entry-head">
-        <span className="entry-stage" style={{ color }}>{milestone.stage}</span>
-        <span className="entry-num" aria-hidden="true">{milestone.number}</span>
+        <span className="entry-stage">{milestone.stage}</span>
       </div>
 
       {/* Title + summary */}
@@ -214,7 +191,6 @@ function TimelineEntry({
             <div
               key={item.title}
               className={`mod-card${open ? " open" : ""}`}
-              style={{ "--mc": color } as CSSProperties}
               onMouseEnter={() => setHoveredIdx(index)}
               onMouseLeave={() => setHoveredIdx(null)}
             >
@@ -231,7 +207,10 @@ function TimelineEntry({
                   <ul>
                     {item.how.map((line) => <li key={line}>{line}</li>)}
                   </ul>
-                  <div className="mod-output">Output: {item.output}</div>
+                  <div className="mod-output">
+                    <span className="mod-output-label">Output</span>
+                    {item.output}
+                  </div>
                 </div>
               </div>
             </div>
@@ -252,43 +231,53 @@ function TimelineEntry({
         .entry-dot {
           position: absolute;
           left: -8px;
-          top: 14px;
-          width: 16px;
-          height: 16px;
+          top: 16px;
+          width: 14px;
+          height: 14px;
           border-radius: 50%;
+          background: var(--accent-intelligence);
           border: 2.5px solid #090810;
+          box-shadow: 0 0 14px rgba(124, 58, 237, 0.6);
           z-index: 2;
         }
 
+        /* Oversized ghost numeral — deliberate layer anchor, not decoration */
+        .entry-num {
+          position: absolute;
+          top: -0.18em;
+          right: 0;
+          font-family: var(--font-display);
+          font-size: clamp(86px, 11vw, 168px);
+          font-weight: 700;
+          line-height: 1;
+          letter-spacing: -0.04em;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(230, 211, 163, 0.12);
+          user-select: none;
+          pointer-events: none;
+          z-index: 0;
+        }
+
         .entry-head {
-          display: flex;
-          align-items: baseline;
-          justify-content: space-between;
-          margin-bottom: var(--space-md);
+          margin-bottom: var(--space-sm);
         }
 
         .entry-stage {
+          font-family: var(--font-mono);
           font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
+          font-weight: 500;
+          letter-spacing: 0.22em;
           text-transform: uppercase;
-        }
-
-        .entry-num {
-          font-family: var(--font-display);
-          font-size: 64px;
-          font-weight: 700;
-          line-height: 1;
-          color: rgba(255, 255, 255, 0.04);
-          letter-spacing: -0.02em;
-          user-select: none;
+          color: var(--accent-authority);
         }
 
         .entry-title {
+          position: relative;
+          z-index: 1;
           font-family: var(--font-display);
-          font-size: clamp(28px, 3.5vw, 48px);
+          font-size: clamp(32px, 4vw, 56px);
           font-weight: 700;
-          line-height: 1.06;
+          line-height: 1.04;
           letter-spacing: -0.02em;
           margin: 0 0 var(--space-md);
           color: var(--text-primary);
@@ -296,10 +285,10 @@ function TimelineEntry({
 
         .entry-summary {
           color: var(--text-secondary);
-          font-size: 15px;
-          line-height: 1.65;
+          font-size: 16px;
+          line-height: 1.7;
           max-width: 620px;
-          margin: 0 0 var(--space-xl);
+          margin: 0 0 var(--space-2xl);
         }
 
         /* Module grid */
@@ -320,46 +309,44 @@ function TimelineEntry({
         .mod-card {
           position: relative;
           overflow: hidden;
-          border-radius: var(--radius-md);
-          border: 1px solid var(--border-muted);
-          background: rgba(255, 255, 255, 0.02);
+          border-radius: var(--radius-sm);
+          border: 1px solid rgba(124, 58, 237, 0.22);
+          background: transparent;
           transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease,
-            transform 0.2s ease,
-            background 0.2s ease;
+            border-color 0.22s ease,
+            background 0.22s ease,
+            transform 0.22s ease;
         }
 
         .mod-card::before {
           content: "";
           position: absolute;
           inset: 0 auto 0 0;
-          width: 3px;
-          background: var(--mc);
-          opacity: 0.8;
-          border-radius: 3px 0 0 3px;
+          width: 2px;
+          background: var(--accent-intelligence);
+          opacity: 0.7;
         }
 
         .mod-card.open {
-          background: color-mix(in srgb, var(--mc) 8%, rgba(24,24,27,0.6));
-          border-color: color-mix(in srgb, var(--mc) 50%, var(--border-muted));
-          box-shadow: 0 0 28px color-mix(in srgb, var(--mc) 16%, transparent);
+          background: rgba(124, 58, 237, 0.06);
+          border-color: rgba(124, 58, 237, 0.55);
           transform: translateY(-2px);
         }
 
         .mod-card button {
           width: 100%;
-          min-height: 68px;
+          min-height: 64px;
           padding: var(--space-md) var(--space-lg);
-          padding-left: calc(var(--space-lg) + 3px);
+          padding-left: calc(var(--space-lg) + 2px);
           background: transparent;
           border: 0;
           cursor: pointer;
           color: var(--text-primary);
-          font: inherit;
+          font-family: var(--font-body);
           font-size: 14px;
-          font-weight: 700;
-          line-height: 1.35;
+          font-weight: 600;
+          line-height: 1.4;
+          letter-spacing: -0.01em;
           text-align: left;
         }
 
@@ -378,7 +365,7 @@ function TimelineEntry({
           min-height: 0;
           overflow: hidden;
           padding: 0 var(--space-lg);
-          padding-left: calc(var(--space-lg) + 3px);
+          padding-left: calc(var(--space-lg) + 2px);
         }
 
         .mod-card.open .mod-inner {
@@ -386,11 +373,10 @@ function TimelineEntry({
         }
 
         .mod-inner p,
-        .mod-inner li,
-        .mod-output {
+        .mod-inner li {
           color: var(--text-secondary);
           font-size: 13px;
-          line-height: 1.6;
+          line-height: 1.65;
           margin: 0;
         }
 
@@ -415,22 +401,38 @@ function TimelineEntry({
         }
 
         .mod-output {
-          border-top: 1px solid var(--border-muted);
+          border-top: 1px solid rgba(124, 58, 237, 0.18);
           padding-top: var(--space-sm);
-          margin-top: var(--space-sm);
+          margin-top: var(--space-md);
+          font-family: var(--font-mono);
+          font-size: 11px;
+          line-height: 1.6;
+          letter-spacing: 0.02em;
+          color: var(--text-secondary);
+        }
+
+        .mod-output-label {
+          display: block;
+          margin-bottom: 4px;
+          color: var(--accent-authority-muted);
+          text-transform: uppercase;
+          letter-spacing: 0.18em;
+          font-size: 10px;
         }
 
         .entry-flow {
           margin-top: var(--space-xl);
           padding-top: var(--space-md);
           border-top: 1px solid var(--border-muted);
+          font-family: var(--font-mono);
           color: var(--accent-authority);
-          font-weight: 600;
-          font-size: 13px;
-          letter-spacing: 0.01em;
+          font-size: 12px;
+          font-weight: 500;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
         }
       `}</style>
-    </motion.div>
+    </div>
   );
 }
 
@@ -443,22 +445,11 @@ function MilestoneTimeline({
   expandedModules: Set<string>;
   onToggle: (key: string) => void;
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start 15%", "end 65%"],
-  });
-  const beamScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
   return (
-    <div ref={containerRef} className="tl">
-      {/* Track */}
+    <div className="tl">
+      {/* Track — static violet→gold spine */}
       <div className="tl-track" aria-hidden="true">
         <div className="tl-line" />
-        <motion.div
-          className="tl-beam"
-          style={{ scaleY: beamScaleY, originY: 0 }}
-        />
       </div>
 
       {/* Entries */}
@@ -485,7 +476,6 @@ function MilestoneTimeline({
           position: relative;
           grid-column: 1;
           grid-row: 1;
-          /* Stretch to cover entries column height */
           align-self: stretch;
         }
 
@@ -494,23 +484,14 @@ function MilestoneTimeline({
           left: 50%;
           top: 24px;
           bottom: 24px;
-          width: 2px;
+          width: 1px;
           transform: translateX(-50%);
-          background: rgba(255, 255, 255, 0.07);
-          border-radius: 1px;
-        }
-
-        .tl-beam {
-          position: absolute;
-          left: 50%;
-          top: 24px;
-          bottom: 24px;
-          width: 2px;
-          transform: translateX(-50%);
-          background: linear-gradient(to bottom, #7C3AED 0%, #06B6D4 60%, #EC4899 100%);
-          border-radius: 1px;
-          transform-origin: top center;
-          will-change: transform;
+          background: linear-gradient(
+            to bottom,
+            rgba(124, 58, 237, 0.7) 0%,
+            rgba(124, 58, 237, 0.35) 50%,
+            rgba(230, 211, 163, 0.6) 100%
+          );
         }
 
         .tl-entries {
@@ -550,57 +531,29 @@ export default function ArchitectureDeepDive() {
 
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="arch-hero">
-        <div className="hero-aurora" aria-hidden="true" />
-        <div className="hero-dots" aria-hidden="true" />
-
         <div className="container hero-body">
-          <motion.span
-            className="hero-label"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: "easeOut" }}
-          >
+          <span className="hero-label" data-reveal>
             The Behavioral Intelligence Stack
-          </motion.span>
+          </span>
 
-          <motion.h1
-            className="hero-title"
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            From behavior<br />to ownership.
-          </motion.h1>
+          <h1 className="hero-title" data-reveal data-reveal-delay="100">
+            From behavior<br />to <span className="gold">ownership.</span>
+          </h1>
 
-          <motion.p
-            className="hero-desc"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.2, ease: "easeOut" }}
-          >
+          <p className="hero-desc" data-reveal data-reveal-delay="200">
             Polynovea turns fragmented human behavior into intelligence, uses that intelligence
             to create IP, commercializes the infrastructure, and compounds toward
             distribution control.
-          </motion.p>
+          </p>
 
-          <motion.div
-            className="hero-chips"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.55, delay: 0.36 }}
-          >
+          <div className="hero-chips" data-reveal data-reveal-delay="320">
             {milestones.map((m) => (
-              <a
-                key={m.key}
-                href={`#milestone-${m.key}`}
-                className="chip"
-                style={{ "--cc": milestoneColors[m.key] } as CSSProperties}
-              >
-                <span className="chip-dot" aria-hidden="true" />
-                {m.number} — {m.title}
+              <a key={m.key} href={`#milestone-${m.key}`} className="chip">
+                <span className="chip-num">{m.number}</span>
+                {m.title}
               </a>
             ))}
-          </motion.div>
+          </div>
         </div>
 
         <div className="hero-fade" aria-hidden="true" />
@@ -610,9 +563,7 @@ export default function ArchitectureDeepDive() {
       <section className="section">
         <div className="container">
           <div className="sec-head" data-reveal>
-            <span className="t-label" style={{ color: "var(--accent-authority)" }}>
-              Milestone Breakdown
-            </span>
+            <span className="sec-label">Milestone Breakdown</span>
             <h2 className="t-display-md">Four compounding layers.</h2>
           </div>
 
@@ -627,9 +578,7 @@ export default function ArchitectureDeepDive() {
       <section className="section">
         <div className="container">
           <div className="sec-head" data-reveal>
-            <span className="t-label" style={{ color: "var(--accent-authority)" }}>
-              Applied Surfaces
-            </span>
+            <span className="sec-label">Applied Surfaces</span>
             <h2 className="t-display-md">Where the framework is being tested first.</h2>
             <p className="t-body-lg">
               The system is strongest when it stays close to measurable reality. For now, the clearest
@@ -642,7 +591,6 @@ export default function ArchitectureDeepDive() {
               <button
                 key={key}
                 className={key === selectedSurface ? "active" : ""}
-                style={{ "--sc": appliedSurfaces[key].color } as CSSProperties}
                 onClick={() => setSelectedSurface(key)}
               >
                 {appliedSurfaces[key].label}
@@ -651,13 +599,9 @@ export default function ArchitectureDeepDive() {
             ))}
           </div>
 
-          <div
-            className="surf-card card"
-            style={{ "--sc": surface.color } as CSSProperties}
-            data-reveal
-          >
+          <div className="surf-card" data-reveal>
             <div>
-              <span className="t-label" style={{ color: surface.color }}>{surface.eyebrow}</span>
+              <span className="surf-eyebrow">{surface.eyebrow}</span>
               <h3>{surface.label}</h3>
             </div>
             <div className="surf-flow">
@@ -676,12 +620,10 @@ export default function ArchitectureDeepDive() {
       <section className="section">
         <div className="container">
           <div className="sec-head" data-reveal>
-            <span className="t-label" style={{ color: "var(--accent-authority)" }}>
-              Intelligence Flow
-            </span>
+            <span className="sec-label">Intelligence Flow</span>
             <h2 className="t-display-md">How signal becomes leverage.</h2>
           </div>
-          <div className="sankey card" data-reveal>
+          <div className="sankey" data-reveal>
             {[
               "Raw behavior input", "Decision framework", "Acquisition system",
               "Optimization system", "Execution layer", "Monetization",
@@ -700,10 +642,8 @@ export default function ArchitectureDeepDive() {
       {/* ── CTA ───────────────────────────────────────────────────── */}
       <section className="section">
         <div className="container">
-          <div className="cta-card card">
-            <span className="t-label" style={{ color: "var(--accent-authority)" }}>
-              Build The System
-            </span>
+          <div className="cta-card">
+            <span className="sec-label">Build The System</span>
             <h2>Bring behavioral intelligence into your ecosystem.</h2>
             <p>
               Partner with Polynovea to define the signals, build the measurement layer, and turn
@@ -723,7 +663,7 @@ export default function ArchitectureDeepDive() {
           color: var(--text-primary);
         }
 
-        /* ── Hero ──────────────────────────────────────────────── */
+        /* ── Hero — scene-forward, editorial ───────────────────── */
         .arch-hero {
           position: relative;
           min-height: 100vh;
@@ -733,34 +673,10 @@ export default function ArchitectureDeepDive() {
           padding-top: var(--nav-height);
         }
 
-        .hero-aurora {
-          position: absolute;
-          inset: 0;
-          background:
-            radial-gradient(ellipse 80% 60% at 18% 22%, rgba(124, 58, 237, 0.30) 0%, transparent 52%),
-            radial-gradient(ellipse 55% 45% at 82% 68%, rgba(6, 182, 212, 0.16) 0%, transparent 48%),
-            radial-gradient(ellipse 45% 38% at 52% 42%, rgba(236, 72, 153, 0.10) 0%, transparent 44%);
-          animation: aurora 14s ease-in-out infinite alternate;
-        }
-
-        @keyframes aurora {
-          0%   { transform: scale(1) translate(0, 0); }
-          50%  { transform: scale(1.05) translate(-1.5%, 1.2%); }
-          100% { transform: scale(1) translate(1%, -0.8%); }
-        }
-
-        .hero-dots {
-          position: absolute;
-          inset: 0;
-          background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
-          background-size: 36px 36px;
-          mask-image: radial-gradient(ellipse 75% 65% at 50% 50%, black 20%, transparent 100%);
-        }
-
         .hero-fade {
           position: absolute;
           bottom: 0; left: 0; right: 0;
-          height: 35%;
+          height: 30%;
           background: linear-gradient(to bottom, transparent, #090810);
           pointer-events: none;
           z-index: 1;
@@ -769,90 +685,98 @@ export default function ArchitectureDeepDive() {
         .hero-body {
           position: relative;
           z-index: 2;
-          max-width: 860px;
+          max-width: 940px;
           padding-bottom: var(--space-4xl);
         }
 
         .hero-label {
           display: block;
+          font-family: var(--font-mono);
           color: var(--accent-authority);
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
+          font-size: 12px;
+          font-weight: 500;
+          letter-spacing: 0.2em;
           text-transform: uppercase;
           margin-bottom: var(--space-lg);
         }
 
         .hero-title {
           font-family: var(--font-display);
-          font-size: clamp(52px, 7.5vw, 108px);
+          font-size: clamp(56px, 8vw, 116px);
           font-weight: 700;
-          line-height: 0.96;
+          line-height: 0.95;
           letter-spacing: -0.03em;
           margin: 0 0 var(--space-xl);
-          background: linear-gradient(135deg, #ffffff 55%, rgba(168, 132, 255, 0.65));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          color: var(--text-primary);
+        }
+
+        .hero-title .gold {
+          color: var(--accent-authority);
         }
 
         .hero-desc {
           color: var(--text-secondary);
-          font-size: clamp(15px, 1.6vw, 18px);
-          line-height: 1.65;
-          max-width: 520px;
+          font-size: clamp(16px, 1.6vw, 19px);
+          line-height: 1.7;
+          max-width: 560px;
           margin: 0 0 var(--space-2xl);
         }
 
         .hero-chips {
           display: flex;
           flex-wrap: wrap;
-          gap: 8px;
+          gap: var(--space-sm);
         }
 
         .chip {
           display: inline-flex;
           align-items: center;
-          gap: 7px;
-          border-radius: var(--radius-pill);
-          padding: 7px 14px 7px 10px;
-          font-size: 12px;
+          gap: 10px;
+          border-radius: var(--radius-sm);
+          padding: 9px 16px;
+          font-size: 13px;
           font-weight: 500;
           line-height: 1;
           white-space: nowrap;
           text-decoration: none;
           color: var(--text-secondary);
-          background: rgba(255,255,255,0.03);
-          border: 1px solid var(--border-muted);
+          background: transparent;
+          border: 1px solid rgba(124, 58, 237, 0.22);
           transition: all 0.2s ease;
         }
 
         .chip:hover {
           color: var(--text-primary);
-          border-color: var(--cc);
-          background: color-mix(in srgb, var(--cc) 10%, transparent);
-          box-shadow: 0 0 16px color-mix(in srgb, var(--cc) 20%, transparent);
-          transform: translateY(-1px);
+          border-color: rgba(124, 58, 237, 0.6);
+          background: rgba(124, 58, 237, 0.06);
         }
 
-        .chip-dot {
-          display: inline-block;
-          width: 7px; height: 7px;
-          border-radius: 50%;
-          background: var(--cc);
-          box-shadow: 0 0 6px var(--cc);
-          flex-shrink: 0;
+        .chip-num {
+          font-family: var(--font-mono);
+          font-size: 11px;
+          letter-spacing: 0.1em;
+          color: var(--accent-authority);
         }
 
-        /* ── Section ───────────────────────────────────────────── */
+        /* ── Section heads ─────────────────────────────────────── */
         .sec-head {
           max-width: 760px;
           margin-bottom: var(--space-3xl);
         }
 
+        .sec-label {
+          display: block;
+          font-family: var(--font-mono);
+          font-size: 12px;
+          font-weight: 500;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--accent-authority);
+          margin-bottom: var(--space-md);
+        }
+
         .sec-head h2 {
           color: var(--text-primary);
-          margin-top: var(--space-md);
         }
 
         .sec-head p { margin-top: var(--space-md); }
@@ -862,43 +786,58 @@ export default function ArchitectureDeepDive() {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: var(--space-sm);
-          margin-bottom: var(--space-lg);
+          margin-bottom: var(--space-md);
         }
 
         .surf-tabs button {
-          border-radius: var(--radius-md);
-          padding: var(--space-md);
+          border-radius: var(--radius-sm);
+          padding: var(--space-md) var(--space-lg);
           text-align: left;
           color: var(--text-primary);
-          font-weight: 700;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid var(--border-muted);
+          font-family: var(--font-body);
+          font-weight: 600;
+          font-size: 15px;
+          background: transparent;
+          border: 1px solid rgba(124, 58, 237, 0.22);
           cursor: pointer;
           transition: all 0.2s ease;
-          font: inherit;
         }
 
         .surf-tabs button span {
           display: block;
           margin-top: 4px;
+          font-family: var(--font-mono);
           color: var(--text-disabled);
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 500;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
         }
 
         .surf-tabs button.active {
-          border-color: var(--sc);
-          box-shadow: 0 0 22px color-mix(in srgb, var(--sc) 22%, transparent);
+          border-color: rgba(124, 58, 237, 0.6);
+          background: rgba(124, 58, 237, 0.06);
         }
 
         .surf-card {
-          padding: var(--space-xl);
-          border-color: color-mix(in srgb, var(--sc) 34%, var(--border-muted));
+          border: 1px solid rgba(124, 58, 237, 0.22);
+          border-radius: var(--radius-sm);
+          padding: var(--space-2xl);
+        }
+
+        .surf-eyebrow {
+          font-family: var(--font-mono);
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--accent-authority);
         }
 
         .surf-card h3 {
           font-family: var(--font-display);
-          font-size: 34px;
+          font-size: clamp(26px, 3vw, 38px);
+          font-weight: 700;
+          letter-spacing: -0.02em;
           margin-top: var(--space-sm);
         }
 
@@ -906,22 +845,26 @@ export default function ArchitectureDeepDive() {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: var(--space-md);
-          margin-top: var(--space-xl);
+          margin-top: var(--space-2xl);
         }
 
         .surf-step {
-          background: rgba(255,255,255,0.03);
           border: 1px solid var(--border-muted);
-          border-radius: var(--radius-md);
+          border-radius: var(--radius-sm);
           padding: var(--space-md);
         }
 
-        .surf-step span { color: var(--sc); font-weight: 800; }
-        .surf-step p { color: var(--text-secondary); margin-top: var(--space-sm); font-size: 14px; }
+        .surf-step span {
+          font-family: var(--font-mono);
+          color: var(--accent-intelligence);
+          font-weight: 600;
+          font-size: 12px;
+          letter-spacing: 0.1em;
+        }
+        .surf-step p { color: var(--text-secondary); margin-top: var(--space-sm); font-size: 14px; line-height: 1.55; }
 
-        /* ── Intelligence flow ─────────────────────────────────── */
+        /* ── Intelligence flow rail ────────────────────────────── */
         .sankey {
-          padding: var(--space-xl);
           display: grid;
           grid-template-columns: repeat(8, 1fr);
           gap: var(--space-sm);
@@ -930,53 +873,67 @@ export default function ArchitectureDeepDive() {
         .sankey-step {
           position: relative;
           padding: var(--space-md);
-          border-radius: var(--radius-md);
-          background: rgba(255,255,255,0.03);
-          border: 1px solid var(--border-muted);
-          min-height: 110px;
+          border-radius: var(--radius-sm);
+          background: transparent;
+          border: 1px solid rgba(124, 58, 237, 0.2);
+          min-height: 112px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
         }
 
         .sankey-step span {
+          font-family: var(--font-mono);
           color: var(--accent-authority);
           font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
+          font-weight: 500;
+          letter-spacing: 0.12em;
         }
 
         .sankey-step strong {
           color: var(--text-primary);
           font-size: 13px;
+          font-weight: 600;
           line-height: 1.35;
+          letter-spacing: -0.01em;
         }
 
         .sankey-step i {
           position: absolute;
           right: -1px; top: 50%;
           width: 0; height: 0;
-          border-top: 7px solid transparent;
-          border-bottom: 7px solid transparent;
-          border-left: 8px solid var(--border-muted);
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          border-left: 7px solid var(--accent-intelligence);
           transform: translateY(-50%);
           z-index: 1;
+          opacity: 0.7;
         }
 
         /* ── CTA ───────────────────────────────────────────────── */
         .cta-card {
-          padding: var(--space-xl);
+          border: 1px solid rgba(124, 58, 237, 0.22);
+          border-radius: var(--radius-sm);
+          padding: var(--space-3xl) var(--space-2xl);
           text-align: center;
         }
 
         .cta-card h2 {
           font-family: var(--font-display);
           font-size: clamp(28px, 4vw, 48px);
-          line-height: 1.1;
-          margin: var(--space-sm) 0 var(--space-md);
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          line-height: 1.08;
+          margin: var(--space-sm) auto var(--space-md);
+          max-width: 720px;
         }
 
-        .cta-card p { color: var(--text-secondary); }
+        .cta-card p {
+          color: var(--text-secondary);
+          max-width: 580px;
+          margin: 0 auto;
+          line-height: 1.7;
+        }
 
         .cta-actions {
           display: flex;
@@ -995,12 +952,11 @@ export default function ArchitectureDeepDive() {
         @media (max-width: 768px) {
           .surf-tabs { grid-template-columns: 1fr; }
           .surf-flow { grid-template-columns: 1fr; }
-          .hero-title { font-size: clamp(44px, 12vw, 72px); }
         }
 
         @media (max-width: 600px) {
           .sankey { grid-template-columns: repeat(2, 1fr); }
-          .cta-card { padding: var(--space-lg); }
+          .cta-card { padding: var(--space-xl) var(--space-lg); }
           .cta-actions { flex-direction: column; }
           .cta-actions a { width: 100%; }
         }

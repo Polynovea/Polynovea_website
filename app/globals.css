@@ -89,6 +89,7 @@
 
   --font-display: "Clash Display", sans-serif;
   --font-body: "Inter", "Helvetica Neue", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", monospace;
 
   --radius-sm: 4px;
   --radius-md: 8px;
