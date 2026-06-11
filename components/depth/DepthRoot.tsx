@@ -19,23 +19,49 @@ function easeOutQuart(t: number): number {
   return 1 - Math.pow(1 - t, 4);
 }
 
+/** Measure 100svh in px once — stable regardless of address-bar shifts. */
+function measureSvh(): number {
+  const el = document.createElement("div");
+  el.style.cssText = "position:fixed;top:0;left:0;height:100svh;width:0;pointer-events:none;visibility:hidden;";
+  document.body.appendChild(el);
+  const h = el.offsetHeight;
+  document.body.removeChild(el);
+  return h || window.innerHeight;
+}
+
 /**
  * Z-axis section pager. The document provides (N-1) viewports of scroll
  * range; every pane is a fixed full-viewport layer. Scroll progress fades
  * and scales panes so new sections arrive from the back (small, blurred)
  * while outgoing sections fly past the camera (enlarged, fading).
  *
- * Mobile and reduced-motion users get a normal scrolling page instead.
+ * Reduced-motion users get a normal scrolling page instead.
+ * Touch devices use CSS scroll-snap; pointer devices use GSAP snap.
  */
 export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
   const [mode, setMode] = useState<"flow" | "depth">("flow");
   const viewportRef = useRef<HTMLDivElement>(null);
+  const svhRef = useRef(0);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isDepth = !reduced;
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+
     depthState.mode = isDepth ? "depth" : "flow";
     setMode(depthState.mode);
+
+    if (isDepth) {
+      svhRef.current = measureSvh();
+      if (isTouch) {
+        // CSS scroll-snap handles snapping on touch; mark html so the CSS rule fires.
+        document.documentElement.classList.add("depth-touch");
+      }
+    }
+
+    return () => {
+      document.documentElement.classList.remove("depth-touch");
+    };
   }, []);
 
   // Drive pane styles + global progress from scroll, frame-synced.
@@ -53,7 +79,8 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
 
     const update = () => {
       raf = requestAnimationFrame(update);
-      const vh = window.innerHeight;
+      // Use the stable svh measurement so address-bar drift doesn't shift the maths.
+      const vh = svhRef.current || window.innerHeight;
       const max = (SECTION_COUNT - 1) * vh;
       const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
       depthState.progress = p;
@@ -98,11 +125,6 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
         el.style.transform = `scale(${scale.toFixed(4)})`;
         el.style.filter = blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : "none";
 
-        // Born from the network: the legibility well + scale origin sit on this
-        // cluster's projected point (the camera tracks it, so ~centre — correct
-        // for readability). The card's children stream in from the *incoming*
-        // cluster's direction (i+1, off-centre as it drifts in from the depths),
-        // so content arrives along the synapse the camera is flying down.
         const cs = depthState.clusterScreen[i];
         const src = depthState.clusterScreen[Math.min(i + 1, SECTION_COUNT - 1)];
         const ox = (cs.x * 100).toFixed(1);
@@ -134,9 +156,11 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
     };
   }, [mode]);
 
-  // Snap each scroll gesture to a whole section.
+  // Pointer-device snap: elastic GSAP snap. Touch uses CSS scroll-snap instead.
   useEffect(() => {
     if (mode !== "depth") return;
+    if (document.documentElement.classList.contains("depth-touch")) return;
+
     let trigger: import("gsap/ScrollTrigger").ScrollTrigger | undefined;
     let cancelled = false;
 
@@ -145,9 +169,10 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
       const { ScrollTrigger } = await import("gsap/ScrollTrigger");
       if (cancelled) return;
       gsap.registerPlugin(ScrollTrigger);
+      const vh = svhRef.current || window.innerHeight;
       trigger = ScrollTrigger.create({
         start: 0,
-        end: () => (SECTION_COUNT - 1) * window.innerHeight,
+        end: (SECTION_COUNT - 1) * vh,
         snap: {
           snapTo: 1 / (SECTION_COUNT - 1),
           duration: { min: 0.65, max: 1.1 },
@@ -178,11 +203,16 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
 
   return (
     <>
-      {/* Scroll track: provides range + anchor targets for #links */}
-      <div className="depth-track" style={{ height: `${SECTION_COUNT * 100}dvh` }}>
+      {/* Scroll track: provides range + anchor targets for #links.
+          svh = small viewport height — stable, unaffected by address-bar shifts. */}
+      <div className="depth-track" style={{ height: `${SECTION_COUNT * 100}svh` }}>
+        {/* CSS scroll-snap targets (touch). One per section, each 100svh tall. */}
+        {Array.from({ length: SECTION_COUNT }, (_, i) => (
+          <div key={`snap-${i}`} className="depth-snap-zone" style={{ top: `${i * 100}svh` }} />
+        ))}
         {panes.map((p, i) =>
           p.id ? (
-            <div key={p.id} id={p.id} style={{ position: "absolute", top: `${i * 100}vh` }} />
+            <div key={p.id} id={p.id} style={{ position: "absolute", top: `${i * 100}svh` }} />
           ) : null
         )}
       </div>
