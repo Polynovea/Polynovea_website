@@ -78,11 +78,13 @@ interface Metric {
 interface EventCardProps {
   event: LiveEvent;
   delay: number;
+  feature?: boolean;
 }
 
 interface VenueCardProps {
   venue: VenuePartnership;
   delay: number;
+  feature?: boolean;
 }
 
 interface MetricCardProps {
@@ -175,9 +177,13 @@ function normalizeVenue(venue: CmsVenuePartnership): VenuePartnership {
   };
 }
 
-function EventCard({ event, delay }: EventCardProps) {
+function EventCard({ event, delay, feature }: EventCardProps) {
   return (
-    <article className="event-card card" data-reveal="true" data-reveal-delay={String(delay)}>
+    <article
+      className={`event-card glass-card${feature ? " bento-feature" : ""}`}
+      data-reveal="true"
+      data-reveal-delay={String(delay)}
+    >
       <div className="event-header">
         {event.dateLabel ? <span className="date-badge">{event.dateLabel}</span> : <span className="date-badge date-badge-muted">Past Show</span>}
       </div>
@@ -218,8 +224,6 @@ function EventCard({ event, delay }: EventCardProps) {
           display: flex;
           flex-direction: column;
           gap: var(--space-md);
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
         }
 
         .event-header {
@@ -353,9 +357,13 @@ function EventCard({ event, delay }: EventCardProps) {
   );
 }
 
-function VenueCard({ venue, delay }: VenueCardProps) {
+function VenueCard({ venue, delay, feature }: VenueCardProps) {
   return (
-    <article className="venue-card card" data-reveal="true" data-reveal-delay={String(delay)}>
+    <article
+      className={`venue-card glass-card${feature ? " bento-feature" : ""}`}
+      data-reveal="true"
+      data-reveal-delay={String(delay)}
+    >
       <div className="venue-image-wrap">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={venue.logo} alt={venue.name} loading="lazy" />
@@ -382,8 +390,8 @@ function VenueCard({ venue, delay }: VenueCardProps) {
           --badge-progress-color: #a78bfa;
           --badge-planned-bg: rgba(230, 211, 163, 0.1);
           overflow: hidden;
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
+          display: flex;
+          flex-direction: column;
         }
 
         .venue-image-wrap {
@@ -587,10 +595,10 @@ export default function LivePortfolioExpanded() {
         <div className="block-header" data-reveal="true" data-reveal-delay="40">
           <span className="block-label">Upcoming Events</span>
         </div>
-        <div className="events-grid">
+        <div className="bento-grid">
           {liveEvents.length > 0 ? (
             liveEvents.map((event, index) => (
-              <EventCard key={event.id} event={event} delay={index * 80} />
+              <EventCard key={event.id} event={event} delay={index * 80} feature={index === 0} />
             ))
           ) : (
             <p style={{ gridColumn: '1 / -1', color: 'var(--text-secondary)' }}>
@@ -602,10 +610,10 @@ export default function LivePortfolioExpanded() {
         <div className="block-header section-spacer" data-reveal="true" data-reveal-delay="40">
           <span className="block-label">Past Shows</span>
         </div>
-        <div className="events-grid">
+        <div className="bento-grid">
           {pastShows.length > 0 ? (
             pastShows.map((event, index) => (
-              <EventCard key={event.id} event={event} delay={index * 80} />
+              <EventCard key={event.id} event={event} delay={index * 80} feature={index === 0} />
             ))
           ) : (
             <p style={{ gridColumn: '1 / -1', color: 'var(--text-secondary)' }}>
@@ -617,10 +625,10 @@ export default function LivePortfolioExpanded() {
         <div id="partnership" className="block-header section-spacer" data-reveal="true" data-reveal-delay="40">
           <span className="block-label">Venue Partnerships</span>
         </div>
-        <div className="venues-grid">
+        <div className="bento-grid">
           {venuePartnerships.length > 0 ? (
             venuePartnerships.map((venue, index) => (
-              <VenueCard key={venue.id} venue={venue} delay={index * 80} />
+              <VenueCard key={venue.id} venue={venue} delay={index * 80} feature={index === 0} />
             ))
           ) : (
             <p style={{ gridColumn: '1 / -1', color: 'var(--text-secondary)' }}>
@@ -632,7 +640,7 @@ export default function LivePortfolioExpanded() {
         <div className="block-header section-spacer" data-reveal="true" data-reveal-delay="40">
           <span className="block-label">Ready to Book?</span>
         </div>
-        <div className="booking-cta card" data-reveal="true" data-reveal-delay="80">
+        <div className="booking-cta glass-card" data-reveal="true" data-reveal-delay="80">
           <h2>Get Polynovea for your event.</h2>
           <p>
             Whether it&apos;s a 100-person intimate show or a 5000-person festival, we bring the music and the

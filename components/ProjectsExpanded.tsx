@@ -23,6 +23,7 @@ interface SystemModule {
 interface VideoCardProps {
   project: MusicProject;
   delay: number;
+  feature?: boolean;
 }
 
 interface ModuleCardProps {
@@ -81,11 +82,15 @@ const systemModules: SystemModule[] = [
   },
 ];
 
-function VideoCard({ project, delay }: VideoCardProps) {
+function VideoCard({ project, delay, feature }: VideoCardProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <article className="video-card card" data-reveal="true" data-reveal-delay={String(delay)}>
+    <article
+      className={`video-card glass-card${feature ? " bento-feature" : ""}`}
+      data-reveal="true"
+      data-reveal-delay={String(delay)}
+    >
       <div className="video-shell">
         {!isLoaded ? (
           <button
@@ -121,13 +126,130 @@ function VideoCard({ project, delay }: VideoCardProps) {
           {project.cta}
         </a>
       </div>
+
+      <style jsx>{`
+        .video-card {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .video-shell {
+          position: relative;
+          aspect-ratio: 16 / 9;
+          width: 100%;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(8, 7, 14, 0.5);
+        }
+
+        .video-shell iframe,
+        .video-thumb {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+
+        .video-thumb {
+          padding: 0;
+          cursor: pointer;
+          background: transparent;
+        }
+
+        .video-thumb img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .play-button {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 64px;
+          height: 64px;
+          margin-left: -32px;
+          margin-top: -32px;
+          border-radius: 999px;
+          background: var(--accent-intelligence);
+          box-shadow: 0 0 24px var(--accent-intelligence-glow);
+          transition: transform var(--duration-default) ease;
+        }
+
+        .play-triangle {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          margin-left: -5px;
+          margin-top: -8px;
+          border-top: 8px solid transparent;
+          border-bottom: 8px solid transparent;
+          border-left: 14px solid var(--text-primary);
+        }
+
+        .video-thumb:hover .play-button {
+          transform: scale(1.08);
+        }
+
+        .video-body {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--space-sm);
+          padding: var(--space-lg);
+        }
+
+        .type-badge {
+          display: inline-flex;
+          width: fit-content;
+          padding: var(--space-xs) var(--space-sm);
+          border: 1px solid rgba(230, 211, 163, 0.3);
+          border-radius: var(--radius-pill);
+          color: var(--accent-authority);
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .video-body h3 {
+          margin: 0;
+          color: var(--text-primary);
+          font-family: var(--font-display);
+          font-size: 22px;
+          line-height: 1.15;
+        }
+
+        .video-body p {
+          margin: 0;
+          color: var(--text-secondary);
+          font-size: 14px;
+          line-height: 1.65;
+        }
+
+        .video-body .btn {
+          margin-top: var(--space-sm);
+        }
+
+        @media (max-width: 600px) {
+          .video-body {
+            padding: var(--space-md);
+          }
+          .video-body h3 {
+            font-size: 20px;
+          }
+        }
+      `}</style>
     </article>
   );
 }
 
 function ModuleCard({ module, delay }: ModuleCardProps) {
   return (
-    <article className="module-card card" data-reveal="true" data-reveal-delay={String(delay)}>
+    <article className="module-panel glass-card" data-reveal="true" data-reveal-delay={String(delay)}>
       <div className="module-top">
         <span className="module-tag">{module.tag}</span>
       </div>
@@ -135,7 +257,7 @@ function ModuleCard({ module, delay }: ModuleCardProps) {
       <p>{module.desc}</p>
 
       <style jsx>{`
-        .module-card {
+        .module-panel {
           display: flex;
           flex-direction: column;
           gap: var(--space-md);
@@ -248,9 +370,9 @@ export default function ProjectsExpanded() {
             <span className="block-label">Original Music</span>
           </div>
 
-          <div className="cards-grid video-grid">
+          <div className="bento-grid bento-2 video-grid">
             {musicProjects.map((project, index) => (
-              <VideoCard key={project.id} project={project} delay={index * 80} />
+              <VideoCard key={project.id} project={project} delay={index * 80} feature={index === 0} />
             ))}
           </div>
         </div>
@@ -353,7 +475,7 @@ export default function ProjectsExpanded() {
         }
 
         .video-card,
-        .module-card {
+        .module-panel {
           overflow: hidden;
         }
 
@@ -438,7 +560,7 @@ export default function ProjectsExpanded() {
         }
 
         .video-body h3,
-        .module-card h3 {
+        .module-panel h3 {
           margin: 0;
           color: var(--text-primary);
           font-family: var(--font-display);
@@ -447,7 +569,7 @@ export default function ProjectsExpanded() {
         }
 
         .video-body p,
-        .module-card p,
+        .module-panel p,
         .placeholder-copy {
           margin: 0;
           color: var(--text-secondary);
@@ -455,14 +577,14 @@ export default function ProjectsExpanded() {
           line-height: 1.65;
         }
 
-        .module-card {
+        .module-panel {
           display: flex;
           flex-direction: column;
           gap: var(--space-md);
           padding: var(--space-xl);
         }
 
-        .module-card .module-top {
+        .module-panel .module-top {
           display: flex !important;
           align-items: center;
           justify-content: space-between;
@@ -557,12 +679,12 @@ export default function ProjectsExpanded() {
           }
 
           .video-body,
-          .module-card {
+          .module-panel {
             padding: var(--space-md);
           }
 
           .video-body h3,
-          .module-card h3 {
+          .module-panel h3 {
             font-size: 20px;
           }
 

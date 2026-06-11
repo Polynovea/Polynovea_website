@@ -450,6 +450,89 @@ body::before {
 }
 
 /* ============================================
+   LIQUID GLASS BENTO (Projects / Live Portfolio)
+   Real frosted-refractive material. Scoped to its own class so the global
+   `.card` !important rules (and the live home scene's perf) stay untouched.
+   The sheen + rim are baked into background/box-shadow — painted BEHIND
+   content, so no wash-out and no pseudo-element stacking conflicts.
+   ============================================ */
+.glass-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background:
+    radial-gradient(130% 90% at 6% -10%, rgba(255, 255, 255, 0.13) 0%, transparent 38%),
+    radial-gradient(120% 95% at 112% 0%, rgba(124, 58, 237, 0.16) 0%, transparent 48%),
+    linear-gradient(155deg, rgba(30, 28, 40, 0.42) 0%, rgba(12, 11, 20, 0.32) 100%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow:
+    inset 1.5px 1.5px 0.5px -1px rgba(255, 255, 255, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset -1px -1px 1px -1px rgba(255, 255, 255, 0.1),
+    0 24px 50px -30px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.4s var(--ease-3d),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(230, 211, 163, 0.42);
+  box-shadow:
+    inset 1.5px 1.5px 0.5px -1px rgba(230, 211, 163, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 32px 64px -28px rgba(0, 0, 0, 0.95),
+    0 0 36px -8px rgba(124, 58, 237, 0.4);
+}
+
+/* Solid fallback where backdrop-filter is unsupported */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass-card {
+    background: linear-gradient(155deg, rgba(28, 26, 38, 0.94), rgba(12, 11, 20, 0.94));
+  }
+}
+
+/* Bento grid: featured cells span two columns */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-lg);
+  grid-auto-flow: dense;
+  align-items: start;
+}
+
+.bento-grid.bento-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.bento-feature {
+  grid-column: span 2;
+}
+
+@media (max-width: 900px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .bento-feature {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .bento-grid,
+  .bento-grid.bento-2 {
+    grid-template-columns: 1fr;
+  }
+  .bento-feature {
+    grid-column: auto;
+  }
+}
+
+/* ============================================
    BUTTONS
    ============================================ */
 
