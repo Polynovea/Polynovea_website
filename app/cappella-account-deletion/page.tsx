@@ -145,7 +145,7 @@ export default function CappellaPage() {
         </section>
 
         {/* ── Why Cappella ─────────────────────────────────────────────── */}
-        <section style={{ ...styles.section, background: "var(--bg-secondary)" }}>
+        <section style={styles.section}>
           <div style={styles.container}>
             <h2 style={styles.sectionTitle}>Why Cappella</h2>
             <div style={styles.whyGrid}>
@@ -178,10 +178,7 @@ export default function CappellaPage() {
         </section>
 
         {/* ── Account Deletion ─────────────────────────────────────────── */}
-        <section
-          id="account-deletion"
-          style={{ ...styles.section, background: "var(--bg-secondary)" }}
-        >
+        <section id="account-deletion" style={styles.section}>
           <div style={styles.container}>
             <div style={styles.deletionHeader}>
               <span style={styles.complianceBadge}>Google Play Compliance</span>
