@@ -4,6 +4,12 @@ import { useEffect } from "react";
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    // Skip Lenis on phones / touch devices: native scroll is smoother there,
+    // and Lenis driving ScrollTrigger via its scroll event proved unreliable
+    // on touch (reveal content got stuck hidden). Reveals on these devices run
+    // through a dependency-free IntersectionObserver instead (see ScrollReveal).
+    if (window.matchMedia("(max-width: 899px), (pointer: coarse)").matches) return;
+
     let lenis: import("lenis").default | null = null;
 
     const init = async () => {
