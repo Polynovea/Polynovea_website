@@ -9,7 +9,7 @@ export interface DepthPaneDef {
   node: ReactNode;
 }
 
-const DESKTOP_MIN_WIDTH = 900;
+// Depth mode runs on all screen sizes; only reduced-motion opts out.
 const ENTER_SCALE = 0.84;
 const EXIT_SCALE = 1.2;
 const ENTER_BLUR_PX = 12;
@@ -33,7 +33,7 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isDepth = window.innerWidth >= DESKTOP_MIN_WIDTH && !reduced;
+    const isDepth = !reduced;
     depthState.mode = isDepth ? "depth" : "flow";
     setMode(depthState.mode);
   }, []);
@@ -179,7 +179,7 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
   return (
     <>
       {/* Scroll track: provides range + anchor targets for #links */}
-      <div className="depth-track" style={{ height: `${SECTION_COUNT * 100}vh` }}>
+      <div className="depth-track" style={{ height: `${SECTION_COUNT * 100}dvh` }}>
         {panes.map((p, i) =>
           p.id ? (
             <div key={p.id} id={p.id} style={{ position: "absolute", top: `${i * 100}vh` }} />

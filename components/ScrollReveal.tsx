@@ -27,11 +27,35 @@ function initObserverReveals(): () => void {
     { rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
   );
 
-  document
-    .querySelectorAll<HTMLElement>("[data-reveal]")
-    .forEach((el) => io.observe(el));
+  const observed = new WeakSet<Element>();
 
-  return () => io.disconnect();
+  function observeNew(root: ParentNode) {
+    root.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
+      if (observed.has(el)) return;
+      observed.add(el);
+      io.observe(el);
+    });
+  }
+
+  observeNew(document);
+
+  // Watch for elements added after initial render (dynamic imports, data fetches).
+  const mo = new MutationObserver((mutations) => {
+    mutations.forEach((m) => {
+      m.addedNodes.forEach((node) => {
+        if (node.nodeType !== Node.ELEMENT_NODE) return;
+        const el = node as Element;
+        if (el.matches("[data-reveal]")) {
+          if (!observed.has(el)) { observed.add(el); io.observe(el); }
+        }
+        observeNew(el);
+      });
+    });
+  });
+
+  mo.observe(document.body, { childList: true, subtree: true });
+
+  return () => { io.disconnect(); mo.disconnect(); };
 }
 
 /** Desktop reveal: GSAP batch fade-up + clip-path heading wipe (unchanged). */
