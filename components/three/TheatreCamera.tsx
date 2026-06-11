@@ -5,6 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { depthState, REVEAL_OPEN_EVENT, SECTION_COUNT } from "@/lib/depthStore";
 import { clusterCenter } from "./networkData";
+import { boundaryTakeover } from "@/lib/clusterFocus";
 import {
   JOURNEY_DURATION,
   getCameraObject,
@@ -144,15 +145,10 @@ export default function TheatreCamera({
     camera.position.lerp(tmpPos, 1 - Math.pow(0.0015, delta));
     camera.lookAt(tmpLook);
 
-    // FOV punch at section crossings: widens ~11° at the mid-transition point,
-    // then snaps back as the new section settles. Journey mode only.
-    let fovBoost = 0;
-    if (depthState.sceneMode !== "ambient") {
-      const fJourney = depthState.progress * (SECTION_COUNT - 1);
-      const frac = fJourney - Math.floor(fJourney);
-      fovBoost = Math.max(0, 1 - Math.abs(frac - 0.5) * 5.5) * 11;
-    }
-    const targetFov = ov.fov + fovBoost;
+    // FOV punch at section crossings: widens at the mid-transition, then settles
+    // as the new section locks in. Shares the one boundary curve with the bloom
+    // flare + pulse surge so the whole takeover fires as a single beat.
+    const targetFov = ov.fov + boundaryTakeover() * 14;
 
     const perspective = camera as THREE.PerspectiveCamera;
     if (perspective.isPerspectiveCamera) {

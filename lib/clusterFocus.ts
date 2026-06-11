@@ -23,3 +23,17 @@ export function clusterFocus(f: number, index: number): number {
   const t = Math.max(0, 1 - Math.abs(f - index));
   return t * t * (3 - 2 * t); // smoothstep
 }
+
+/**
+ * Boundary takeover: 0..1 surge that swells as the camera crosses *between*
+ * clusters (peaks at the mid-transition) and is 0 while parked on a section.
+ * One shared scalar so the FOV punch, bloom flare and pulse surge all fire in
+ * lockstep at the same instant. Journey mode only — subpages never take over.
+ */
+export function boundaryTakeover(): number {
+  if (depthState.sceneMode === "ambient") return 0;
+  const f = depthState.progress * (SECTION_COUNT - 1);
+  const frac = f - Math.floor(f);
+  const t = Math.max(0, 1 - Math.abs(frac - 0.5) * 4.2); // active ~[0.26, 0.74]
+  return t * t * (3 - 2 * t); // smoothstep → a swell, not a spike
+}

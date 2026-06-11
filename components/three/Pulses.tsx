@@ -4,6 +4,7 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { NetworkData } from "./networkData";
+import { boundaryTakeover } from "@/lib/clusterFocus";
 
 interface PulseState {
   edge: number;
@@ -28,9 +29,14 @@ export default function Pulses({ data, count }: { data: NetworkData; count: numb
   useFrame((_, delta) => {
     const mesh = meshRef.current;
     if (!mesh) return;
+    // At a cluster crossing the spine "fires": packets accelerate down the
+    // edges and swell, so the network visibly surges as a new section arrives.
+    const surge = boundaryTakeover();
+    const speedMul = 1 + surge * 2.4;
+    const sizeMul = 1 + surge * 1.3;
     for (let i = 0; i < pulses.length; i++) {
       const p = pulses[i];
-      p.t += delta * p.speed;
+      p.t += delta * p.speed * speedMul;
       if (p.t >= 1) {
         p.t = 0;
         p.edge = Math.floor(Math.random() * data.edges.length);
@@ -38,7 +44,7 @@ export default function Pulses({ data, count }: { data: NetworkData; count: numb
       const e = data.edges[p.edge];
       dummy.position.lerpVectors(e.a, e.b, p.t);
       const flare = 0.6 + Math.sin(p.t * Math.PI) * 0.9;
-      dummy.scale.setScalar(0.045 * flare);
+      dummy.scale.setScalar(0.045 * flare * sizeMul);
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
     }

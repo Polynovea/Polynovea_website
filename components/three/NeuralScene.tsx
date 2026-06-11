@@ -6,6 +6,7 @@ import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import { PerformanceMonitor, AdaptiveDpr } from "@react-three/drei";
 import * as THREE from "three";
 import { depthState, SCENE_READY_EVENT, SECTION_COUNT } from "@/lib/depthStore";
+import { boundaryTakeover } from "@/lib/clusterFocus";
 import { generateNetwork, clusterCenter } from "./networkData";
 import Network from "./Network";
 import Pulses from "./Pulses";
@@ -55,13 +56,11 @@ function DynamicBloom() {
 
   useFrame(() => {
     if (!bloomRef.current) return;
-    const f = depthState.progress * (SECTION_COUNT - 1);
-    const frac = f - Math.floor(f);
-    const boundaryT = Math.max(0, 1 - Math.abs(frac - 0.5) * 5.5);
+    // Flare shares the one boundary curve with the FOV punch + pulse surge.
     bloomRef.current.intensity = THREE.MathUtils.lerp(
       bloomRef.current.intensity,
-      0.85 + boundaryT * 2.0,
-      0.06
+      0.85 + boundaryTakeover() * 2.3,
+      0.12
     );
   });
 
