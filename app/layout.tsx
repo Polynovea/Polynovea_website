@@ -15,28 +15,31 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Polynovea | Behavioral Intelligence for Music",
+    default: "Polynovea — Behavioral Intelligence Infrastructure",
     template: "%s | Polynovea",
   },
   description:
-    "Polynovea is a behavioral intelligence operation based in Navi Mumbai, India. We map human decision-making in commercial environments and convert it into repeatable frameworks, products, and automated systems.",
+    "Polynovea is an AI and data company building the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making, extracts repeatable patterns, and converts them into operational systems. Hospitality is the first domain. The framework is domain-agnostic. Polynovea Records is the cultural deployment arm.",
   metadataBase: new URL("https://www.polynovea.in"),
   keywords: [
+    "behavioral intelligence",
+    "human behavioral intelligence framework",
+    "HBIF",
+    "AI data company india",
+    "behavioral pattern recognition",
+    "decision intelligence infrastructure",
+    "behavioral data systems",
+    "human behavior AI",
     "behavioral intelligence india",
-    "independent music label india",
-    "live music events mumbai",
-    "artist development india",
-    "behavioral data music venues",
-    "music publishing india",
   ],
   icons: {
     icon: "/icon.png",
     apple: "/icon.png",
   },
   openGraph: {
-    title: "Polynovea | Behavioral Intelligence for Music",
+    title: "Polynovea — Behavioral Intelligence Infrastructure",
     description:
-      "Behavioral intelligence operation based in Navi Mumbai. Mapping human decision-making into frameworks, products, and systems — applied through Polynovea Records.",
+      "An AI and data company building the Human Behavioral Intelligence Framework. We observe human decision-making, extract patterns, and convert them into repeatable systems. Polynovea Records is the cultural arm — the parent company is the intelligence infrastructure.",
     siteName: "Polynovea",
     url: "https://www.polynovea.in",
     type: "website",
@@ -44,9 +47,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Polynovea | Behavioral Intelligence for Music",
+    title: "Polynovea — Behavioral Intelligence Infrastructure",
     description:
-      "Behavioral intelligence operation based in Navi Mumbai. Mapping human decision-making into frameworks, products, and systems — applied through Polynovea Records.",
+      "An AI and data company building the Human Behavioral Intelligence Framework. We observe human decision-making, extract patterns, and convert them into repeatable systems. Polynovea Records is the cultural arm — the parent company is the intelligence infrastructure.",
     images: ["/og-image.png"],
   },
   alternates: {
