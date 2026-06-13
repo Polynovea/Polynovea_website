@@ -397,7 +397,7 @@ export default function ResearchPage() {
               <>
                 <div className="rp-brand">
                   <svg width="18" height="18" viewBox="0 0 64 64"><path d="M32 4 L37 27 L60 32 L37 37 L32 60 L27 37 L4 32 L27 27 Z" fill="#E6D3A3"/></svg>
-                  Polynovea Records
+                  Polynovea
                 </div>
                 <h1 className="rp-q" style={{ fontSize: "clamp(28px,5vw,56px)" }}>Help us understand what makes a great night.</h1>
                 <p className="rp-sub">16 questions. 4 minutes. Your answers shape how we build live experiences.</p>
@@ -474,7 +474,7 @@ export default function ResearchPage() {
               <>
                 <div className="rp-brand">
                   <svg width="18" height="18" viewBox="0 0 64 64"><path d="M32 4 L37 27 L60 32 L37 37 L32 60 L27 37 L4 32 L27 27 Z" fill="#E6D3A3"/></svg>
-                  Polynovea Records
+                  Polynovea
                 </div>
                 <h2 className="rp-q" style={{ fontSize: "clamp(24px,4vw,44px)" }}>That&apos;s exactly what we needed.</h2>
                 <p className="rp-sub">Want early access to what we&apos;re building based on this?</p>

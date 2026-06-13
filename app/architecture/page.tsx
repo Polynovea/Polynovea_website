@@ -6,12 +6,12 @@ import ArchitectureDeepDive from "@/components/ArchitectureDeepDive";
 export const metadata: Metadata = {
   title: "The System Architecture",
   description:
-    "A deep dive into how Polynovea Records maps behavioral data from live music events into actionable intelligence for venues and artists in India.",
+    "A deep dive into how Polynovea's Human Behavioral Intelligence Framework (HBIF) is structured — four milestones, the behavioral intelligence pipeline, and the long-term ecosystem design.",
   alternates: { canonical: "https://www.polynovea.in/architecture" },
   openGraph: {
-    title: "The System Architecture | Polynovea Records",
+    title: "The System Architecture | Polynovea",
     description:
-      "How we convert live event behavior into intelligence — the full system breakdown.",
+      "How the HBIF is structured — four milestones from intelligence infrastructure to distribution, and the behavioral intelligence loop that compounds them.",
     url: "https://www.polynovea.in/architecture",
   },
 };

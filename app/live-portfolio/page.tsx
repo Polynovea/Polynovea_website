@@ -8,12 +8,12 @@ const LivePortfolioExpanded = dynamic(() => import("@/components/LivePortfolioEx
 export const metadata: Metadata = {
   title: "Live Portfolio — Events & Shows",
   description:
-    "Explore Polynovea Records' live music portfolio — shows, venues, and events across Mumbai and Navi Mumbai featuring independent artists.",
+    "Live music events and shows operated by Polynovea Records — the cultural arm of Polynovea. Venues and performances across Mumbai and Navi Mumbai featuring independent artists.",
   alternates: { canonical: "https://www.polynovea.in/live-portfolio" },
   openGraph: {
     title: "Live Portfolio | Polynovea Records",
     description:
-      "Live music events and shows by Polynovea Records across Mumbai and Navi Mumbai.",
+      "Live events and shows by Polynovea Records — the cultural deployment arm of the Polynovea behavioral intelligence ecosystem.",
     url: "https://www.polynovea.in/live-portfolio",
   },
 };

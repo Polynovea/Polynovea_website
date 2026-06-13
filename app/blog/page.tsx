@@ -47,8 +47,6 @@ export default function BlogPage() {
   const startIdx = (currentPage - 1) * POSTS_PER_PAGE;
   const currentPosts = posts.slice(startIdx, startIdx + POSTS_PER_PAGE);
 
-  if (loading) return <div style={{ color: "var(--text-primary)" }}>Loading...</div>;
-
   return (
     <>
       <Navbar />
@@ -65,7 +63,7 @@ export default function BlogPage() {
               The Blog
             </h1>
             <p className="t-body-lg" style={{ marginTop: "var(--space-md)" }}>
-              Intelligence, music, and systems thinking. Direct from the team.
+              Behavioral intelligence, systems thinking, and operational insights from the Polynovea team. Covering patterns in human behavior, live environments, and the infrastructure being built to understand them.
             </p>
           </div>
 
@@ -79,7 +77,9 @@ export default function BlogPage() {
           </div>
 
           <div className="blog-grid">
-            {currentPosts.length > 0 ? (
+            {loading ? (
+              <p style={{ color: "var(--text-secondary)" }}>Loading articles…</p>
+            ) : currentPosts.length > 0 ? (
               currentPosts.map((post, i) => (
                 <article
                   key={post.id}

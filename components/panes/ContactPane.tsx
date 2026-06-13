@@ -6,7 +6,7 @@ const socials = [
   { label: "Instagram", href: "https://www.instagram.com/polynovearecords/" },
   { label: "X", href: "https://x.com/PolynoveaRec" },
   { label: "YouTube", href: "https://www.youtube.com/@PolynoveaRecords" },
-  { label: "Threads", href: "https://www.threads.com/@polynovearecords" },
+  { label: "Threads", href: "https://www.threads.net/@polynovearecords" },
 ];
 
 /** Contact section plus a slim end-of-journey footer strip. */

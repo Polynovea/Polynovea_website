@@ -99,7 +99,7 @@ const organizationSchema = {
     "https://www.instagram.com/polynovearecords/",
     "https://www.instagram.com/polynovea.in/",
     "https://x.com/PolynoveaRec",
-    "https://www.threads.com/@polynovearecords",
+    "https://www.threads.net/@polynovearecords",
     "https://www.youtube.com/@PolynoveaRecords",
   ],
 };
