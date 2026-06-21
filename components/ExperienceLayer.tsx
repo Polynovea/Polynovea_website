@@ -1,36 +1,33 @@
 "use client";
 
-import { useEffect } from "react";
-import dynamic from "next/dynamic";
-import { usePathname } from "next/navigation";
-import { depthState, routeClusterIndex } from "@/lib/depthStore";
+import { EtheralShadow } from "@/components/ui/etheral-shadow";
 import PageTransition from "@/components/PageTransition";
 
-const NeuralScene = dynamic(() => import("@/components/three/NeuralScene"), {
-  ssr: false,
-});
-
-/**
- * Site-wide WebGL layer. Lives in the root layout so the canvas (and its
- * camera) survives client navigation — page changes become camera flights
- * through the same neural network instead of repaints.
- */
 export default function ExperienceLayer() {
-  const pathname = usePathname();
-
-  useEffect(() => {
-    const isHome = pathname === "/";
-    depthState.sceneMode = isHome ? "journey" : "ambient";
-    depthState.ambientIndex = routeClusterIndex(pathname);
-    if (!isHome) {
-      // Subpages have no curtain; let the camera intro dolly run immediately.
-      depthState.revealOpen = true;
-    }
-  }, [pathname]);
-
   return (
     <>
-      <NeuralScene />
+      <div
+        aria-hidden="true"
+        style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundColor: "rgb(7, 6, 16)" }}
+      >
+        {/* Wave layer */}
+        <EtheralShadow
+          color="rgba(100, 40, 220, 1)"
+          animation={{ scale: 100, speed: 90 }}
+          noise={{ opacity: 0.6, scale: 1.2 }}
+          sizing="fill"
+        />
+        {/* Frosted glass diffusion — softens orbs, keeps wave movement visible */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backdropFilter: "blur(28px) saturate(120%)",
+            WebkitBackdropFilter: "blur(28px) saturate(120%)",
+            backgroundColor: "rgba(7, 6, 16, 0.25)",
+          }}
+        />
+      </div>
       <PageTransition />
     </>
   );
