@@ -1,193 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { BentoGrid, type BentoItem } from "@/components/ui/bento-grid";
 
-const musicProjects = [
+const systemModules: BentoItem[] = [
   {
-    id: "I8ZQCN9EslU",
-    title: "Lately",
-    desc: "Our debut release. The first piece of original IP from Polynovea.",
-    cta: "Watch on YouTube",
-    href: "https://youtu.be/I8ZQCN9EslU",
-  },
-  {
-    id: "VqiJCgQTJ0g",
-    title: "Lately — Remake",
-    desc: "A reimagined version. Same foundation, different resolution.",
-    cta: "Watch on YouTube",
-    href: "https://youtu.be/VqiJCgQTJ0g",
-  },
-  {
-    id: "IIvCau8-tBw",
-    title: "Sangharsh",
-    desc: "Our upcoming album. A body of work in active production — releasing progressively.",
-    cta: "Watch Teaser",
-    href: "https://youtu.be/IIvCau8-tBw",
-  },
-];
-
-const systemModules = [
-  {
-    tag: "Module 01",
+    num: "01",
+    tag: "M1",
     title: "Decision Framework",
     desc: "Determines whether an opportunity is viable. Evaluates engagement fit, pricing logic, and expected outcomes before any resource is committed.",
+    colSpan: 1,
   },
   {
-    tag: "Module 02",
+    num: "02",
+    tag: "M2",
     title: "Acquisition System",
-    desc: "Multi-source behavioural signal extraction, structured through an ontology layer that maps how human behaviour operates inside commercial environments. Not what customers say — the mechanisms that drive what they do. Feeds a field execution system that tells you who to target, how to reach them, and what they respond to before a single show runs.",
+    desc: "Multi-source behavioural signal extraction, structured through an ontology layer that maps how human behaviour operates inside commercial environments.",
+    colSpan: 2,
   },
   {
-    tag: "Module 03",
+    num: "03",
+    tag: "M3",
     title: "Optimisation System",
     desc: "Two-part system. Part 1 instruments the live environment — POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
+    colSpan: 3,
   },
 ];
-
-function VideoCard({
-  id, title, desc, cta, href, delay,
-}: {
-  id: string; title: string; desc: string; cta: string; href: string; delay: number;
-}) {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <div className="project-card card" data-reveal data-reveal-delay={String(delay)}>
-      <div className="video-embed">
-        {!loaded && (
-          <button className="video-thumb" onClick={() => setLoaded(true)} aria-label={`Play ${title}`}>
-            <img
-              src={`https://img.youtube.com/vi/${id}/mqdefault.jpg`}
-              alt={title}
-              loading="lazy"
-            />
-            <div className="play-btn">▶</div>
-          </button>
-        )}
-        {loaded && (
-          <iframe
-            src={`https://www.youtube.com/embed/${id}?autoplay=1`}
-            title={title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        )}
-      </div>
-      <div className="project-card-body">
-        <div className="project-card-title">{title}</div>
-        <p className="t-body-sm">{desc}</p>
-        <a href={href} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
-          {cta} →
-        </a>
-      </div>
-
-      <style jsx>{`
-        .project-card {
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-        }
-        .video-embed {
-          position: relative;
-          padding-top: 56.25%;
-          overflow: hidden;
-          border-bottom: 1px solid var(--border-muted);
-          background: var(--bg-card);
-        }
-        .video-embed iframe,
-        .video-thumb {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          border: none;
-        }
-        .video-thumb {
-          cursor: pointer;
-          background: none;
-          padding: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .video-thumb img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        .play-btn {
-          position: absolute;
-          width: 52px;
-          height: 52px;
-          background: rgba(124, 58, 237, 0.9);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 18px;
-          color: white;
-          box-shadow: 0 0 24px var(--accent-intelligence-glow);
-          transition: transform 0.2s ease, background 0.2s ease;
-        }
-        .video-thumb:hover .play-btn {
-          transform: scale(1.1);
-          background: var(--accent-intelligence);
-        }
-        .project-card-body {
-          padding: var(--space-lg);
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-sm);
-          flex: 1;
-        }
-        .project-card-title {
-          font-family: var(--font-display);
-          font-size: 17px;
-          font-weight: 600;
-          color: var(--text-primary);
-          letter-spacing: -0.01em;
-        }
-      `}</style>
-    </div>
-  );
-}
-
-function ModuleCard({
-  tag, title, desc, delay,
-}: {
-  tag: string; title: string; desc: string; delay: number;
-}) {
-  return (
-    <div className="module-card card" data-reveal data-reveal-delay={String(delay)}>
-      <div className="module-top">
-        <span className="t-label">{tag}</span>
-      </div>
-      <div className="module-title">{title}</div>
-      <p className="t-body-sm">{desc}</p>
-
-      <style jsx>{`
-        .module-card {
-          padding: var(--space-xl);
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-md);
-        }
-        .module-top {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-        .module-title {
-          font-family: var(--font-display);
-          font-size: 20px;
-          font-weight: 600;
-          color: var(--text-primary);
-          letter-spacing: -0.015em;
-        }
-      `}</style>
-    </div>
-  );
-}
 
 export default function Projects() {
   return (
@@ -198,30 +35,17 @@ export default function Projects() {
             Projects
           </span>
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
-            Original music and the intelligence{" "}
-            <span className="gold-accent">infrastructure</span> behind it.
+            The intelligence{" "}
+            <span style={{ color: "var(--accent-authority)" }}>infrastructure</span>{" "}
+            in motion.
           </h2>
           <p className="t-body" style={{ marginTop: "var(--space-md)" }}>
-            Both in motion.
+            Three modules. One compounding system.
           </p>
         </div>
 
-        <div className="block-header" data-reveal data-reveal-delay="50">
-          <span className="block-label">Original Music</span>
-        </div>
-        <div className="projects-grid">
-          {musicProjects.map((p, i) => (
-            <VideoCard key={p.id} {...p} delay={i * 80} />
-          ))}
-        </div>
-
-        <div className="block-header" data-reveal data-reveal-delay="50">
-          <span className="block-label">The Intelligence System</span>
-        </div>
-        <div className="modules-grid">
-          {systemModules.map((m, i) => (
-            <ModuleCard key={m.tag} {...m} delay={i * 80} />
-          ))}
+        <div data-reveal data-reveal-delay="50">
+          <BentoGrid items={systemModules} />
         </div>
       </div>
 
@@ -231,40 +55,6 @@ export default function Projects() {
         }
         .projects-header {
           margin-bottom: var(--space-3xl);
-        }
-        .gold-accent {
-          color: var(--accent-authority);
-          font-weight: inherit;
-        }
-        .block-header {
-          margin-bottom: var(--space-xl);
-          padding-bottom: var(--space-md);
-          border-bottom: 1px solid var(--border-muted);
-        }
-        .block-label {
-          font-family: var(--font-display);
-          font-size: 13px;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: var(--text-secondary);
-        }
-        .projects-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: var(--space-lg);
-          margin-bottom: var(--space-3xl);
-        }
-        .modules-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: var(--space-lg);
-        }
-        @media (max-width: 900px) {
-          .projects-grid, .modules-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-          .projects-grid, .modules-grid { grid-template-columns: 1fr; }
         }
       `}</style>
     </section>

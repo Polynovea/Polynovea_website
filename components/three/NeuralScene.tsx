@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
+import { EffectComposer, Bloom, Vignette, ToneMapping, Noise } from "@react-three/postprocessing";
+import { ToneMappingMode } from "postprocessing";
 import { PerformanceMonitor, AdaptiveDpr } from "@react-three/drei";
 import * as THREE from "three";
 import { depthState, SCENE_READY_EVENT, SECTION_COUNT } from "@/lib/depthStore";
@@ -59,15 +60,17 @@ function DynamicBloom() {
     // Flare shares the one boundary curve with the FOV punch + pulse surge.
     bloomRef.current.intensity = THREE.MathUtils.lerp(
       bloomRef.current.intensity,
-      0.85 + boundaryTakeover() * 2.3,
+      1.3 + boundaryTakeover() * 2.3,
       0.12
     );
   });
 
   return (
     <EffectComposer multisampling={0}>
-      <Bloom ref={bloomRef} mipmapBlur intensity={0.85} luminanceThreshold={0.34} luminanceSmoothing={0.32} />
-      <Vignette offset={0.22} darkness={0.78} />
+      <Bloom ref={bloomRef} mipmapBlur intensity={1.3} luminanceThreshold={0.08} luminanceSmoothing={0.3} />
+      <ToneMapping mode={ToneMappingMode.REINHARD} />
+      <Noise premultiply opacity={0.045} />
+      <Vignette offset={0.2} darkness={0.85} />
     </EffectComposer>
   );
 }
@@ -90,6 +93,30 @@ function CameraLight() {
     ref.current.position.y += 2.5;
   });
   return <pointLight ref={ref} color="#9a6cff" intensity={120} distance={45} decay={2} />;
+}
+
+/** Subtle cursor parallax — the whole field leans toward the pointer. */
+function CursorLook() {
+  const { camera } = useThree();
+  const target = useRef({ x: 0, y: 0 });
+  const cur = useRef({ x: 0, y: 0 });
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      target.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      target.current.y = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+    window.addEventListener("pointermove", onMove);
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
+  // Runs after TheatreCamera (which resets rotation each frame) and before
+  // ClusterProjector, so the offset is consistent between render and card anchoring.
+  useFrame(() => {
+    cur.current.x += (target.current.x - cur.current.x) * 0.04;
+    cur.current.y += (target.current.y - cur.current.y) * 0.04;
+    camera.rotation.y += cur.current.x * 0.05;
+    camera.rotation.x += -cur.current.y * 0.035;
+  });
+  return null;
 }
 
 export default function NeuralScene() {
@@ -137,7 +164,7 @@ export default function NeuralScene() {
         <GlDispose />
 
         <color attach="background" args={["#0a0912"]} />
-        <fogExp2 attach="fog" args={["#0a0912", 0.02]} />
+        <fogExp2 attach="fog" args={["#0a0912", 0.022]} />
 
         <ambientLight intensity={0.22} color="#4633a0" />
         <CameraLight />
@@ -146,10 +173,11 @@ export default function NeuralScene() {
 
         <HeatGrid lowPower={lowPower} />
         <Network data={data} />
-        <Pulses data={data} count={lowPower ? 36 : 90} />
+        <Pulses data={data} count={lowPower ? 60 : 150} />
         <ClusterIgnite lowPower={lowPower} />
         <DataReadouts />
         <TheatreCamera lightRef={goldLightRef} />
+        <CursorLook />
         <ClusterProjector />
         <ReadySignal />
 

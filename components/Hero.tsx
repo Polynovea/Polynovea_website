@@ -66,8 +66,8 @@ export default function Hero() {
         </h1>
 
         <p className="hero-sub" style={{ opacity: 0 }}>
-          Four milestones. One ecosystem. Records, intelligence infrastructure,
-          AI agency, and data products — all in motion.
+          Domain-agnostic behavioral intelligence infrastructure. Built once.
+          Deployed across hospitality, music, education, and beyond.
         </p>
 
         <div className="hero-ctas" style={{ opacity: 0 }}>

@@ -3,23 +3,23 @@
 const milestones = [
   {
     num: "01",
-    title: "Behavioral Intelligence Framework",
-    desc: "The foundation. An AI and data-driven system built to read, map, and model human behaviour — designed to power every milestone that follows.",
+    title: "Behavioral Intelligence Infrastructure",
+    desc: "The foundation. HBIF — a system built to read, map, and model human behaviour at the pattern level. M1, M2, and M3 are the intelligence, acquisition, and optimisation layers that make it operational. Everything that follows is built on this.",
   },
   {
     num: "02",
-    title: "Original Music & IP",
-    desc: "Creating original music and building our own intellectual property — establishing Polynovea as an independent creative operation with real cultural output.",
+    title: "Domain Deployment",
+    desc: "The first live deployment environments. Hospitality and Music — chosen because they are behaviourally rich, measurable, and generate rapid feedback. This is where the infrastructure is proven against real human decisions at scale.",
   },
   {
     num: "03",
-    title: "Artist Automation Tools",
-    desc: "AI-powered tools that handle the tedious parts of music publishing — giving independent artists a fairer, simpler path without the exploitation.",
+    title: "Behavioral Automation",
+    desc: "Converting extracted patterns into automated decision systems. Once the infrastructure has sufficient signal from a domain, human decision overhead at the execution layer is replaced by systems that act on what they know.",
   },
   {
     num: "04",
-    title: "Distribution Infrastructure",
-    desc: "Building a full distribution framework — acquiring the licenses and infrastructure to make music release sustainable and accessible for artists across India.",
+    title: "Behavioral Operating System",
+    desc: "The long-term destination. Infrastructure capable of deploying behavioral intelligence across Education, Workplace, and additional sectors — compounding signal across domains without rebuilding from scratch in each new environment.",
   },
 ];
 
@@ -29,10 +29,10 @@ export default function MilestonesPane() {
       <div className="container">
         <div className="ms-header">
           <h2 className="t-display-md" style={{ color: "var(--text-primary)" }}>
-            Four Milestones. One Direction.
+            Four Phases. One Infrastructure.
           </h2>
           <p className="t-body" style={{ marginTop: "var(--space-sm)" }}>
-            Each milestone compounds the last. The architecture builds itself.
+            The same behavioral intelligence system, extended into progressively broader environments.
           </p>
         </div>
 

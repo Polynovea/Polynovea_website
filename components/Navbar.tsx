@@ -8,7 +8,6 @@ const homeLinks = [
   { href: "/", label: "Home" },
   { href: "/architecture", label: "The Architecture" },
   { href: "/projects", label: "Projects" },
-  { href: "/live-portfolio", label: "Live Portfolio" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/research", label: "Research" },

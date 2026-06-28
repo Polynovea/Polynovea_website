@@ -5,7 +5,7 @@
  * would defeat the purpose. Never read from React render paths.
  */
 
-export const SECTION_COUNT = 9;
+export const SECTION_COUNT = 8;
 
 export type SceneMode = "journey" | "ambient";
 
@@ -60,8 +60,7 @@ export function routeClusterIndex(pathname: string): number {
   if (pathname.startsWith("/blog")) return 3;
   if (pathname.startsWith("/about")) return 4;
   if (pathname.startsWith("/projects")) return 5;
-  if (pathname.startsWith("/live-portfolio")) return 6;
-  if (pathname.startsWith("/research")) return 7;
-  if (pathname.startsWith("/contact")) return 8;
+  if (pathname.startsWith("/research")) return 6;
+  if (pathname.startsWith("/contact")) return 7;
   return 3; // unknown routes settle mid-network
 }

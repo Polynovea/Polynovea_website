@@ -27,7 +27,7 @@ export default function ModulesPane() {
             Infrastructure
           </span>
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
-            The Machines Behind the Music
+            The Infrastructure Layer
           </h2>
         </div>
 

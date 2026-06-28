@@ -7,8 +7,13 @@
  *
  * Theatre is layered as an *authorable overlay* on top of the existing
  * procedural camera: at default values the camera behaves exactly as before.
- * The Studio GUI (dev-only) lets you keyframe the overlay channels against the
- * journey; the sequence playhead is locked to depthState.progress.
+ *
+ * IMPORTANT: Theatre.js IProject/ISheet objects have circular parent/children
+ * references in their internal reactive graph. React 19's dev overlay
+ * serializes component context with JSON.stringify, which hits those circular
+ * refs and crashes. To prevent this, ALL Theatre.js object creation is gated
+ * behind the studio opt-in check. When studio is not active, Theatre.js never
+ * creates any objects and remains inert.
  */
 import { getProject, types } from "@theatre/core";
 
@@ -20,12 +25,6 @@ const SHEET_NAME = "Journey";
 
 const OFFSET_RANGE = { range: [-20, 20] as [number, number] };
 
-/**
- * Empty baseline state. Seeding this silences Theatre's "state is empty" warning
- * (which Next's dev overlay escalates to a blocking error) when Studio isn't
- * loaded. `shallowValidateOnDiskState` only checks definitionVersion. Once the
- * camera is authored in `?studio`, export the real state and replace this.
- */
 const EMPTY_STATE = {
   sheetsById: {},
   definitionVersion: "0.4.0",
@@ -33,6 +32,18 @@ const EMPTY_STATE = {
 } as const;
 
 let project: ReturnType<typeof getProject> | null = null;
+let cameraObject: ReturnType<typeof createCameraObject> | null = null;
+let studioStarted = false;
+let studioActive = false;
+
+/** Returns true only when the ?studio flag or localStorage key is set. */
+export function isStudioMode(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    new URLSearchParams(window.location.search).has("studio") ||
+    window.localStorage.getItem("theatreStudio") === "1"
+  );
+}
 
 function getJourneyProject() {
   if (!project) {
@@ -41,14 +52,10 @@ function getJourneyProject() {
   return project;
 }
 
-export function getJourneySheet() {
+function getJourneySheet() {
   return getJourneyProject().sheet(SHEET_NAME);
 }
 
-/**
- * Authorable camera overlay. Defaults are no-ops (offsets 0, fov 58 = the
- * Canvas default) so the procedural camera is unchanged until you keyframe it.
- */
 function createCameraObject() {
   return getJourneySheet().object("Camera", {
     fov: types.number(58, { range: [20, 100] }),
@@ -65,38 +72,57 @@ function createCameraObject() {
   });
 }
 
-// Lazily created on the client only — avoids constructing Theatre objects during
-// SSR module evaluation, and dedupes across HMR / remounts.
-let cameraObject: ReturnType<typeof createCameraObject> | null = null;
-let studioStarted = false;
+export interface CameraOverlay {
+  fov: number;
+  offset: { x: number; y: number; z: number };
+  lookOffset: { x: number; y: number; z: number };
+}
 
-export function getCameraObject() {
+export const DEFAULT_OVERLAY: CameraOverlay = {
+  fov: 58,
+  offset: { x: 0, y: 0, z: 0 },
+  lookOffset: { x: 0, y: 0, z: 0 },
+};
+
+/**
+ * Subscribe to camera overlay value changes from Theatre.
+ * Returns a no-op unsubscribe if studio is not active.
+ */
+export function subscribeCameraOverlay(
+  cb: (v: CameraOverlay) => void
+): () => void {
+  if (!studioActive) return () => {};
   if (!cameraObject) cameraObject = createCameraObject();
-  return cameraObject;
+  return cameraObject.onValuesChange((v) => cb(v as unknown as CameraOverlay));
+}
+
+/**
+ * Advance the Theatre sequence playhead to match scroll progress.
+ * No-ops if studio is not active — avoids creating Theatre objects on every frame.
+ */
+export function setSequencePosition(journeyT: number): void {
+  if (!studioActive) return;
+  getJourneySheet().sequence.position = journeyT * JOURNEY_DURATION;
 }
 
 /**
  * Mount the Theatre Studio authoring UI. Opt-in and dev-only: it only loads when
  * the page is opened with `?studio` (or localStorage `theatreStudio=1`), so the
  * editor never covers normal dev view and never ships to production.
- *
- * Author the camera overlay there, then we export its state to ship a baseline.
  */
 export async function startStudio(): Promise<void> {
   if (process.env.NODE_ENV === "production") return;
   if (studioStarted || typeof window === "undefined") return;
-
-  const optedIn =
-    new URLSearchParams(window.location.search).has("studio") ||
-    window.localStorage.getItem("theatreStudio") === "1";
-  if (!optedIn) return;
+  if (!isStudioMode()) return;
 
   studioStarted = true;
+  studioActive = true;
   try {
     const studio = (await import("@theatre/studio")).default;
     studio.initialize();
   } catch (err) {
     studioStarted = false;
+    studioActive = false;
     console.error("Theatre Studio failed to initialize", err);
   }
 }

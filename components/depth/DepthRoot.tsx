@@ -15,10 +15,6 @@ const EXIT_SCALE = 1.2;
 const ENTER_BLUR_PX = 12;
 const EXIT_BLUR_PX = 8;
 
-function easeOutQuart(t: number): number {
-  return 1 - Math.pow(1 - t, 4);
-}
-
 /** Measure 100svh in px once — stable regardless of address-bar shifts. */
 function measureSvh(): number {
   const el = document.createElement("div");
@@ -45,8 +41,9 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isDepth = !reduced;
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    const isMobile = window.matchMedia("(max-width: 899px)").matches;
+    const isDepth = !reduced && !isMobile;
+    const isTouch = isDepth && window.matchMedia("(pointer: coarse)").matches;
 
     depthState.mode = isDepth ? "depth" : "flow";
     setMode(depthState.mode);
@@ -97,7 +94,9 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
       els.forEach((el, i) => {
         const local = i - f; // >0 upcoming (behind, deeper), <0 passed (flew by)
         const dist = Math.abs(local);
-        if (dist >= 1) {
+        // Only the two panes straddling the playhead render; anything a full
+        // step away is hidden so we never stack three panes at once.
+        if (dist >= 1.0) {
           if (el.style.visibility !== "hidden") el.style.visibility = "hidden";
           // Disassemble hidden panes so they re-animate on return.
           if (el.classList.contains("pane-assembled")) el.classList.remove("pane-assembled");
@@ -105,23 +104,23 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
         }
         if (el.style.visibility !== "visible") el.style.visibility = "visible";
 
-        let scale: number;
-        let opacity: number;
-        let blur: number;
-        if (local >= 0) {
-          // Arriving from the depths of the network.
-          const t = easeOutQuart(1 - local);
-          scale = ENTER_SCALE + (1 - ENTER_SCALE) * t;
-          opacity = Math.pow(1 - local, 1.7);
-          blur = ENTER_BLUR_PX * local;
-        } else {
-          // Flying past the camera.
-          const v = -local;
-          scale = 1 + (EXIT_SCALE - 1) * v * v;
-          opacity = Math.max(0, 1 - v * 1.9);
-          blur = EXIT_BLUR_PX * v;
-        }
-        el.style.opacity = opacity.toFixed(3);
+        // Continuous reveal: a wide fully-legible plateau, then a smooth cross-fade
+        // into the neighbour. Because each pane stays readable across most of its
+        // band, free (un-snapped) scrolling never strands content half-hidden.
+        // Linear cross-fade between the two straddling panes: their opacities
+        // sum to ~1, so it's never blank (no gap) and never both fully opaque
+        // (no muddy stack). One pane dominates near its centre; a soft dissolve
+        // at the midpoint. Continuous — no snap.
+        const reveal = Math.max(0, 1 - dist);
+
+        // Gentle depth: upcoming sits slightly back/small; passed drifts forward.
+        const scale =
+          local >= 0
+            ? ENTER_SCALE + (1 - ENTER_SCALE) * reveal
+            : 1 + (EXIT_SCALE - 1) * (1 - reveal) * 0.5;
+        const blur = (1 - reveal) * (local >= 0 ? ENTER_BLUR_PX : EXIT_BLUR_PX) * 0.6;
+
+        el.style.opacity = reveal.toFixed(3);
         el.style.transform = `scale(${scale.toFixed(4)})`;
         el.style.filter = blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : "none";
 
@@ -133,8 +132,9 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
         el.style.setProperty("--birth-x", `${((src.x - 0.5) * 140).toFixed(1)}px`);
         el.style.setProperty("--birth-y", `${((src.y - 0.5) * 120 + 26).toFixed(1)}px`);
 
-        // Card assembly: snap children in when the camera arrives.
-        const assembled = local > -0.38 && local < 0.18;
+        // Assemble children across the whole readable plateau (not just dead-centre),
+        // so content is present throughout continuous scrolling.
+        const assembled = dist < 0.6;
         if (assembled !== el.classList.contains("pane-assembled")) {
           if (assembled) el.classList.add("pane-assembled");
           else el.classList.remove("pane-assembled");
@@ -156,38 +156,10 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
     };
   }, [mode]);
 
-  // Pointer-device snap: elastic GSAP snap. Touch uses CSS scroll-snap instead.
-  useEffect(() => {
-    if (mode !== "depth") return;
-    if (document.documentElement.classList.contains("depth-touch")) return;
-
-    let trigger: import("gsap/ScrollTrigger").ScrollTrigger | undefined;
-    let cancelled = false;
-
-    const init = async () => {
-      const { gsap } = await import("gsap");
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      if (cancelled) return;
-      gsap.registerPlugin(ScrollTrigger);
-      const vh = svhRef.current || window.innerHeight;
-      trigger = ScrollTrigger.create({
-        start: 0,
-        end: (SECTION_COUNT - 1) * vh,
-        snap: {
-          snapTo: 1 / (SECTION_COUNT - 1),
-          duration: { min: 0.65, max: 1.1 },
-          ease: "power3.out",
-          delay: 0.22,
-          directional: true,
-        },
-      });
-    };
-    init();
-    return () => {
-      cancelled = true;
-      trigger?.kill();
-    };
-  }, [mode]);
+  // Continuous scroll (1C): the elastic section-snap is gone so the journey
+  // scrubs like film. Safe now that the reveal bands above keep every section
+  // (incl. contact) legible without needing to land exactly on it. Lenis
+  // (SmoothScroll) supplies the smoothing; camera + panes read continuous progress.
 
   if (mode === "flow") {
     return (

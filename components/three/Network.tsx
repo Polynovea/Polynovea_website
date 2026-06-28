@@ -6,7 +6,7 @@ import * as THREE from "three";
 import type { NetworkData } from "./networkData";
 import { SECTION_COUNT } from "@/lib/depthStore";
 import { clusterCenter } from "./networkData";
-import { clusterFocus, journeyPosition } from "@/lib/clusterFocus";
+import { clusterFocus, journeyPosition, boundaryTakeover } from "@/lib/clusterFocus";
 
 // ── Violet bloom cloud ──────────────────────────────────────────────────────
 
@@ -56,7 +56,7 @@ const GOLD_VERT = /* glsl */ `
     float pulse = 1.0 + sin(uTime * 1.4 + aPhase) * 0.22;
     vec4 mv = modelViewMatrix * vec4(position, 1.0);
     float depth = max(-mv.z, 0.1);
-    gl_PointSize = clamp(aScale * pulse * 320.0 / depth, 0.0, 20.0);
+    gl_PointSize = clamp(aScale * pulse * 230.0 / depth, 0.0, 13.0);
     vAlpha = clamp(aScale * 7.0, 0.4, 1.0);
     gl_Position = projectionMatrix * mv;
   }
@@ -70,9 +70,47 @@ const GOLD_FRAG = /* glsl */ `
   void main() {
     vec2 c = gl_PointCoord - 0.5;
     float d = length(c);
-    float a = smoothstep(0.5, 0.0, d) * vAlpha;
+    float a = pow(smoothstep(0.5, 0.0, d), 1.7) * vAlpha;
     if (a < 0.01) discard;
     gl_FragColor = vec4(uColor, a);
+  }
+`;
+
+// ── Synapse wires: a signal pulse fires and travels along every edge ─────────
+
+const FIRE_VERT = /* glsl */ `
+  attribute float aEdgeT;
+  attribute float aSeed;
+  varying float vT;
+  varying float vSeed;
+
+  void main() {
+    vT = aEdgeT;
+    vSeed = aSeed;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const FIRE_FRAG = /* glsl */ `
+  precision mediump float;
+  uniform float uTime;
+  uniform float uSurge;
+  uniform vec3 uBase;
+  uniform vec3 uPulse;
+  varying float vT;
+  varying float vSeed;
+
+  void main() {
+    // Each wire fires on its own phase; signals accelerate at section crossings.
+    float speed = (0.10 + 0.12 * fract(vSeed * 7.31)) * (1.0 + uSurge * 2.2);
+    float head = fract(uTime * speed + vSeed * 6.2831);
+    float d = head - vT;
+    d = d - floor(d);                 // wrap: distance behind the travelling head
+    float pulse = pow(smoothstep(0.16, 0.0, d), 1.5);
+    float baseA = 0.09 + uSurge * 0.05;
+    vec3 col = mix(uBase, uPulse, pulse);
+    float a = baseA + pulse * 0.9;
+    gl_FragColor = vec4(col, a);
   }
 `;
 
@@ -152,11 +190,45 @@ export default function Network({ data }: { data: NetworkData }) {
     []
   );
 
+  // ── Firing synapse wires ──────────────────────────────────────────────────
+  const edgeGeo = useMemo(() => {
+    const E = data.edges.length;
+    const pos = new Float32Array(E * 6);
+    const ts = new Float32Array(E * 2);
+    const seeds = new Float32Array(E * 2);
+    data.edges.forEach((e, i) => {
+      pos.set([e.a.x, e.a.y, e.a.z, e.b.x, e.b.y, e.b.z], i * 6);
+      ts[i * 2] = 0; ts[i * 2 + 1] = 1;
+      const s = (i * 0.3719) % 1;
+      seeds[i * 2] = s; seeds[i * 2 + 1] = s;
+    });
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    g.setAttribute("aEdgeT", new THREE.BufferAttribute(ts, 1));
+    g.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+    return g;
+  }, [data]);
+
+  const fireRef = useRef<THREE.ShaderMaterial>(null);
+  const fireUniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uSurge: { value: 0 },
+      uBase: { value: new THREE.Color("#5b3aa8") },
+      uPulse: { value: new THREE.Color("#E6D3A3") },
+    }),
+    []
+  );
+
   // ── Cluster glow sprite refs ────────────────────────────────────────────
   const spriteRefs = useRef<(THREE.Sprite | null)[]>([]);
 
   useFrame(({ clock }) => {
     if (goldMatRef.current) goldMatRef.current.uniforms.uTime.value = clock.elapsedTime;
+    if (fireRef.current) {
+      fireRef.current.uniforms.uTime.value = clock.elapsedTime;
+      fireRef.current.uniforms.uSurge.value = boundaryTakeover();
+    }
 
     const f = journeyPosition();
     spriteRefs.current.forEach((s, i) => {
@@ -194,17 +266,16 @@ export default function Network({ data }: { data: NetworkData }) {
         />
       </points>
 
-      {/* Synapse lines */}
-      <lineSegments frustumCulled={false}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[data.edgePositions, 3]} />
-        </bufferGeometry>
-        <lineBasicMaterial
-          color="#7C3AED"
+      {/* Synapse wires — a gold signal fires and travels along every edge */}
+      <lineSegments geometry={edgeGeo} frustumCulled={false}>
+        <shaderMaterial
+          ref={fireRef}
+          uniforms={fireUniforms}
+          vertexShader={FIRE_VERT}
+          fragmentShader={FIRE_FRAG}
           transparent
-          opacity={0.14}
-          blending={THREE.AdditiveBlending}
           depthWrite={false}
+          blending={THREE.AdditiveBlending}
         />
       </lineSegments>
 

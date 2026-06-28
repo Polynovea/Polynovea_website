@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 
 export default function About() {
 
@@ -10,7 +11,8 @@ export default function About() {
       <div className="hero-container">
         <div className="hero-content">
           <h1 className="hero-heading">Measurement Changes Everything</h1>
-          <p className="hero-subheading">Most systems operate blind. We built the intelligence layer.</p>
+          <p className="hero-subheading">Most systems operate without behavioral intelligence. Polynovea built the infrastructure layer that changes that.</p>
+          <p className="hero-byline">By Polynovea Intelligence Team · Founded 2023 · Navi Mumbai, India · Updated June 27, 2026</p>
         </div>
       </div>
 
@@ -44,8 +46,8 @@ export default function About() {
 
         {/* THE ECOSYSTEM */}
         <div className="ecosystem-section">
-          <h2 className="section-title">The Ecosystem Architecture</h2>
-          <p className="section-subtitle">Four compounding milestones building toward full-stack control</p>
+          <h2 className="section-title">How is the Polynovea behavioral intelligence ecosystem structured?</h2>
+          <p className="section-subtitle">Four compounding milestones — Intelligence Infrastructure, IP &amp; Records, External Services, Distribution &amp; Ownership — each converting the previous layer&apos;s output into a higher-order leverage position.</p>
 
           <div className="milestones-grid">
             <div className="milestone">
@@ -104,7 +106,8 @@ export default function About() {
 
         {/* WHY WE EXIST */}
         <div className="why-exists-section">
-          <h2 className="section-title">Why We Exist</h2>
+          <h2 className="section-title">Why did Polynovea build behavioral intelligence infrastructure?</h2>
+          <p className="section-subtitle">Important decisions across industries are made blindly inside systems that should be measurable. Behavioral intelligence infrastructure fixes that by converting observed human behavior into repeatable operational systems.</p>
           <div className="why-exists-content">
             <div className="why-block">
               <h3>The Pattern We Noticed</h3>
@@ -127,7 +130,8 @@ export default function About() {
 
         {/* CORE PHILOSOPHY */}
         <div className="philosophy-section">
-          <h2 className="section-title">Core Philosophy</h2>
+          <h2 className="section-title">What principles guide Polynovea&apos;s behavioral intelligence approach?</h2>
+          <p className="section-subtitle">Six operating principles that govern how Polynovea observes, measures, and converts human behavior into compounding intelligence infrastructure.</p>
           <div className="philosophy-grid">
             <div className="phil-item">
               <h4>Measurement First</h4>
@@ -158,7 +162,8 @@ export default function About() {
 
         {/* WHAT POLYNOVEA RECORDS IS */}
         <div className="records-section">
-          <h2 className="section-title">What Polynovea Records Is</h2>
+          <h2 className="section-title">What is Polynovea Records within the behavioral intelligence ecosystem?</h2>
+          <p className="section-subtitle">Polynovea Records is the cultural and IP execution layer — the music-facing identity of the broader behavioral intelligence operation, not the parent company itself.</p>
           <div className="records-grid">
             <div className="records-item">
               <h3>The IP & Cultural Layer</h3>
@@ -172,6 +177,45 @@ export default function About() {
               <h3>The Music-Facing Identity</h3>
               <p>Records embodies the artist development layer, the audience ownership strategy, and the long-term cultural asset approach. It&apos;s where intelligence becomes music.</p>
             </div>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div className="faq-section">
+          <h2 className="section-title" style={{ textAlign: 'left', fontSize: '32px' }}>Frequently asked questions about Polynovea</h2>
+          <div className="faq-list">
+            {[
+              {
+                q: "What is behavioral intelligence?",
+                a: "Behavioral intelligence is the systematic process of observing human decision-making patterns in real commercial environments, extracting repeatable structures, and converting those structures into operational systems. Unlike survey data or stated preferences, it works from what people actually do.",
+              },
+              {
+                q: "What does Polynovea do?",
+                a: "Polynovea builds the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making, identifies repeatable behavioral patterns, and converts them into operational systems. Hospitality and music are the first 2 live domains. Education and workplace are in design.",
+              },
+              {
+                q: "What is the Human Behavioral Intelligence Framework (HBIF)?",
+                a: "The HBIF is Polynovea's core architecture: a 4-milestone system progressing from behavioral data infrastructure (M1) through cultural execution and IP development (M2), external services and licensing (M3), to distribution control and ecosystem ownership (M4). The same framework deploys across hospitality, music, education, and workplace environments.",
+              },
+              {
+                q: "What is Polynovea Records?",
+                a: "Polynovea Records is the cultural and IP execution layer of the Polynovea ecosystem — not the parent company. It converts behavioral intelligence from live environments into artist development, owned IP, and audience assets. It is one deployment surface of the broader HBIF, operating in the music domain.",
+              },
+              {
+                q: "Where is Polynovea based and when was it founded?",
+                a: "Polynovea was founded in 2023 by Subrojit Roy and is based in Navi Mumbai, Maharashtra, India. Contact: subrojitroy@polynovea.in",
+              },
+            ].map(({ q, a }) => (
+              <div key={q} className="faq-item">
+                <h3 className="faq-q">{q}</h3>
+                <p className="faq-a">{a}</p>
+              </div>
+            ))}
+          </div>
+          <div className="faq-links">
+            <Link href="/architecture">Explore the system architecture</Link>
+            <Link href="/projects">View active behavioral intelligence projects</Link>
+            <a href="mailto:subrojitroy@polynovea.in">Contact the team</a>
           </div>
         </div>
 
@@ -241,6 +285,14 @@ export default function About() {
           font-size: 20px;
           color: var(--text-secondary);
           font-weight: 300;
+        }
+
+        .hero-byline {
+          font-size: 12px;
+          color: var(--text-disabled);
+          margin-top: 12px;
+          font-family: var(--font-mono, monospace);
+          letter-spacing: 0.06em;
         }
 
         .container {
@@ -528,6 +580,56 @@ export default function About() {
           color: var(--text-secondary);
           line-height: 1.6;
           font-size: 15px;
+        }
+
+        .faq-section {
+          margin: 140px 0 80px;
+        }
+
+        .faq-list {
+          display: grid;
+          gap: 24px;
+          margin: 40px 0 32px;
+        }
+
+        .faq-item {
+          border-left: 2px solid rgba(124, 58, 237, 0.4);
+          padding-left: 24px;
+        }
+
+        .faq-q {
+          font-size: 17px;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin: 0 0 10px;
+          line-height: 1.4;
+        }
+
+        .faq-a {
+          font-size: 15px;
+          color: var(--text-secondary);
+          line-height: 1.7;
+          margin: 0;
+        }
+
+        .faq-links {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          padding-top: 24px;
+          border-top: 1px solid rgba(124, 58, 237, 0.15);
+        }
+
+        .faq-links a {
+          font-size: 14px;
+          font-weight: 500;
+          color: rgba(124, 58, 237, 0.9);
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+
+        .faq-links a:hover {
+          color: var(--accent-authority, #e6d3a3);
         }
 
         .about-cta {

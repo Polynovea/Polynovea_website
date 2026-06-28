@@ -44,7 +44,7 @@ export default function Pulses({ data, count }: { data: NetworkData; count: numb
       const e = data.edges[p.edge];
       dummy.position.lerpVectors(e.a, e.b, p.t);
       const flare = 0.6 + Math.sin(p.t * Math.PI) * 0.9;
-      dummy.scale.setScalar(0.045 * flare * sizeMul);
+      dummy.scale.setScalar(0.03 * flare * sizeMul);
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
     }
@@ -54,7 +54,7 @@ export default function Pulses({ data, count }: { data: NetworkData; count: numb
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, count]} frustumCulled={false}>
       <sphereGeometry args={[1, 6, 6]} />
-      <meshBasicMaterial color="#F5E9C8" toneMapped={false} />
+      <meshBasicMaterial color="#FFF1CE" toneMapped={false} />
     </instancedMesh>
   );
 }

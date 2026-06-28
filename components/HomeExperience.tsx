@@ -8,7 +8,6 @@ import SystemPane from "@/components/panes/SystemPane";
 import MilestonesPane from "@/components/panes/MilestonesPane";
 import WhyDifferent from "@/components/WhyDifferent";
 import WhoPane from "@/components/panes/WhoPane";
-import MusicPane from "@/components/panes/MusicPane";
 import ModulesPane from "@/components/panes/ModulesPane";
 import FAQ from "@/components/FAQ";
 import ContactPane from "@/components/panes/ContactPane";
@@ -23,7 +22,6 @@ const panes: DepthPaneDef[] = [
   { node: <MilestonesPane /> },
   { node: <WhyDifferent /> },
   { node: <WhoPane /> },
-  { id: "projects", node: <MusicPane /> },
   { node: <ModulesPane /> },
   { id: "faq", node: <FAQ /> },
   { id: "contact", node: <ContactPane /> },

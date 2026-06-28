@@ -1,415 +1,141 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { BentoGrid, type BentoItem } from "@/components/ui/bento-grid";
 
-interface MusicProject {
-  id: string;
-  title: string;
-  desc: string;
-  type: string;
-  cta: string;
-  href: string;
-}
-
-interface SystemModule {
-  tag: string;
-  title: string;
-  status: string;
-  statusType: "active" | "progress" | "planned";
-  desc: string;
-}
-
-interface VideoCardProps {
-  project: MusicProject;
-  delay: number;
-  feature?: boolean;
-}
-
-interface ModuleCardProps {
-  module: SystemModule;
-  delay: number;
-}
-
-const musicProjects: MusicProject[] = [
+const systemModules: BentoItem[] = [
   {
-    id: "I8ZQCN9EslU",
-    title: "Lately",
-    desc: "Our debut release. The first piece of original IP from Polynovea.",
-    type: "Release",
-    cta: "Watch on YouTube",
-    href: "https://youtu.be/I8ZQCN9EslU",
-  },
-  {
-    id: "VqiJCgQTJ0g",
-    title: "Lately - Remake",
-    desc: "A reimagined version. Same foundation, different resolution.",
-    type: "Remake",
-    cta: "Watch on YouTube",
-    href: "https://youtu.be/VqiJCgQTJ0g",
-  },
-  {
-    id: "IIvCau8-tBw",
-    title: "Sangharsh",
-    desc: "Our upcoming album. A body of work in active production - releasing progressively.",
-    type: "Album (Upcoming)",
-    cta: "Watch Teaser",
-    href: "https://youtu.be/IIvCau8-tBw",
-  },
-];
-
-const systemModules: SystemModule[] = [
-  {
-    tag: "Module 01",
+    num: "01",
+    tag: "01",
     title: "Decision Framework",
-    status: "Active",
-    statusType: "active",
     desc: "Determines whether an opportunity is viable. Evaluates engagement fit, pricing logic, and expected outcomes before any resource is committed.",
+    colSpan: 1,
   },
   {
-    tag: "Module 02",
+    num: "02",
+    tag: "02",
     title: "Acquisition System",
-    status: "In Progress",
-    statusType: "progress",
-    desc: "Multi-source behavioural signal extraction, structured through an ontology layer that maps how human behaviour operates inside commercial environments. Not what customers say — the mechanisms that drive what they do. Feeds a field execution system that tells you who to target, how to reach them, and what they respond to before a single show runs.",
+    desc: "Not review sentiment analysis — behavioral signal extraction. Each Google Review is run through the HBIF extraction layer to pull out Stimuli, Frictions, Compensations, and Emotional context. 11,063 venues behaviourally analysed across Mumbai. Signals map to six fitness dimensions and feed a live 8-phase acquisition playbook that tells you who to target, how to reach them, and what they respond to before a show runs.",
+    colSpan: 2,
   },
   {
-    tag: "Module 03",
+    num: "03",
+    tag: "03",
     title: "Optimisation System",
-    status: "Planned",
-    statusType: "planned",
-    desc: "Two-part system. Part 1 instruments the live environment - POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
+    desc: "Two-part system. Part 1 instruments the live environment — POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
+    colSpan: 3,
   },
 ];
 
-function VideoCard({ project, delay, feature }: VideoCardProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  return (
-    <article
-      className={`video-card glass-card${feature ? " bento-feature" : ""}`}
-      data-reveal="true"
-      data-reveal-delay={String(delay)}
-    >
-      <div className="video-shell">
-        {!isLoaded ? (
-          <button
-            type="button"
-            className="video-thumb"
-            onClick={() => setIsLoaded(true)}
-            aria-label={`Play ${project.title}`}
-          >
-            <img
-              src={`https://img.youtube.com/vi/${project.id}/hqdefault.jpg`}
-              alt={project.title}
-              loading="lazy"
-            />
-            <span className="play-button" aria-hidden="true">
-              <span className="play-triangle" />
-            </span>
-          </button>
-        ) : (
-          <iframe
-            src={`https://www.youtube.com/embed/${project.id}?autoplay=1`}
-            title={project.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        )}
-      </div>
-
-      <div className="video-body">
-        <span className="type-badge">{project.type}</span>
-        <h3>{project.title}</h3>
-        <p>{project.desc}</p>
-        <a href={project.href} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-          {project.cta}
-        </a>
-      </div>
-
-      <style jsx>{`
-        .video-card {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .video-shell {
-          position: relative;
-          aspect-ratio: 16 / 9;
-          width: 100%;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(8, 7, 14, 0.5);
-        }
-
-        .video-shell iframe,
-        .video-thumb {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          border: 0;
-        }
-
-        .video-thumb {
-          padding: 0;
-          cursor: pointer;
-          background: transparent;
-        }
-
-        .video-thumb img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-
-        .play-button {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 64px;
-          height: 64px;
-          margin-left: -32px;
-          margin-top: -32px;
-          border-radius: 999px;
-          background: var(--accent-intelligence);
-          box-shadow: 0 0 24px var(--accent-intelligence-glow);
-          transition: transform var(--duration-default) ease;
-        }
-
-        .play-triangle {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 0;
-          height: 0;
-          margin-left: -5px;
-          margin-top: -8px;
-          border-top: 8px solid transparent;
-          border-bottom: 8px solid transparent;
-          border-left: 14px solid var(--text-primary);
-        }
-
-        .video-thumb:hover .play-button {
-          transform: scale(1.08);
-        }
-
-        .video-body {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: var(--space-sm);
-          padding: var(--space-lg);
-        }
-
-        .type-badge {
-          display: inline-flex;
-          width: fit-content;
-          padding: var(--space-xs) var(--space-sm);
-          border: 1px solid rgba(230, 211, 163, 0.3);
-          border-radius: var(--radius-pill);
-          color: var(--accent-authority);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-
-        .video-body h3 {
-          margin: 0;
-          color: var(--text-primary);
-          font-family: var(--font-display);
-          font-size: 22px;
-          line-height: 1.15;
-        }
-
-        .video-body p {
-          margin: 0;
-          color: var(--text-secondary);
-          font-size: 14px;
-          line-height: 1.65;
-        }
-
-        .video-body .btn {
-          margin-top: var(--space-sm);
-        }
-
-        @media (max-width: 600px) {
-          .video-body {
-            padding: var(--space-md);
-          }
-          .video-body h3 {
-            font-size: 20px;
-          }
-        }
-      `}</style>
-    </article>
-  );
-}
-
-function ModuleCard({ module, delay }: ModuleCardProps) {
-  return (
-    <article className="module-panel glass-card" data-reveal="true" data-reveal-delay={String(delay)}>
-      <div className="module-top">
-        <span className="module-tag">{module.tag}</span>
-      </div>
-      <h3>{module.title}</h3>
-      <p>{module.desc}</p>
-
-      <style jsx>{`
-        .module-panel {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-md);
-          padding: var(--space-xl);
-        }
-
-        .module-top {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: var(--space-md);
-        }
-
-        .module-tag {
-          color: var(--accent-authority-muted);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          flex-shrink: 0;
-        }
-
-        .status-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: var(--space-xs);
-          padding: var(--space-xs) var(--space-sm);
-          border-radius: var(--radius-pill);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          flex-shrink: 0;
-        }
-
-        .status-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 999px;
-          flex-shrink: 0;
-        }
-
-        .badge-active {
-          background: rgba(34, 197, 94, 0.12);
-          color: #4ade80;
-        }
-
-        .badge-active .status-dot {
-          background: #4ade80;
-        }
-
-        .badge-progress {
-          background: rgba(124, 58, 237, 0.15);
-          color: #a78bfa;
-        }
-
-        .badge-progress .status-dot {
-          background: #a78bfa;
-        }
-
-        .badge-planned {
-          background: rgba(230, 211, 163, 0.1);
-          color: var(--accent-authority);
-        }
-
-        .badge-planned .status-dot {
-          background: var(--accent-authority);
-        }
-
-        h3 {
-          margin: 0;
-          color: var(--text-primary);
-          font-family: var(--font-display);
-          font-size: 22px;
-          line-height: 1.15;
-        }
-
-        p {
-          margin: 0;
-          color: var(--text-secondary);
-          font-size: 14px;
-          line-height: 1.65;
-        }
-      `}</style>
-    </article>
-  );
-}
+const faqItems = [
+  {
+    q: "What projects is Polynovea currently working on?",
+    a: "Polynovea is actively building three behavioral intelligence modules: the Decision Framework which defines what to measure and why; the Acquisition System which maps behavioral mechanics of commercial environments using an 8-phase live execution framework; and the Optimisation System which instruments live environments and converts behavioral intelligence into measurable revenue optimisation.",
+  },
+  {
+    q: "What is the behavioral intelligence Decision Framework?",
+    a: "The Decision Framework is the foundation of Polynovea's behavioral intelligence system. It defines what behavior to measure, establishes success metrics, and creates measurement baselines before any optimization occurs. Output: KPIs, decision criteria, and a behavioral baseline for each operating environment.",
+  },
+  {
+    q: "What is the 8-phase Acquisition System?",
+    a: "The Acquisition System extracts multi-source behavioral signals from commercial environments and structures them through an ontology layer that maps how human behavior operates. It scores venues across fitness dimensions and audience archetypes using Bayesian inference, then converts that intelligence into an 8-phase field execution framework.",
+  },
+  {
+    q: "What is the Optimisation System?",
+    a: "The Optimisation System is a two-part behavioral intelligence system. Part 1 instruments the live environment — capturing POS data, venue flow, and audience behavior in real time. Part 2 converts that intelligence into measurable revenue optimisation decisions for venue operators.",
+  },
+  {
+    q: "What is Cappella by Polynovea?",
+    a: "Cappella is a behavioral software product built by Polynovea operating within the music context. It applies the HBIF's measurement and pattern-recognition capabilities to the artist–audience relationship, creating a data layer for the music domain.",
+  },
+];
 
 export default function ProjectsExpanded() {
   return (
     <section className="section projects-expanded">
       <div className="container">
+
+        {/* Hero */}
         <div className="hero-section" data-reveal="true">
           <div className="hero-copy">
             <span className="hero-label">Projects</span>
             <h1>
-              Original music and the intelligence <span className="gradient-text">infrastructure</span> behind it.
+              Behavioral intelligence <span className="gradient-text">infrastructure</span> in motion.
             </h1>
-            <p>Both in motion. Everything you see is live data feeding back into the system.</p>
+            <p>Three behavioral intelligence modules. One compounding system. Live inside every domain Polynovea operates — hospitality, music, and beyond.</p>
+            <p className="hero-byline">By Polynovea Intelligence Team · 3 active modules · Updated June 27, 2026</p>
           </div>
           <div className="hero-actions">
-            <Link href="/" className="btn btn-secondary">
-              Back to Home
-            </Link>
+            <Link href="/" className="btn btn-secondary">Back to Home</Link>
           </div>
         </div>
 
+        {/* Intelligence System — bento */}
         <div className="content-section">
           <div className="block-header" data-reveal="true" data-reveal-delay="40">
-            <span className="block-label">Original Music</span>
+            <h2 className="block-label-h2">What are the active behavioral intelligence modules?</h2>
+            <p className="block-answer">The behavioral intelligence system comprises 3 compounding modules, each converting the output of the previous into higher-order operational leverage. Together they form an end-to-end pipeline from signal extraction to revenue optimisation.</p>
           </div>
 
-          <div className="bento-grid bento-2 video-grid">
-            {musicProjects.map((project, index) => (
-              <VideoCard key={project.id} project={project} delay={index * 80} feature={index === 0} />
+          <div data-reveal="true" data-reveal-delay="80">
+            <BentoGrid items={systemModules} />
+          </div>
+        </div>
+
+        {/* How it works */}
+        <div className="content-section" data-reveal="true">
+          <div className="block-header">
+            <h2 className="block-label-h2">How does the behavioral intelligence system compound across domains?</h2>
+            <p className="block-answer">Each module is deployed live in the hospitality domain first, then the same infrastructure runs inside the music domain without a rebuild. Behavioral patterns observed in live hospitality environments surface mechanisms that improve accuracy in music — and vice versa. The system becomes more intelligent the more domains it operates in.</p>
+          </div>
+          <div className="stats-row">
+            <div className="stat-item">
+              <span className="stat-num">3</span>
+              <span className="stat-label">active behavioral intelligence modules</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-num">2</span>
+              <span className="stat-label">live deployment domains</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-num">8</span>
+              <span className="stat-label">phase acquisition execution framework</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-num">3</span>
+              <span className="stat-label">intelligence modules</span>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div className="content-section faq-section" data-reveal="true">
+          <div className="block-header">
+            <h2 className="block-label-h2">Frequently asked questions about Polynovea&apos;s projects</h2>
+          </div>
+          <div className="faq-list">
+            {faqItems.map(({ q, a }) => (
+              <div key={q} className="faq-item">
+                <h3 className="faq-q">{q}</h3>
+                <p className="faq-a">{a}</p>
+              </div>
             ))}
           </div>
-        </div>
-
-        <div className="content-section">
-          <div className="block-header" data-reveal="true" data-reveal-delay="40">
-            <span className="block-label">The Intelligence System</span>
-          </div>
-
-          <div className="cards-grid module-grid">
-            {systemModules.map((module, index) => (
-              <ModuleCard key={module.tag} module={module} delay={index * 80} />
-            ))}
+          <div className="faq-links">
+            <Link href="/architecture">Explore the behavioral intelligence stack architecture</Link>
+            <Link href="/about">About Polynovea</Link>
+            <Link href="/#contact">Partner with us</Link>
           </div>
         </div>
 
-        <div className="content-section">
-          <div className="block-header" data-reveal="true" data-reveal-delay="40">
-            <span className="block-label">Sangharsh Album</span>
-          </div>
-
-          <div className="placeholder-copy" data-reveal="true" data-reveal-delay="80">
-            Coming soon. Full tracklist and release details will be published here.
-          </div>
-        </div>
       </div>
 
       <style jsx>{`
         .projects-expanded {
-          background: rgba(9, 8, 16, 0.62); /* veil over the global neural scene */
-          --status-active-bg: rgba(34, 197, 94, 0.12);
-          --status-active-color: #4ade80;
-          --status-progress-bg: rgba(124, 58, 237, 0.15);
-          --status-progress-color: #a78bfa;
-          --status-planned-bg: rgba(230, 211, 163, 0.1);
+          background: rgba(9, 8, 16, 0.62);
         }
 
+        /* ── Hero ── */
         .hero-section {
           display: grid;
           grid-template-columns: minmax(0, 1fr) auto;
@@ -443,15 +169,22 @@ export default function ProjectsExpanded() {
           max-width: 44rem;
         }
 
+        .hero-byline {
+          font-size: 12px !important;
+          color: var(--text-disabled) !important;
+          font-family: var(--font-mono, monospace);
+          letter-spacing: 0.06em;
+          margin-top: var(--space-sm) !important;
+        }
+
         .hero-actions {
           display: flex;
           justify-content: flex-end;
           align-items: flex-start;
         }
 
-        .content-section {
-          margin-top: var(--space-4xl);
-        }
+        /* ── Section chrome ── */
+        .content-section { margin-top: var(--space-4xl); }
 
         .block-header {
           margin-bottom: var(--space-xl);
@@ -468,200 +201,113 @@ export default function ProjectsExpanded() {
           text-transform: uppercase;
         }
 
-        .cards-grid {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: var(--space-lg);
-        }
-
-        .video-card,
-        .module-panel {
-          overflow: hidden;
-        }
-
-        .video-shell {
-          position: relative;
-          aspect-ratio: 16 / 9;
-          border-bottom: 1px solid var(--border-muted);
-          background: var(--bg-card);
-        }
-
-        .video-shell iframe,
-        .video-thumb {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          border: 0;
-        }
-
-        .video-thumb {
-          padding: 0;
-          cursor: pointer;
-          background: var(--bg-card);
-        }
-
-        .video-thumb img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-
-        .play-button {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 64px;
-          height: 64px;
-          margin-left: -32px;
-          margin-top: -32px;
-          border-radius: 999px;
-          background: var(--accent-intelligence);
-          box-shadow: 0 0 24px var(--accent-intelligence-glow);
-          transition: transform var(--duration-default) ease;
-        }
-
-        .play-triangle {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 0;
-          height: 0;
-          margin-left: -5px;
-          margin-top: -8px;
-          border-top: 8px solid transparent;
-          border-bottom: 8px solid transparent;
-          border-left: 14px solid var(--text-primary);
-        }
-
-        .video-thumb:hover .play-button {
-          transform: scale(1.08);
-        }
-
-        .video-body {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-sm);
-          padding: var(--space-lg);
-        }
-
-        .type-badge {
-          display: inline-flex;
-          width: fit-content;
-          padding: var(--space-xs) var(--space-sm);
-          border: 1px solid var(--border-muted);
-          border-radius: var(--radius-pill);
-          color: var(--accent-authority);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-
-        .video-body h3,
-        .module-panel h3 {
-          margin: 0;
+        .block-label-h2 {
           color: var(--text-primary);
           font-family: var(--font-display);
-          font-size: 22px;
+          font-size: clamp(22px, 3vw, 32px);
+          font-weight: 700;
+          letter-spacing: -0.02em;
           line-height: 1.15;
+          margin: 0 0 var(--space-md);
         }
 
-        .video-body p,
-        .module-panel p,
-        .placeholder-copy {
-          margin: 0;
+        .block-answer {
           color: var(--text-secondary);
-          font-size: 14px;
-          line-height: 1.65;
+          font-size: 16px;
+          line-height: 1.7;
+          max-width: 720px;
+          margin: 0;
         }
 
-        .module-panel {
+        /* ── Stats ── */
+        .stats-row {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: var(--space-md);
+          margin-top: var(--space-2xl);
+        }
+
+        .stat-item {
+          border: 1px solid rgba(124, 58, 237, 0.22);
+          border-radius: var(--radius-sm, 8px);
+          padding: var(--space-lg);
           display: flex;
           flex-direction: column;
-          gap: var(--space-md);
-          padding: var(--space-xl);
-        }
-
-        .module-panel .module-top {
-          display: flex !important;
-          align-items: center;
-          justify-content: space-between;
-          gap: var(--space-md);
-        }
-
-        .module-tag {
-          color: var(--accent-authority-muted);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-
-        .status-badge {
-          display: inline-flex;
-          align-items: center;
           gap: var(--space-xs);
-          padding: var(--space-xs) var(--space-sm);
-          border-radius: var(--radius-pill);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
         }
 
-        .status-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 999px;
-          flex-shrink: 0;
-        }
-
-        .badge-active {
-          background: var(--status-active-bg);
-          color: var(--status-active-color);
-        }
-
-        .badge-active .status-dot {
-          background: var(--status-active-color);
-        }
-
-        .badge-progress {
-          background: var(--status-progress-bg);
-          color: var(--status-progress-color);
-        }
-
-        .badge-progress .status-dot {
-          background: var(--status-progress-color);
-        }
-
-        .badge-planned {
-          background: var(--status-planned-bg);
+        .stat-num {
+          font-family: var(--font-display);
+          font-size: clamp(36px, 4vw, 56px);
+          font-weight: 700;
           color: var(--accent-authority);
+          line-height: 1;
+          letter-spacing: -0.03em;
         }
 
-        .badge-planned .status-dot {
-          background: var(--accent-authority);
+        .stat-label {
+          font-size: 12px;
+          color: var(--text-disabled);
+          line-height: 1.4;
+          font-family: var(--font-mono, monospace);
+          letter-spacing: 0.04em;
         }
 
-        .placeholder-copy {
-          max-width: 42rem;
+        /* ── FAQ ── */
+        .faq-section { padding-bottom: var(--space-4xl); }
+
+        .faq-list {
+          display: grid;
+          gap: var(--space-lg);
+          margin-bottom: var(--space-2xl);
         }
 
+        .faq-item {
+          border-left: 2px solid rgba(124, 58, 237, 0.4);
+          padding-left: var(--space-lg);
+        }
+
+        .faq-q {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin: 0 0 var(--space-sm);
+          line-height: 1.4;
+        }
+
+        .faq-a {
+          font-size: 15px;
+          color: var(--text-secondary);
+          line-height: 1.7;
+          margin: 0;
+        }
+
+        .faq-links {
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--space-md);
+          padding-top: var(--space-xl);
+          border-top: 1px solid var(--border-muted);
+        }
+
+        .faq-links a {
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--accent-intelligence);
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+
+        .faq-links a:hover { color: var(--accent-authority); }
+
+        /* ── Responsive ── */
         @media (max-width: 900px) {
           .hero-section {
             grid-template-columns: 1fr;
             align-items: start;
           }
-
-          .hero-actions {
-            justify-content: flex-start;
-          }
-
-          .cards-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
+          .hero-actions { justify-content: flex-start; }
+          .stats-row { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 600px) {
@@ -669,29 +315,8 @@ export default function ProjectsExpanded() {
             gap: var(--space-lg);
             margin-bottom: var(--space-3xl);
           }
-
-          .content-section {
-            margin-top: var(--space-3xl);
-          }
-
-          .cards-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .video-body,
-          .module-panel {
-            padding: var(--space-md);
-          }
-
-          .video-body h3,
-          .module-panel h3 {
-            font-size: 20px;
-          }
-
-          .module-top {
-            align-items: flex-start;
-            flex-direction: column;
-          }
+          .content-section { margin-top: var(--space-3xl); }
+          .stats-row { grid-template-columns: repeat(2, 1fr); }
         }
       `}</style>
     </section>
