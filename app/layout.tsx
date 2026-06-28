@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | Polynovea",
   },
   description:
-    "Polynovea is an AI and data company building the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making, extracts repeatable patterns, and converts them into operational systems. Hospitality is the first domain. The framework is domain-agnostic. Polynovea Records is the cultural deployment arm.",
+    "Polynovea builds the Human Behavioral Intelligence Framework — three modules that observe, model, and act on human decision-making across commercial environments.",
   metadataBase: new URL("https://www.polynovea.in"),
   keywords: [
     "behavioral intelligence",
@@ -33,7 +33,10 @@ export const metadata: Metadata = {
     "behavioral intelligence india",
   ],
   icons: {
-    icon: "/icon.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png" },
+    ],
     apple: "/icon.png",
   },
   openGraph: {

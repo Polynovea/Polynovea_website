@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Behavioral Intelligence Company — About Polynovea",
+  title: "About Polynovea — Behavioral Intelligence Company",
   description:
-    "Polynovea is a behavioral intelligence company building the Human Behavioral Intelligence Framework (HBIF) — infrastructure that maps human decision-making into repeatable operational systems. Based in Navi Mumbai, India.",
+    "Polynovea builds the Human Behavioral Intelligence Framework — infrastructure that maps human decision-making into repeatable operational systems. Based in Navi Mumbai, India.",
   alternates: { canonical: "https://www.polynovea.in/about" },
   openGraph: {
     title: "About Polynovea — Behavioral Intelligence Company",

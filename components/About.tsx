@@ -203,7 +203,7 @@ export default function About() {
               },
               {
                 q: "Where is Polynovea based and when was it founded?",
-                a: "Polynovea was founded in 2023 by Subrojit Roy and is based in Navi Mumbai, Maharashtra, India. Contact: subrojitroy@polynovea.in",
+                a: "Polynovea was founded in 2023 by Subrojit Roy and is based in Navi Mumbai, Maharashtra, India.",
               },
             ].map(({ q, a }) => (
               <div key={q} className="faq-item">
@@ -215,7 +215,7 @@ export default function About() {
           <div className="faq-links">
             <Link href="/architecture">Explore the system architecture</Link>
             <Link href="/projects">View active behavioral intelligence projects</Link>
-            <a href="mailto:subrojitroy@polynovea.in">Contact the team</a>
+            <a href="/#contact">Contact the team</a>
           </div>
         </div>
 
