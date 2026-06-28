@@ -10,9 +10,9 @@ export default function Footer() {
           <div className="footer-brand">
             <div className="footer-logo">Polynovea</div>
             <p className="footer-tagline">
-              Behavioral intelligence infrastructure
+              Behavioral intelligence infrastructure.
               <br />
-              for the music industry.
+              Domain-agnostic. Built once. Deployed across industries.
             </p>
           </div>
 
