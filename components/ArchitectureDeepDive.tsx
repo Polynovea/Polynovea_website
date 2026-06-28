@@ -348,7 +348,7 @@ export default function ArchitectureDeepDive() {
             <span className="gold">Infrastructure.</span>
           </h1>
           <p className="hero-desc" data-reveal data-reveal-delay="200">
-            How Polynovea observes, models, and improves human decision-making across commercial environments through the Human Behavioral Intelligence Framework (HBIF).
+            The behavioral intelligence infrastructure that observes, models, and acts on human decision-making across commercial environments — built as the Human Behavioral Intelligence Framework (HBIF).
           </p>
           <div className="hero-meta" data-reveal data-reveal-delay="260">
             <span>By Polynovea Intelligence Team</span>
@@ -387,15 +387,15 @@ export default function ArchitectureDeepDive() {
           </div>
           <div className="three-col" data-reveal>
             <div className="three-col-item">
-              <h3>What it is</h3>
+              <p className="three-col-label">What it is</p>
               <p>The systematic extraction of behavioral signals from human environments, structured into models that explain decision-making and generate operational recommendations.</p>
             </div>
             <div className="three-col-item">
-              <h3>Why it matters</h3>
+              <p className="three-col-label">Why it matters</p>
               <p>Most commercial decisions are made without understanding the behavioral mechanisms driving customer behavior. Behavioral intelligence replaces assumption with evidence.</p>
             </div>
             <div className="three-col-item">
-              <h3>How it differs from analytics</h3>
+              <p className="three-col-label">How it differs from analytics</p>
               <p>Analytics reports outcomes. Behavioral intelligence explains decisions. Analytics shows what happened. Behavioral intelligence shows why — and predicts what will happen next.</p>
             </div>
           </div>
@@ -903,7 +903,8 @@ export default function ArchitectureDeepDive() {
           border-radius: var(--radius-sm, 8px);
           padding: var(--space-xl, 32px);
         }
-        .three-col-item h3 {
+        .three-col-item h3,
+        .three-col-label {
           font-size: 15px;
           font-weight: 700;
           color: var(--text-primary);

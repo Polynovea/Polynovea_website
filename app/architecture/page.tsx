@@ -4,9 +4,9 @@ import Footer from "@/components/Footer";
 import ArchitectureDeepDive from "@/components/ArchitectureDeepDive";
 
 export const metadata: Metadata = {
-  title: "Behavioral Intelligence Infrastructure — HBIF Architecture",
+  title: "Behavioral Intelligence Infrastructure",
   description:
-    "How Polynovea's Human Behavioral Intelligence Framework works: three modules that observe, model, and improve human decision-making across commercial environments.",
+    "How the Human Behavioral Intelligence Framework works: three modules that observe, model, and act on human decision-making across commercial environments.",
   alternates: { canonical: "https://www.polynovea.in/architecture" },
   openGraph: {
     title: "Behavioral Intelligence Infrastructure | Polynovea",
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Behavioral Intelligence Stack Architecture",
+  headline: "Behavioral Intelligence Infrastructure — How the HBIF Works",
   description:
-    "Polynovea's behavioral intelligence stack: four compounding layers from data infrastructure to distribution control and ecosystem ownership.",
+    "How the Human Behavioral Intelligence Framework works: three intelligence modules that observe, model, and act on human decision-making across commercial environments.",
   author: { "@type": "Organization", name: "Polynovea" },
   publisher: {
     "@type": "Organization",
