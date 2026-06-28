@@ -40,7 +40,7 @@ export default function Footer() {
                   ["https://www.youtube.com/@PolynoveaRecords", "YouTube"],
                   ["https://www.instagram.com/polynovearecords/", "Instagram — Records"],
                   ["https://www.instagram.com/polynovea.in/", "Instagram — Business"],
-                  ["https://x.com/PolynoveaRec", "X (Twitter)"],
+                  ["https://x.com/Polynovea", "X (Twitter)"],
                   ["#contact", "Contact Us"],
                 ].map(([href, label]) => (
                   <li key={label}>

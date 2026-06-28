@@ -98,7 +98,7 @@ const organizationSchema = {
   sameAs: [
     "https://www.instagram.com/polynovearecords/",
     "https://www.instagram.com/polynovea.in/",
-    "https://x.com/PolynoveaRec",
+    "https://x.com/Polynovea",
     "https://www.threads.net/@polynovearecords",
     "https://www.youtube.com/@PolynoveaRecords",
   ],
