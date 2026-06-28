@@ -100,6 +100,7 @@ const organizationSchema = {
     url: "https://www.polynovea.in",
   },
   sameAs: [
+    "https://www.linkedin.com/company/111494249/",
     "https://www.instagram.com/polynovearecords/",
     "https://www.instagram.com/polynovea.in/",
     "https://x.com/Polynovea",
