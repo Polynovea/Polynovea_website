@@ -4,7 +4,10 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogPostTracker from "@/components/BlogPostTracker";
+import VideoBlock from "@/components/VideoBlock";
 import styles from "./page.module.css";
+
+export const dynamic = "force-dynamic";
 
 interface ContentBlock {
   id: string;
@@ -36,7 +39,7 @@ function PostBody({ content, styles: s }: { content: string; styles: Record<stri
               {block.media && (
                 <div className={s.postBlockMedia}>
                   {isVideo(block.media) ? (
-                    <video src={block.media} controls className={s.postBlockVideo} />
+                    <VideoBlock src={block.media} className={s.postBlockVideo} />
                   ) : (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={block.media} alt={block.title || `Block ${i + 1}`} className={s.postBlockImage} />
@@ -84,7 +87,7 @@ interface BlogPost {
 
 async function getPost(slug: string): Promise<BlogPost | null> {
   try {
-    const res = await fetch(`${ADMIN_API}/blog-posts/${slug}`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${ADMIN_API}/blog-posts/${slug}`, { cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();
     const post: BlogPost = data.data ?? data;
