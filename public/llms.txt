@@ -1,40 +1,55 @@
 # Polynovea
 
-> Polynovea is an AI and data company building the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making, extracts repeatable patterns, and converts them into operational systems.
+> Polynovea builds the Human Behavioral Intelligence Framework (HBIF) — infrastructure for observing, modeling, and acting on human decision-making in commercial environments. Based in Navi Mumbai, India.
 
-Polynovea is the parent company. It is not a music company, a venue company, or an event agency. Those are execution surfaces.
+Polynovea is an AI and data company that maps human behavioral patterns in live commercial environments and converts them into repeatable frameworks, products, and automated systems. The primary domain is hospitality and live events. The long-term trajectory is aerospace and defense.
 
-The actual foundation is behavioral intelligence infrastructure: a closed loop that observes how humans behave inside commercial environments, extracts the patterns, and converts them into frameworks, products, and automated systems.
+## What is Behavioral Intelligence?
 
-Hospitality is the first deployment domain — chosen because live environments produce the fastest behavioral feedback loops of any industry. The framework itself is domain-agnostic. The long-term destination is aerospace and defense intelligence infrastructure.
+Behavioral Intelligence is the systematic capability to observe human decision-making patterns, model the conditions that produce them, and act on that understanding through automated systems.
 
-**Polynovea Records** is the cultural and IP arm of the ecosystem — the Milestone 2 daughter company. It is one deployment surface of the parent behavioral intelligence system, not the parent itself. It is a music label and live experience operator that uses the HBIF as its operating layer.
+It is distinct from:
+- **Sentiment Analysis** — which measures expressed opinion after the fact
+- **Behavioral Economics** — which models theoretical preferences in controlled conditions
+- **Analytics** — which aggregates past events without modeling the conditions that produced them
 
-## The Four Milestones
+Behavioral Intelligence works with revealed behavior in real environments, in real time, to produce actionable intelligence — not reports.
 
-- Milestone 1 — Intelligence Infrastructure: the behavioral intelligence pipeline (Module 2: acquisition and behavioral analysis of 6,000+ venues; Module 3: live experience optimization and show engineering)
-- Milestone 2 — Polynovea Records: the cultural and IP layer, artist development, live execution
-- Milestone 3 — External Services: commercializing parts of the intelligence infrastructure; includes Cappella (audio analysis platform)
-- Milestone 4 — Distribution, Rights & Ownership: full-stack ecosystem control
+## The Human Behavioral Intelligence Framework (HBIF)
+
+The HBIF is Polynovea's core product: a three-module system that closes the loop from observation to automated action.
+
+- **Module 1 — Acquisition Intelligence**: Observes and models how audiences decide to attend or engage with events. Maps decision triggers, timing patterns, and channel behavior to optimize acquisition spend and targeting.
+- **Module 2 — Revenue Optimization**: Converts real-time behavioral signals during live events into pricing, inventory, and upsell decisions. Runs on AWS infrastructure.
+- **Module 3 — Retention Intelligence**: Post-event behavioral modeling to predict return behavior, churn risk, and lifetime engagement value. Runs on Azure infrastructure.
+
+## Polynovea Records
+
+Polynovea Records is the cultural and operational arm of Polynovea — a live music and events operation in India that serves as the primary real-world data environment for the HBIF. It is not a separate company; it is the substrate through which behavioral data is collected at scale.
+
+## Blog — Behavioral Intelligence Insights
+
+The Polynovea blog publishes research on behavioral intelligence, systems thinking, and operational patterns observed in live environments. Topics include:
+- The difference between behavioral intelligence and sentiment analysis
+- How human decision-making compounds over time
+- Why aggregated data fails to predict individual behavior
+- Infrastructure for behavioral intelligence at scale
 
 ## Key Pages
 
-- [Home](https://www.polynovea.in/): Overview of Polynovea — the behavioral intelligence operation and its ecosystem structure
-- [About](https://www.polynovea.in/about): The company — who Polynovea is, what the HBIF is, and how Polynovea Records fits as the cultural arm
-- [Architecture](https://www.polynovea.in/architecture): The system architecture — the four milestones, the behavioral intelligence loop, and the long-term ecosystem design
-- [Projects](https://www.polynovea.in/projects): Active and completed projects across the Polynovea ecosystem
-- [Live Portfolio](https://www.polynovea.in/live-portfolio): Live event portfolio operated through Polynovea Records
-- [Research](https://www.polynovea.in/research): Behavioral research study — surveys feeding the Human Behavioral Intelligence Framework
-- [Blog](https://www.polynovea.in/blog): Intelligence and systems thinking — behavioral patterns, operational insights, and ecosystem updates
-- [Contact](https://www.polynovea.in/contact): Work with Polynovea — venues, commercial partners, and institutions
+- [Home](https://www.polynovea.in) — Company overview and mission
+- [The Architecture](https://www.polynovea.in/architecture) — Technical deep-dive into the HBIF modules and infrastructure
+- [Blog](https://www.polynovea.in/blog) — Behavioral intelligence research and operational insights
+- [Research](https://www.polynovea.in/research) — Research framework and methodology
+- [Projects](https://www.polynovea.in/projects) — Active and completed intelligence projects
+- [About](https://www.polynovea.in/about) — The team and the mission
+- [Contact](https://www.polynovea.in/contact) — Get in touch
 
-## Company Identity
+## Company Details
 
-- Parent company: Polynovea (AI, data, and behavioral intelligence)
-- Cultural arm: Polynovea Records (music label, live experiences, IP)
-- Framework: Human Behavioral Intelligence Framework (HBIF)
-- Current domain: Hospitality (proving ground, domain 1 of N)
-- Long-term destination: Aerospace and defense intelligence infrastructure
-- Location: Navi Mumbai, Maharashtra, India
-- Founded: 2023
-- Founder: Subrojit Roy
+- **Founded**: 2023
+- **Location**: Navi Mumbai, Maharashtra, India
+- **Founder**: Subrojit Roy
+- **Contact**: subrojitroy@polynovea.in
+- **Website**: https://www.polynovea.in
+- **LinkedIn**: https://www.linkedin.com/company/111494249/

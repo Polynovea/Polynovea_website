@@ -3,12 +3,18 @@ import type { MetadataRoute } from "next";
 const BASE = "https://www.polynovea.in";
 const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://admin.polynovea.in/api/content";
 
-async function getPublishedBlogPosts(): Promise<{ id: string; date: string }[]> {
+interface BlogPost {
+  slug: string;
+  status: string;
+  published_at: string | null;
+}
+
+async function getPublishedBlogPosts(): Promise<BlogPost[]> {
   try {
-    const res = await fetch(`${ADMIN_API}/blog-posts`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${ADMIN_API}/blog-posts`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();
-    return (data.data ?? []).filter((p: { status: string }) => p.status === "published");
+    return (data.data ?? []).filter((p: BlogPost) => p.status === "published");
   } catch {
     return [];
   }
@@ -17,8 +23,8 @@ async function getPublishedBlogPosts(): Promise<{ id: string; date: string }[]> 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getPublishedBlogPosts();
   const postUrls: MetadataRoute.Sitemap = posts.map((p) => ({
-    url: `${BASE}/blog/${p.id}`,
-    lastModified: p.date ? new Date(p.date) : new Date(),
+    url: `${BASE}/blog/${p.slug}`,
+    lastModified: p.published_at ? new Date(p.published_at) : new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
