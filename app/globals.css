@@ -1020,6 +1020,15 @@ html.warp-in footer {
    solid/simple fallbacks.
    ============================================ */
 @media (max-width: 899px), (pointer: coarse) {
+  /* Reveals: skip the opacity-0 initial state on touch devices.
+     The IntersectionObserver path is the intended mobile reveal mechanism,
+     but if JS is slow or blocked, content must not stay permanently hidden. */
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   /* Card liquid-glass pseudo-element: no SVG filter, no backdrop-filter */
   .card::after,
   .who-card::after,
