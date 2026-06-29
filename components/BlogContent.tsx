@@ -5,6 +5,7 @@ import Link from "next/link";
 
 export interface BlogPost {
   id: string;
+  slug: string;
   title: string;
   excerpt: string;
   published_at: string | null;
@@ -95,7 +96,7 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
                 data-reveal-delay={String(i * 60)}
               >
                 {/* Cover image — edge-to-edge */}
-                <Link href={`/blog/${post.id}`} className="card-img-link" tabIndex={-1} aria-hidden="true">
+                <Link href={`/blog/${post.slug}`} className="card-img-link" tabIndex={-1} aria-hidden="true">
                   <div className="card-img-wrap">
                     {post.cover_image ? (
                       <img src={post.cover_image} alt={post.title} className="card-img" />
@@ -117,7 +118,7 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
                   )}
 
                   <h2 className="card-title">
-                    <Link href={`/blog/${post.id}`}>{post.title}</Link>
+                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                   </h2>
 
                   <p className="card-excerpt">{post.excerpt}</p>
@@ -132,7 +133,7 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
                         </>
                       )}
                     </div>
-                    <Link href={`/blog/${post.id}`} className="card-cta">
+                    <Link href={`/blog/${post.slug}`} className="card-cta">
                       Read →
                     </Link>
                   </div>
