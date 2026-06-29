@@ -1,100 +1,178 @@
 .postMain {
-  background: var(--bg-primary);
   min-height: 100vh;
-  padding-top: calc(var(--nav-height) + var(--space-2xl));
-  padding-bottom: var(--space-4xl);
+  padding-top: calc(var(--nav-height) + var(--space-3xl));
+  padding-bottom: var(--space-5xl);
+  padding-inline: var(--space-lg);
 }
+
 .postContainer {
-  max-width: 720px;
+  max-width: 780px;
   margin-inline: auto;
 }
+
+.postBack {
+  margin-bottom: var(--space-xl);
+}
+
 .postBack a {
-  color: var(--text-secondary);
+  color: var(--text-disabled);
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
   transition: color 0.2s;
 }
+
 .postBack a:hover {
-  color: var(--accent-intelligence);
+  color: var(--accent-authority);
 }
-.postArticle {
-  margin-top: var(--space-2xl);
+
+/* Glass card shell — .glass-card applied in JSX handles border/backdrop */
+.postCard {
+  overflow: hidden;
+  padding: 0;
 }
+
+/* Cover image */
+.postCoverWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+}
+
+.postCoverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.postCoverFade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(to bottom, transparent, rgba(10, 9, 18, 0.75));
+  pointer-events: none;
+}
+
+/* Inner content padding */
+.postInner {
+  padding: var(--space-2xl) var(--space-2xl) var(--space-3xl);
+}
+
 .postMeta {
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  color: var(--text-secondary);
-  font-size: 0.8125rem;
-  margin-bottom: var(--space-md);
+  font-size: 0.75rem;
+  color: var(--text-disabled);
+  margin-bottom: var(--space-lg);
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
 }
+
 .postCategory {
-  color: var(--accent-intelligence);
-  font-weight: 600;
-}
-.postTitle {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 700;
-  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-authority-muted);
+}
+
+.metaDot {
+  opacity: 0.35;
+}
+
+.postTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.625rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
   color: var(--text-primary);
   margin-bottom: var(--space-lg);
 }
+
 .postExcerpt {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   color: var(--text-secondary);
-  line-height: 1.6;
-  border-left: 3px solid var(--accent-intelligence);
+  line-height: 1.65;
+  border-left: 2px solid rgba(124, 58, 237, 0.5);
   padding-left: var(--space-md);
   margin-bottom: var(--space-2xl);
 }
+
+/* ── Body ── */
 .postBody {
-  color: var(--text-primary);
-  font-size: 1rem;
-  line-height: 1.75;
-}
-.postBody h2,
-.postBody h3 {
-  color: var(--text-primary);
-  margin-top: var(--space-2xl);
-  margin-bottom: var(--space-md);
-}
-.postBody p {
-  margin-bottom: var(--space-md);
   color: var(--text-secondary);
-}
-.postBody a {
-  color: var(--accent-intelligence);
-  text-decoration: underline;
+  font-size: 1rem;
+  line-height: 1.8;
 }
 
-/* Block-based content */
 .postBlock {
   margin-bottom: var(--space-2xl);
 }
+
 .postBlockTitle {
+  font-family: var(--font-display);
   font-size: clamp(1.1rem, 2.5vw, 1.375rem);
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
   margin-bottom: var(--space-md);
   margin-top: 0;
 }
+
 .postBlockBody p {
   margin-bottom: var(--space-md);
   color: var(--text-secondary);
+  line-height: 1.8;
 }
+
 .postBlockMedia {
   margin-top: var(--space-lg);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .postBlockImage {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 8px;
 }
+
 .postBlockVideo {
   width: 100%;
-  border-radius: 8px;
   background: #000;
+}
+
+/* Glow orb inside the card */
+.postGlow {
+  position: absolute;
+  bottom: -120px;
+  right: -120px;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.22) 0%,
+    rgba(230, 211, 163, 0.1) 50%,
+    transparent 100%
+  );
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .postMain {
+    padding-inline: var(--space-md);
+    padding-top: calc(var(--nav-height) + var(--space-2xl));
+  }
+
+  .postInner {
+    padding: var(--space-lg) var(--space-lg) var(--space-2xl);
+  }
 }

@@ -127,22 +127,43 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
       />
       <Navbar />
       <main className={styles.postMain}>
-        <div className={`container ${styles.postContainer}`}>
+        <div className={styles.postContainer}>
           <div className={styles.postBack} data-reveal>
             <Link href="/blog">← Back to Blog</Link>
           </div>
-          <article className={styles.postArticle} data-reveal>
-            <div className={styles.postMeta}>
-              {post.category && <span className={styles.postCategory}>{post.category}</span>}
-              {post.published_at && (
-                <span>{new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
-              )}
-              <span>·</span>
-              <span>{post.author}</span>
+
+          <article className={`glass-card ${styles.postCard}`} data-reveal>
+            {/* Cover image — edge-to-edge at top of card */}
+            {post.cover_image && (
+              <div className={styles.postCoverWrap}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={post.cover_image} alt={post.title} className={styles.postCoverImg} />
+                <div className={styles.postCoverFade} />
+              </div>
+            )}
+
+            <div className={styles.postInner}>
+              <div className={styles.postMeta}>
+                {post.category && (
+                  <>
+                    <span className={styles.postCategory}>{post.category}</span>
+                    <span className={styles.metaDot}>·</span>
+                  </>
+                )}
+                {post.published_at && (
+                  <span>{new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
+                )}
+                {post.published_at && <span className={styles.metaDot}>·</span>}
+                <span>{post.author}</span>
+              </div>
+
+              <h1 className={styles.postTitle}>{post.title}</h1>
+              <p className={styles.postExcerpt}>{post.excerpt}</p>
+              {post.content && <PostBody content={post.content} styles={styles} />}
             </div>
-            <h1 className={styles.postTitle}>{post.title}</h1>
-            <p className={styles.postExcerpt}>{post.excerpt}</p>
-            {post.content && <PostBody content={post.content} styles={styles} />}
+
+            {/* Ambient glow orb */}
+            <div className={styles.postGlow} aria-hidden="true" />
           </article>
         </div>
       </main>
