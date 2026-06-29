@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BlogPostTracker from "@/components/BlogPostTracker";
 import styles from "./page.module.css";
 
 interface ContentBlock {
@@ -50,6 +51,20 @@ function PostBody({ content, styles: s }: { content: string; styles: Record<stri
   } catch {}
   // Fallback: legacy HTML content
   return <div className={s.postBody} dangerouslySetInnerHTML={{ __html: content }} />;
+}
+
+function countWords(content?: string): number {
+  if (!content) return 0;
+  try {
+    const blocks: { title?: string; body?: string }[] = JSON.parse(content);
+    if (Array.isArray(blocks)) {
+      return blocks.reduce((sum, b) => {
+        const text = `${b.title ?? ""} ${b.body ?? ""}`;
+        return sum + text.split(/\s+/).filter(Boolean).length;
+      }, 0);
+    }
+  } catch {}
+  return content.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
 }
 
 const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://admin.polynovea.in/api/content";
@@ -119,11 +134,19 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     mainEntityOfPage: `https://www.polynovea.in/blog/${post.slug}`,
   };
 
+  const wordCount = countWords(post.content);
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <BlogPostTracker
+        slug={post.slug}
+        title={post.title}
+        category={post.category ?? ""}
+        wordCount={wordCount}
       />
       <Navbar />
       <main className={styles.postMain}>
@@ -160,6 +183,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <h1 className={styles.postTitle}>{post.title}</h1>
               <p className={styles.postExcerpt}>{post.excerpt}</p>
               {post.content && <PostBody content={post.content} styles={styles} />}
+              <div data-article-end aria-hidden="true" />
             </div>
 
             {/* Ambient glow orb */}

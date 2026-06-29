@@ -3,6 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -94,6 +100,11 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
                 className="blog-card glass-card"
                 data-reveal
                 data-reveal-delay={String(i * 60)}
+                onClick={() => window.gtag?.("event", "blog_card_click", {
+                  post_slug: post.slug,
+                  post_title: post.title,
+                  card_position: startIdx + i + 1,
+                })}
               >
                 {/* Cover image — edge-to-edge */}
                 <Link href={`/blog/${post.slug}`} className="card-img-link" tabIndex={-1} aria-hidden="true">
