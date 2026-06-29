@@ -66,3 +66,35 @@
   color: var(--accent-intelligence);
   text-decoration: underline;
 }
+
+/* Block-based content */
+.postBlock {
+  margin-bottom: var(--space-2xl);
+}
+.postBlockTitle {
+  font-size: clamp(1.1rem, 2.5vw, 1.375rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  margin-top: 0;
+}
+.postBlockBody p {
+  margin-bottom: var(--space-md);
+  color: var(--text-secondary);
+}
+.postBlockMedia {
+  margin-top: var(--space-lg);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.postBlockImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+.postBlockVideo {
+  width: 100%;
+  border-radius: 8px;
+  background: #000;
+}
