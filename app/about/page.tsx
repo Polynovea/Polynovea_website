@@ -17,7 +17,7 @@ const articleSchema = {
     url: "https://www.polynovea.in",
     logo: { "@type": "ImageObject", url: "https://www.polynovea.in/logo.png" },
   },
-  datePublished: "2023-01-01",
+  datePublished: "2026-01-01",
   dateModified: "2026-06-27",
   url: "https://www.polynovea.in/about",
   mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.polynovea.in/about" },
@@ -64,7 +64,7 @@ const faqSchema = {
       name: "Where is Polynovea based?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Polynovea is based in Navi Mumbai, Maharashtra, India. The company was founded in 2023 by Subrojit Roy. Contact: subrojitroy@polynovea.in.",
+        text: "Polynovea is based in Navi Mumbai, Maharashtra, India. The company was founded in 2026 by Subrojit Roy. Contact: subrojitroy@polynovea.in.",
       },
     },
     {
