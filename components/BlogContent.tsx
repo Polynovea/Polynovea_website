@@ -7,13 +7,22 @@ export interface BlogPost {
   id: string;
   title: string;
   excerpt: string;
-  date: string;
+  published_at: string | null;
   author: string;
   category?: string;
+  cover_image?: string | null;
   status: "draft" | "published";
 }
 
-const POSTS_PER_PAGE = 2;
+const POSTS_PER_PAGE = 6;
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
 
 export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[] }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,23 +33,48 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
 
   return (
     <main className="blog-main">
-      <div className="container blog-container">
+      <div className="blog-container">
+        {/* ── Header ── */}
         <div className="blog-header" data-reveal>
-          <span className="t-label" style={{ color: "var(--accent-authority-muted)" }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "var(--accent-authority-muted)",
+            }}
+          >
             Insights
           </span>
           <h1
-            className="t-display-md"
-            style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(36px, 5vw, 64px)",
+              fontWeight: 600,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.05,
+              color: "var(--text-primary)",
+              marginTop: "var(--space-md)",
+            }}
           >
             Behavioral Intelligence Blog
           </h1>
-          <p className="t-body-lg" style={{ marginTop: "var(--space-md)" }}>
-            Behavioral intelligence, systems thinking, and operational insights from the Polynovea team. Covering patterns in human behavior, live environments, and the infrastructure being built to understand them.
+          <p
+            style={{
+              fontSize: "1rem",
+              lineHeight: 1.7,
+              color: "var(--text-secondary)",
+              marginTop: "var(--space-md)",
+              maxWidth: "640px",
+            }}
+          >
+            Systems thinking, operational insights, and patterns in human behavior — from the Polynovea team.
           </p>
-          <p className="blog-byline">By Polynovea Intelligence Team · Last updated June 27, 2026</p>
         </div>
 
+        {/* ── Search ── */}
         <div className="search-wrapper" data-reveal>
           <input
             type="text"
@@ -50,52 +84,81 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
           />
         </div>
 
+        {/* ── Grid ── */}
         <div className="blog-grid">
           {currentPosts.length > 0 ? (
             currentPosts.map((post, i) => (
               <article
                 key={post.id}
-                className="blog-card"
+                className="blog-card glass-card"
                 data-reveal
-                data-reveal-delay={String(i * 80)}
+                data-reveal-delay={String(i * 60)}
               >
-                <div className="blog-card-content">
-                  <div className="blog-meta">
-                    {post.category && <span>{post.category}</span>}
-                    {post.category && <span>·</span>}
-                    <span>{post.date}</span>
-                    <span>·</span>
-                    <span>{post.author}</span>
+                {/* Cover image — edge-to-edge */}
+                <Link href={`/blog/${post.id}`} className="card-img-link" tabIndex={-1} aria-hidden="true">
+                  <div className="card-img-wrap">
+                    {post.cover_image ? (
+                      <img src={post.cover_image} alt={post.title} className="card-img" />
+                    ) : (
+                      <div className="card-img-placeholder">
+                        <div className="placeholder-glow" />
+                      </div>
+                    )}
+                    {/* Gradient fade into card body */}
+                    <div className="card-img-fade" />
                   </div>
-                  <h2 className="blog-title">
+                </Link>
+
+                {/* Content */}
+                <div className="card-body">
+                  {/* Category tag */}
+                  {post.category && (
+                    <span className="card-category">{post.category}</span>
+                  )}
+
+                  <h2 className="card-title">
                     <Link href={`/blog/${post.id}`}>{post.title}</Link>
                   </h2>
-                  <p className="blog-excerpt">{post.excerpt}</p>
-                  <Link href={`/blog/${post.id}`} className="read-more">
-                    Read more →
-                  </Link>
+
+                  <p className="card-excerpt">{post.excerpt}</p>
+
+                  <div className="card-footer">
+                    <div className="card-meta">
+                      <span className="card-author">{post.author}</span>
+                      {post.published_at && (
+                        <>
+                          <span className="meta-dot">·</span>
+                          <span className="card-date">{formatDate(post.published_at)}</span>
+                        </>
+                      )}
+                    </div>
+                    <Link href={`/blog/${post.id}`} className="card-cta">
+                      Read →
+                    </Link>
+                  </div>
                 </div>
+
+                {/* Bento glow orb */}
+                <div className="card-glow" aria-hidden="true" />
               </article>
             ))
           ) : (
-            <p style={{ color: "var(--text-secondary)" }}>No posts yet.</p>
+            <p style={{ color: "var(--text-secondary)", gridColumn: "1 / -1" }}>No posts yet.</p>
           )}
         </div>
 
+        {/* ── Pagination ── */}
         {totalPages > 1 && (
           <div className="pagination" data-reveal>
             {currentPage > 1 && (
-              <button
-                className="page-btn"
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
+              <button className="page-btn" onClick={() => setCurrentPage(currentPage - 1)}>
                 ←
               </button>
             )}
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
-                className={`page-btn ${page === currentPage ? "active" : ""}`}
+                className={`page-btn${page === currentPage ? " active" : ""}`}
                 onClick={() => setCurrentPage(page)}
                 aria-current={page === currentPage ? "page" : undefined}
               >
@@ -103,10 +166,7 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
               </button>
             ))}
             {currentPage < totalPages && (
-              <button
-                className="page-btn"
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
+              <button className="page-btn" onClick={() => setCurrentPage(currentPage + 1)}>
                 →
               </button>
             )}
@@ -116,12 +176,10 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
 
       <style jsx>{`
         .blog-main {
-          background: rgba(9, 8, 16, 0.62);
           min-height: 100vh;
-          padding-top: calc(var(--nav-height) + var(--space-2xl));
-          padding-bottom: var(--space-4xl);
-          --bg-elevated: #1e1e22;
-          --text-muted: var(--text-disabled);
+          padding-top: calc(var(--nav-height) + var(--space-3xl));
+          padding-bottom: var(--space-5xl);
+          padding-inline: var(--space-lg);
         }
 
         .blog-container {
@@ -130,13 +188,7 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
         }
 
         .blog-header {
-          margin-bottom: var(--space-2xl);
-        }
-
-        .blog-byline {
-          font-size: 0.8125rem;
-          color: var(--text-disabled);
-          margin-top: var(--space-sm);
+          margin-bottom: var(--space-3xl);
         }
 
         .search-wrapper {
@@ -145,93 +197,212 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
 
         .search-input {
           width: 100%;
-          max-width: 480px;
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
-          border-radius: 10px;
-          padding: 0.75rem 1rem;
+          max-width: 420px;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: var(--radius-lg);
+          padding: 0.75rem 1.125rem;
           color: var(--text-primary);
           font-family: var(--font-body);
           font-size: 0.9375rem;
           transition: border-color 0.2s ease, box-shadow 0.2s ease;
           outline: none;
+          backdrop-filter: blur(8px);
         }
 
         .search-input:focus {
-          border-color: var(--accent-intelligence);
-          box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+          border-color: rgba(124, 58, 237, 0.5);
+          box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
         }
 
         .search-input::placeholder {
           color: var(--text-disabled);
         }
 
+        /* ── Grid ── */
         .blog-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: var(--space-lg);
         }
 
+        /* ── Card shell — glass-card handles border/backdrop, we layer on top ── */
         .blog-card {
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
-          border-radius: 10px;
-          padding: var(--space-lg);
-          transition: all 0.2s ease;
-        }
-
-        .blog-card:hover {
-          background: var(--bg-elevated);
-          border-color: var(--accent-intelligence);
-        }
-
-        .blog-card-content {
           display: flex;
           flex-direction: column;
+          overflow: hidden;
+          cursor: pointer;
+          padding: 0 !important; /* override any glass-card padding */
         }
 
-        .blog-meta {
+        /* ── Cover image ── */
+        .card-img-link {
+          display: block;
+          text-decoration: none;
+        }
+
+        .card-img-wrap {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          overflow: hidden;
+        }
+
+        .card-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.5s var(--ease-3d);
+        }
+
+        .blog-card:hover .card-img {
+          transform: scale(1.06);
+        }
+
+        .card-img-placeholder {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #16122a 0%, #1e1a38 40%, #12101e 100%);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .placeholder-glow {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(124, 58, 237, 0.18) 0%, transparent 70%);
+        }
+
+        .card-img-fade {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 40%;
+          background: linear-gradient(to bottom, transparent, rgba(12, 11, 20, 0.55));
+          pointer-events: none;
+        }
+
+        /* ── Card body ── */
+        .card-body {
           display: flex;
-          align-items: center;
-          gap: var(--space-xs);
-          color: var(--text-muted);
-          font-size: 0.8125rem;
-          margin-bottom: var(--space-sm);
+          flex-direction: column;
+          gap: var(--space-sm);
+          padding: var(--space-lg);
+          flex: 1;
         }
 
-        .blog-title a {
-          color: var(--text-primary);
+        .card-category {
+          font-family: var(--font-mono);
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--accent-authority-muted);
+        }
+
+        .card-title {
+          margin: 0;
+        }
+
+        .card-title a {
+          font-family: var(--font-display);
+          font-size: clamp(16px, 1.4vw, 20px);
           font-weight: 600;
-          font-size: 1.25rem;
+          letter-spacing: -0.02em;
+          line-height: 1.2;
+          color: var(--text-primary);
           text-decoration: none;
           transition: color 0.2s ease;
+          display: block;
         }
 
-        .blog-title a:hover {
-          color: var(--accent-intelligence);
-        }
-
-        .blog-excerpt {
-          color: var(--text-secondary);
-          font-size: 0.9375rem;
-          line-height: 1.5;
-          margin-top: var(--space-sm);
-        }
-
-        .read-more {
-          display: inline-block;
-          margin-top: var(--space-md);
-          color: var(--accent-intelligence);
-          text-decoration: none;
-          font-size: 0.9375rem;
-          font-weight: 500;
-          transition: color 0.2s ease;
-        }
-
-        .read-more:hover {
+        .blog-card:hover .card-title a {
           color: var(--accent-authority);
         }
 
+        .card-excerpt {
+          font-size: 0.875rem;
+          line-height: 1.6;
+          color: var(--text-secondary);
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .card-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: auto;
+          padding-top: var(--space-md);
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-meta {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.75rem;
+          color: var(--text-disabled);
+        }
+
+        .card-author {
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+
+        .meta-dot {
+          opacity: 0.4;
+        }
+
+        .card-date {
+          font-variant-numeric: tabular-nums;
+        }
+
+        .card-cta {
+          font-size: 0.8125rem;
+          font-weight: 600;
+          color: var(--accent-intelligence);
+          text-decoration: none;
+          transition: color 0.2s ease, transform 0.2s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          white-space: nowrap;
+        }
+
+        .blog-card:hover .card-cta {
+          color: var(--accent-authority);
+        }
+
+        /* ── Bento glow orb ── */
+        .card-glow {
+          position: absolute;
+          bottom: -80px;
+          right: -80px;
+          width: 220px;
+          height: 220px;
+          border-radius: 50%;
+          background: radial-gradient(
+            circle,
+            var(--accent-intelligence) 0%,
+            var(--accent-authority) 60%,
+            transparent 100%
+          );
+          filter: blur(60px);
+          opacity: 0.06;
+          pointer-events: none;
+          transition: opacity 0.35s ease;
+        }
+
+        .blog-card:hover .card-glow {
+          opacity: 0.14;
+        }
+
+        /* ── Pagination ── */
         .pagination {
           display: flex;
           justify-content: center;
@@ -241,27 +412,41 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
         }
 
         .page-btn {
-          background: var(--bg-card);
-          border: 1px solid var(--border-muted);
-          color: var(--text-primary);
-          padding: 0.5rem 0.75rem;
-          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          color: var(--text-secondary);
+          padding: 0.5rem 0.875rem;
+          border-radius: var(--radius-md);
+          font-family: var(--font-body);
           font-size: 0.875rem;
           cursor: pointer;
           transition: all 0.2s ease;
         }
 
         .page-btn:hover {
-          background: var(--bg-elevated);
+          border-color: rgba(124, 58, 237, 0.4);
+          color: var(--text-primary);
         }
 
         .page-btn.active {
           background: var(--accent-intelligence);
-          color: white;
           border-color: var(--accent-intelligence);
+          color: #fff;
+          box-shadow: 0 0 16px rgba(124, 58, 237, 0.4);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+          .blog-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
         }
 
         @media (max-width: 640px) {
+          .blog-main {
+            padding-inline: var(--space-md);
+          }
+
           .blog-grid {
             grid-template-columns: 1fr;
           }

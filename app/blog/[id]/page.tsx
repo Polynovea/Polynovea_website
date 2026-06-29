@@ -57,11 +57,13 @@ const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_BASE || "https://admin.polyn
 interface BlogPost {
   id: string;
   title: string;
+  slug: string;
   excerpt: string;
   content?: string;
-  date: string;
+  published_at: string | null;
   author: string;
   category?: string;
+  cover_image?: string | null;
   status: "draft" | "published";
 }
 
@@ -90,7 +92,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       description: post.excerpt,
       url: `https://www.polynovea.in/blog/${id}`,
       type: "article",
-      publishedTime: post.date,
+      publishedTime: post.published_at ?? undefined,
       authors: [post.author],
     },
   };
@@ -106,7 +108,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
     "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
-    datePublished: post.date,
+    datePublished: post.published_at ?? undefined,
     author: { "@type": "Person", name: post.author },
     publisher: {
       "@type": "Organization",
@@ -132,7 +134,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
           <article className={styles.postArticle} data-reveal>
             <div className={styles.postMeta}>
               {post.category && <span className={styles.postCategory}>{post.category}</span>}
-              <span>{post.date}</span>
+              {post.published_at && (
+                <span>{new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
+              )}
               <span>·</span>
               <span>{post.author}</span>
             </div>
