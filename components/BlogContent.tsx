@@ -3,12 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
-
 export interface BlogPost {
   id: string;
   slug: string;

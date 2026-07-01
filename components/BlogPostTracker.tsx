@@ -9,12 +9,6 @@ interface Props {
   wordCount: number;
 }
 
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
-
 function fire(event: string, params: Record<string, unknown>) {
   window.gtag?.("event", event, params);
 }

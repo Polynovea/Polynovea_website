@@ -7,7 +7,6 @@ import BlogPostTracker from "@/components/BlogPostTracker";
 import VideoBlock from "@/components/VideoBlock";
 import styles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
 
 interface ContentBlock {
   id: string;
@@ -66,6 +65,7 @@ function countWords(content?: string): number {
         return sum + text.split(/\s+/).filter(Boolean).length;
       }, 0);
     }
+    return 0;
   } catch {}
   return content.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
 }
@@ -87,7 +87,7 @@ interface BlogPost {
 
 async function getPost(slug: string): Promise<BlogPost | null> {
   try {
-    const res = await fetch(`${ADMIN_API}/blog-posts/${slug}`, { cache: "no-store" });
+    const res = await fetch(`${ADMIN_API}/blog-posts/${slug}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     const data = await res.json();
     const post: BlogPost = data.data ?? data;

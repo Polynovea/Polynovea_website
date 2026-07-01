@@ -11,7 +11,7 @@ interface BlogPost {
 
 async function getPublishedBlogPosts(): Promise<BlogPost[]> {
   try {
-    const res = await fetch(`${ADMIN_API}/blog-posts`, { cache: "no-store" });
+    const res = await fetch(`${ADMIN_API}/blog-posts`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     const data = await res.json();
     return (data.data ?? []).filter((p: BlogPost) => p.status === "published");
@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getPublishedBlogPosts();
   const postUrls: MetadataRoute.Sitemap = posts.map((p) => ({
     url: `${BASE}/blog/${p.slug}`,
-    lastModified: p.published_at ? new Date(p.published_at) : new Date(),
+    lastModified: p.published_at && !isNaN(new Date(p.published_at).getTime()) ? new Date(p.published_at) : new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
