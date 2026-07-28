@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-type SurfaceKey = "hospitality" | "music" | "education" | "workplace";
+type SurfaceKey = "hospitality" | "education" | "workplace";
 
 // ─── Intelligence pipeline ────────────────────────────────────────────────────
 const pipelineSteps = [
@@ -40,13 +40,14 @@ const modules = [
     num: "02",
     title: "Acquisition System",
     purpose: "Extracts behavioral signals from multiple sources and models them into venue intelligence.",
-    what: "Traditional review analytics classify opinions. The Acquisition System explains behaviours. It processes Google Reviews, field observation, POS signals, and audience data — not to score sentiment, but to extract the behavioral mechanisms that explain why people visit, what creates friction, what they tolerate, and what occasions drive their decisions. These signals are structured through an ontology layer and scored across six fitness dimensions using Bayesian inference.",
+    what: "Traditional review analytics classify opinions. The Acquisition System explains behaviours. It processes Google Reviews, field observation, POS signals, and audience data — not to score sentiment, but to extract the behavioral mechanisms that explain why people visit, what creates friction, what they tolerate, and what occasions drive their decisions. These signals are structured through an ontology layer and scored across five fitness dimensions using pure percentile calibration. A venue's score reflects where it truly ranks against its city, regardless of review volume — confidence is tracked separately, so a promising new venue with five reviews is never diluted toward a neutral average.",
     how: [
       "Google Reviews behavioral pipeline: 11,063 venues behaviourally analysed across Mumbai — each review run through the HBIF extraction layer, not classified, fingerprinted",
       "Extracts Stimuli (what drew someone in), Frictions (what created resistance), Compensations (what people tolerate despite friction), and Emotional context (the occasion driving the visit)",
       "Multi-source signal unification: reviews, field observation, POS data, audience flow — structured through an ontology layer",
-      "Bayesian venue scoring across six fitness dimensions: social dwell, group energy, retention strength, operational quality, and more",
-      "8-phase field execution framework converting intelligence into a live acquisition playbook per venue",
+      "Calibrated venue scoring across five fitness dimensions (Office Lunch, Repeat Habit, Social Dwell, Group Energy, Destination Visit) via city-relative percentile rank mapping",
+      "Score magnitude and score certainty are kept separate: percentile rank reflects true standing regardless of review count, while a HIGH / MED / LOW / SPARSE confidence badge communicates evidence depth without shrinking the score itself",
+      "Six-stage extraction-to-output pipeline — Signal Extraction, Pattern Clustering, Governance Validation, Behavioral Scoring, Similarity Enrichment, and Output & Intervention Playbooks — converting raw review signal into a live acquisition playbook per venue",
     ],
     output: "Behavioural fingerprints, behavioural similarity maps, audience archetypes, behavioural fitness scores, opportunity mapping, commercial intelligence, acquisition playbooks.",
   },
@@ -75,20 +76,10 @@ const surfaces: Record<SurfaceKey, { label: string; status: "live" | "in develop
     examples: [
       "13,492 venues indexed across the Mumbai Metro Region. 11,063 behaviourally analysed through a multi-source blend pipeline — quality-filtered by behavioral relevance, not by category.",
       "54 behavioral primitives extracted per review — not sentiment scores. Primitives span 12 categories: culinary, pricing, service, ambience, social, behavioral, emotional, and use-case. Negation-aware, contradiction-tracked, confidence-scored per review via a 6-component formula including temporal decay, corroboration saturation, and explicit vs. implied evidence weighting.",
-      "7 customer segments modelled per venue with full revenue economics: RevPASH ranges from ₹180/hr (Office Workers at lunch) to ₹1,800/hr (Premium Diners). 11 audience archetypes with spend trigger scripts, peer influence coefficients, occasion multipliers, and diminishing-returns timing. Grounded in peer-reviewed behavioral economics research on F&B consumer psychology.",
-      "5 fitness dimensions scored per venue: Office Lunch, Repeat Habit, Social Dwell, Group Energy, Destination Visit — each a 0–1 behavioral fit score computed from signal match ratios, not a category label. Behavioral competitor mapping uses cosine similarity on 54-dimension signal vectors, not geographic radius or price tier.",
+      "6 customer segments modelled per venue with full revenue economics: RevPASH (Revenue Per Available Seat Hour) ranges from ₹180/hr (Office Workers at lunch) to ₹1,800/hr (Premium Diners). 11 audience archetypes with spend trigger scripts, peer influence coefficients, occasion multipliers, and diminishing-returns timing. Peer influence coefficients are grounded in social-proof theory (Source: Cialdini, Influence: The Psychology of Persuasion, 1984); spend-trigger asymmetry draws on prospect theory (Source: Kahneman & Tversky, Econometrica, 1979).",
+      "5 fitness dimensions scored per venue: Office Lunch, Repeat Habit, Social Dwell, Group Energy, Destination Visit — each a 0–100 city-relative percentile rank computed from signal match ratios, not a category label. Behavioral competitor mapping uses cosine similarity on 54-dimension signal vectors, not geographic radius or price tier.",
       "Intervention playbooks generated per venue with priority tiers (HIGH / MEDIUM / CANDIDATE): dwell monetisation (long-stay venues not converting to multi-round orders), premium justification, friction reduction, operational optimisation — each with revenue impact estimates and narrative output readable by venue operators.",
-      "Intelligence surfaces for venue operators: Behavioral Health Score (0–100), 5-dimension fitness radar, audience composition with RevPASH by segment, behavioral competitor map with similarity buckets, repositioning roadmap with target-gap scoring, channel-specific marketing briefs per segment, and a venue-specific AI chat running on the complete behavioral data as its knowledge base.",
-    ],
-  },
-  music: {
-    label: "Music & Live Events",
-    status: "live",
-    examples: [
-      "Audience behavioral intelligence applied to live event environments and artist–audience relationships.",
-      "Behavioral signals from live events feed artist development decisions via Polynovea Records.",
-      "Audience intelligence from releases feeds back into creative and IP decisions.",
-      "Cappella: behavioral software product operating within the music context.",
+      "Intelligence surfaces for venue operators: Behavioral Health Score (0–100), 5-dimension fitness radar, audience composition with RevPASH by segment, behavioral competitor map with similarity buckets, repositioning roadmap with target-gap scoring, channel-specific marketing briefs per segment, and a venue-specific tool-calling AI chat running with Qdrant HyDE vector retrieval over 11,128 embeddings as its knowledge base.",
     ],
   },
   education: {
@@ -105,10 +96,10 @@ const surfaces: Record<SurfaceKey, { label: string; status: "live" | "in develop
     label: "Workplace Intelligence",
     status: "in development",
     examples: [
+      "Infrakinetic — the Workplace domain's product. A full operational platform (finance, HR, payroll, commercial) that runs the business and, underneath, generates the behavioral signal this domain's intelligence layer is built on.",
       "Organisational behavior mapping: how teams make decisions under pressure and at scale.",
       "Performance intelligence: patterns from work environments correlated against outcomes.",
-      "Culture measurement: converting observed behaviour into quantifiable cultural signals.",
-      "Intervention design: behavioral models informing organisational structure and systems.",
+      "Currently in development. Product architecture is built; the behavioral data and signal collection this domain's intelligence depends on is still being generated.",
     ],
   },
 };
@@ -145,11 +136,11 @@ const faqs = [
   },
   {
     q: "What is HBIF?",
-    a: "HBIF — the Human Behavioral Intelligence Framework — is Polynovea's behavioral intelligence infrastructure. It comprises three modules: the Decision Framework (defining what to measure), the Acquisition System (extracting and modelling behavioral signals), and the Optimisation System (generating recommendations and learning from outcomes). It is domain-agnostic — the same framework deploys across hospitality, music, education, and workplace environments.",
+    a: "HBIF — the Human Behavioral Intelligence Framework — is Polynovea's behavioral intelligence infrastructure. In Hospitality, it comprises three modules: the Decision Framework (defining what to measure), the Acquisition System (extracting and modelling behavioral signals), and the Optimisation System (generating recommendations and learning from outcomes). Each domain gets its own purpose-built version of this — but underneath every domain's product sits a shared, deeper layer of the infrastructure that gets sharper the more domains it operates across.",
   },
   {
     q: "How is Behavioral Intelligence different from Sentiment Analysis?",
-    a: "Sentiment analysis classifies opinions as positive or negative. Behavioral Intelligence extracts the mechanisms behind those opinions: what drew someone in (Stimuli), what created resistance (Frictions), what they tolerate despite friction (Compensations), and what occasion drove the visit (Emotional context). The output is not a sentiment score — it is a behavioral fingerprint that explains decision-making and enables prediction.",
+    a: "Sentiment analysis classifies opinions as positive or negative. Behavioral Intelligence extracts the mechanisms behind those opinions: what drew someone in (Stimuli), what created resistance (Frictions), what they tolerate despite friction (Compensations), and what occasion drove the visit (Emotional context). This maps to the stimulus-organism-response framework from environmental psychology (Source: Turley & Milliman, Journal of Business Research, 2000; Bitner, Journal of Marketing, 1992). The output is not a sentiment score — it is a behavioral fingerprint that explains decision-making and enables prediction.",
   },
   {
     q: "How is Behavioral Intelligence different from Business Intelligence?",
@@ -165,15 +156,15 @@ const faqs = [
   },
   {
     q: "What industries can HBIF be applied to?",
-    a: "HBIF is domain-agnostic. The same framework currently deploys in Hospitality and Music & Live Events. Education and Workplace are in development. The infrastructure does not require a rebuild per domain — behavioral signal extraction, modelling, and optimisation follow the same pipeline regardless of industry.",
+    a: "Hospitality is live today via the Acquisition System. A product for the Workplace domain is in development. Education is in design. Each domain gets its own purpose-built product, not a redeployment of an existing one — but every domain's product is built on the same underlying infrastructure, which gets more capable the more domains it operates across.",
   },
   {
     q: "How does HBIF learn and improve over time?",
     a: "HBIF operates a continuous feedback loop: behavioral signals are extracted, modelled into intelligence, used to generate recommendations and interventions, and the outcomes of those interventions are observed and fed back into the model. Each cycle improves the accuracy of the behavioral models and the quality of recommendations.",
   },
   {
-    q: "Why is HBIF domain agnostic?",
-    a: "Human decision-making follows universal mechanisms — attraction, friction, compensation, and context — regardless of industry. The HBIF models these mechanisms rather than industry-specific metrics. Once the framework understands how behavioral signals map to operational outcomes in one domain, the same logic applies to any other commercial environment.",
+    q: "Is HBIF the same system across every domain?",
+    a: "No — and that's deliberate. Each domain gets its own product, purpose-built around that domain's own behavioral primitives; Hospitality's Acquisition System isn't copy-pasted into a new domain. What is shared is a deeper layer of the infrastructure underneath every domain's product — one that models decision-making mechanisms directly, independent of what's actually being decided. Every new domain's product makes that shared layer sharper for every other domain too.",
   },
 ];
 
@@ -355,9 +346,9 @@ export default function ArchitectureDeepDive() {
             <span aria-hidden="true">·</span>
             <span>3 intelligence modules</span>
             <span aria-hidden="true">·</span>
-            <span>2 live domains</span>
+            <span>1 live domain</span>
             <span aria-hidden="true">·</span>
-            <time dateTime="2026-06-27">Updated June 27, 2026</time>
+            <time dateTime="2026-07-28">Updated July 28, 2026</time>
           </div>
           <div className="hero-actions" data-reveal data-reveal-delay="320">
             <a href="#hbif-modules" className="btn btn-primary">Explore the Architecture</a>
@@ -399,6 +390,7 @@ export default function ArchitectureDeepDive() {
               <p>Analytics reports outcomes. Behavioral intelligence explains decisions. Analytics shows what happened. Behavioral intelligence shows why — and predicts what will happen next.</p>
             </div>
           </div>
+          <p className="key-takeaway"><strong>Key takeaway:</strong> Behavioral Intelligence explains the mechanisms behind human decisions, not just their outcomes — it replaces assumption with evidence about why customers behave the way they do.</p>
         </div>
       </section>
 
@@ -433,7 +425,7 @@ export default function ArchitectureDeepDive() {
             </div>
             <div className="hier-arrow" aria-hidden="true">↓</div>
             <div className="hier-domains-row">
-              {["Hospitality", "Music & Live Events", "Education", "Workplace"].map((d) => (
+              {["Hospitality", "Education", "Workplace"].map((d) => (
                 <span key={d} className="hier-domain">{d}</span>
               ))}
             </div>
@@ -454,6 +446,7 @@ export default function ArchitectureDeepDive() {
               </div>
             ))}
           </div>
+          <p className="key-takeaway"><strong>Key takeaway:</strong> Behavioral Intelligence Infrastructure is the full operational stack — observation, extraction, modelling, decision support, and feedback — not a dashboard. HBIF is Polynovea's implementation of it, built domain by domain.</p>
         </div>
       </section>
 
@@ -480,6 +473,7 @@ export default function ArchitectureDeepDive() {
               </div>
             ))}
           </div>
+          <p className="key-takeaway"><strong>Key takeaway:</strong> Business Intelligence reports what happened. Customer Analytics segments who did it. Machine Learning predicts patterns without explaining them. Behavioral Intelligence is the first layer that explains the mechanism and improves continuously.</p>
         </div>
       </section>
 
@@ -490,15 +484,14 @@ export default function ArchitectureDeepDive() {
             <span className="sec-label">Applications</span>
             <h2 className="t-display-md">Where Behavioral Intelligence can be applied.</h2>
             <p className="sec-answer">
-              HBIF is domain-agnostic because it models human decision-making rather than industry-specific metrics. The behavioral mechanisms that drive commercial decisions — attraction, friction, compensation, context — operate the same way regardless of industry.
+              Each domain HBIF enters gets its own product, purpose-built around that domain&apos;s own behavioral primitives — Hospitality&apos;s is the Acquisition System. But underneath every domain-specific product sits a deeper, shared layer of the infrastructure — one that reads behavioral state and decision-making itself, independent of industry. That shared layer is what actually compounds: every new domain&apos;s product makes it sharper for every other domain too.
             </p>
           </div>
           <div className="apps-grid" data-reveal>
             {[
               { domain: "Hospitality", status: "live" },
-              { domain: "Music & Live Events", status: "live" },
-              { domain: "Education", status: "in development" },
               { domain: "Workplace", status: "in development" },
+              { domain: "Education", status: "in design" },
               { domain: "Retail", status: "future" },
               { domain: "Healthcare", status: "future" },
               { domain: "Financial Services", status: "future" },
@@ -507,11 +500,12 @@ export default function ArchitectureDeepDive() {
               <div key={domain} className="app-item">
                 <span className="app-domain">{domain}</span>
                 <span className={`app-status app-status-${status.replace(/\s/g, "-")}`}>
-                  {status === "live" ? "Live" : status === "in development" ? "In development" : "Future"}
+                  {status === "live" ? "Live" : status === "in development" ? "In development" : status === "in design" ? "In design" : "Future"}
                 </span>
               </div>
             ))}
           </div>
+          <p className="key-takeaway"><strong>Key takeaway:</strong> Hospitality is live today via the Acquisition System; Workplace's product, Infrakinetic, is in development. Each domain gets its own product — but all of them sharpen the same shared intelligence layer underneath.</p>
         </div>
       </section>
 
@@ -581,6 +575,7 @@ export default function ArchitectureDeepDive() {
               </tbody>
             </table>
           </div>
+          <p className="key-takeaway"><strong>Key takeaway:</strong> Traditional analytics and sentiment analysis report outcomes and opinions. Behavioral Intelligence is the only approach that explains the mechanism behind them and improves its own models over time.</p>
         </div>
       </section>
 
@@ -603,6 +598,7 @@ export default function ArchitectureDeepDive() {
               </div>
             ))}
           </div>
+          <p className="key-takeaway"><strong>Key takeaway:</strong> Behavioral Intelligence runs as a continuous loop, not a one-time analysis — every observed outcome feeds back in, so each cycle improves the accuracy of the next recommendation.</p>
         </div>
       </section>
 
@@ -610,10 +606,10 @@ export default function ArchitectureDeepDive() {
       <section className="section section-alt" id="hbif-modules">
         <div className="container">
           <div className="sec-head" data-reveal>
-            <span className="sec-label">The Human Behavioral Intelligence Framework</span>
-            <h2 className="t-display-md">The HBIF intelligence modules.</h2>
+            <span className="sec-label">Hospitality Domain — Layer 1</span>
+            <h2 className="t-display-md">Hospitality&apos;s three modules.</h2>
             <p className="sec-answer">
-              HBIF comprises three sequential modules. Each takes the output of the previous as its input, creating a pipeline that converts raw behavioral signals into operational intelligence and continuously improves its models over time.
+              Hospitality&apos;s product comprises three sequential modules. Each takes the output of the previous as its input, creating a pipeline that converts raw behavioral signals into operational intelligence and continuously improves its models over time. Every domain gets its own version of this — see how the three layers fit together below.
             </p>
           </div>
           <div className="modules-list" data-reveal>
@@ -626,6 +622,42 @@ export default function ArchitectureDeepDive() {
               />
             ))}
           </div>
+          <p className="key-takeaway"><strong>Key takeaway:</strong> Decision Framework, Acquisition System, and Optimisation System are Hospitality's product — Layer 1. Every other domain gets its own three-module build, not a copy of this one.</p>
+        </div>
+      </section>
+
+      {/* ── Section 4.5: The Three Layers ────────────────────────────── */}
+      <section className="section" id="three-layers">
+        <div className="container">
+          <div className="sec-head" data-reveal>
+            <span className="sec-label">Depth, Not Breadth</span>
+            <h2 className="t-display-md">HBIF is three layers, not one system.</h2>
+            <p className="sec-answer">
+              What you just read — Decision Framework, Acquisition System, Optimisation System — is Layer 1: Hospitality&apos;s product. It isn&apos;t the whole of HBIF. Two more layers sit underneath, and they don&apos;t stay inside one domain.
+            </p>
+          </div>
+
+          <div className="layers-diagram" data-reveal>
+            <div className="layer-tier layer-tier-1">
+              <span className="layer-index">Layer 01</span>
+              <span className="hier-label">Domain Product</span>
+              <span className="hier-sub">Purpose-built per domain. Hospitality&apos;s is live — the Acquisition System. A Workplace product is in development.</span>
+            </div>
+            <div className="hier-arrow" aria-hidden="true">↓</div>
+            <div className="layer-tier layer-tier-2">
+              <span className="layer-index">Layer 02</span>
+              <span className="hier-label">Shared Behavioral Layer</span>
+              <span className="hier-sub">Underneath every domain&apos;s product. Reads behavioral state directly, independent of industry. Not public yet.</span>
+            </div>
+            <div className="hier-arrow" aria-hidden="true">↓</div>
+            <div className="layer-tier layer-tier-3">
+              <span className="layer-index">Layer 03</span>
+              <span className="hier-label">The Frontier</span>
+              <span className="hier-sub">The deepest layer. Doesn&apos;t model the domain at all — models the decision-making itself. Still being built.</span>
+            </div>
+          </div>
+
+          <p className="key-takeaway" data-reveal><strong>Key takeaway:</strong> Layer 1 is domain-specific and visible today. Layers 2 and 3 are shared and still being built — every domain's product sharpens them for every other domain. That's the part that compounds.</p>
         </div>
       </section>
 
@@ -657,6 +689,7 @@ export default function ArchitectureDeepDive() {
               </div>
             ))}
           </div>
+          <p className="key-takeaway"><strong>Key takeaway:</strong> An 8-step loop — observe, extract, model, predict, intervene, measure, learn, repeat — is what separates HBIF from a one-time analytics report. It gets more accurate the longer it runs.</p>
         </div>
       </section>
 
@@ -667,7 +700,7 @@ export default function ArchitectureDeepDive() {
             <span className="sec-label">Deployments</span>
             <h2 className="t-display-md">Where the HBIF currently operates.</h2>
             <p className="sec-answer">
-              The same behavioral intelligence infrastructure deploys across domains without a rebuild. Hospitality and Music & Live Events are live. Education and Workplace are in development.
+              Each domain gets its own purpose-built product on the same underlying infrastructure. Hospitality is live. A Workplace product (Infrakinetic) is in development. Education is in design.
             </p>
           </div>
           <div className="stats-row" data-reveal>
@@ -675,7 +708,7 @@ export default function ArchitectureDeepDive() {
               { num: "13,492", label: "venues indexed" },
               { num: "11,063", label: "behaviourally analysed venues" },
               { num: "3", label: "intelligence modules" },
-              { num: "8-phase", label: "acquisition methodology" },
+              { num: "6-stage", label: "acquisition pipeline" },
             ].map(({ num, label }) => (
               <div key={label} className="stat-item">
                 <span className="stat-num">{num}</span>
@@ -1310,6 +1343,62 @@ export default function ArchitectureDeepDive() {
           letter-spacing: 0.04em;
         }
 
+        /* ── Three Layers diagram ─────────────────────────────────── */
+        .layers-diagram {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          max-width: 640px;
+          margin: 0 auto var(--space-xl, 32px);
+        }
+        .layer-tier {
+          width: 100%;
+          border: 1px solid rgba(124, 58, 237, 0.3);
+          border-radius: var(--radius-sm, 8px);
+          padding: var(--space-lg, 24px) var(--space-xl, 32px);
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .layer-index {
+          font-family: var(--font-mono, monospace);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--accent-authority, #e6d3a3);
+          opacity: 0.7;
+          margin-bottom: 2px;
+        }
+        .layer-tier-1 {
+          border-color: rgba(124, 58, 237, 0.55);
+          background: rgba(124, 58, 237, 0.05);
+        }
+        .layer-tier-2 {
+          border-color: rgba(230, 211, 163, 0.28);
+          background: rgba(230, 211, 163, 0.02);
+          opacity: 0.85;
+        }
+        .layer-tier-3 {
+          border-color: rgba(230, 211, 163, 0.16);
+          opacity: 0.65;
+        }
+        /* ── Key takeaway callout (AEO) ───────────────────────────── */
+        .key-takeaway {
+          max-width: 720px;
+          margin: var(--space-xl, 32px) auto 0;
+          padding: var(--space-md, 16px) var(--space-lg, 24px);
+          border-left: 2px solid var(--accent-authority, #e6d3a3);
+          background: rgba(230, 211, 163, 0.04);
+          font-size: 14px;
+          line-height: 1.6;
+          color: var(--text-secondary);
+        }
+        .key-takeaway strong {
+          color: var(--accent-authority, #e6d3a3);
+        }
+
         /* ── Infrastructure grid ──────────────────────────────────── */
         .infra-grid {
           display: grid;
@@ -1407,6 +1496,7 @@ export default function ArchitectureDeepDive() {
         }
         .app-status-live { color: #4ade80; }
         .app-status-in-development { color: var(--accent-authority, #e6d3a3); opacity: 0.7; }
+        .app-status-in-design { color: var(--accent-authority, #e6d3a3); opacity: 0.45; }
         .app-status-future { color: var(--text-disabled); }
 
         /* ── Responsive ────────────────────────────────────────────── */

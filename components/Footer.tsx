@@ -12,7 +12,7 @@ export default function Footer() {
             <p className="footer-tagline">
               Behavioral intelligence infrastructure.
               <br />
-              Domain-agnostic. Built once. Deployed across industries.
+              Live in Hospitality. One product per domain, one intelligence underneath.
             </p>
           </div>
 
@@ -37,9 +37,7 @@ export default function Footer() {
               <div className="footer-col-label">Connect</div>
               <ul>
                 {[
-                  ["https://www.youtube.com/@PolynoveaRecords", "YouTube"],
-                  ["https://www.instagram.com/polynovearecords/", "Instagram — Records"],
-                  ["https://www.instagram.com/polynovea.in/", "Instagram — Business"],
+                  ["https://www.instagram.com/polynovea.in/", "Instagram"],
                   ["https://x.com/Polynovea", "X (Twitter)"],
                   ["#contact", "Contact Us"],
                 ].map(([href, label]) => (

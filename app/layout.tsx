@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s | Polynovea",
   },
   description:
-    "Polynovea builds the Human Behavioral Intelligence Framework — three modules that observe, model, and act on human decision-making across commercial environments.",
+    "Polynovea builds the Human Behavioral Intelligence Framework — live in Hospitality, expanding domain by domain, sharpening one intelligence layer underneath.",
   metadataBase: new URL("https://www.polynovea.in"),
   keywords: [
     "behavioral intelligence",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Polynovea — Behavioral Intelligence Infrastructure",
     description:
-      "An AI and data company building the Human Behavioral Intelligence Framework. We observe human decision-making, extract patterns, and convert them into repeatable systems. Polynovea Records is the cultural arm — the parent company is the intelligence infrastructure.",
+      "An AI and data company building the Human Behavioral Intelligence Framework. We observe human decision-making, extract patterns, and convert them into repeatable systems. Each domain we enter gets its own purpose-built product, all sharpening one shared intelligence layer underneath.",
     siteName: "Polynovea",
     url: "https://www.polynovea.in",
     type: "website",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Polynovea — Behavioral Intelligence Infrastructure",
     description:
-      "An AI and data company building the Human Behavioral Intelligence Framework. We observe human decision-making, extract patterns, and convert them into repeatable systems. Polynovea Records is the cultural arm — the parent company is the intelligence infrastructure.",
+      "An AI and data company building the Human Behavioral Intelligence Framework. We observe human decision-making, extract patterns, and convert them into repeatable systems. Each domain we enter gets its own purpose-built product, all sharpening one shared intelligence layer underneath.",
     images: ["/og-image.png"],
   },
   alternates: {
@@ -94,18 +94,10 @@ const organizationSchema = {
     "@type": "AdministrativeArea",
     name: "India",
   },
-  subOrganization: {
-    "@type": "MusicGroup",
-    name: "Polynovea Records",
-    url: "https://www.polynovea.in",
-  },
   sameAs: [
     "https://www.linkedin.com/company/111494249/",
-    "https://www.instagram.com/polynovearecords/",
     "https://www.instagram.com/polynovea.in/",
     "https://x.com/Polynovea",
-    "https://www.threads.net/@polynovearecords",
-    "https://www.youtube.com/@PolynoveaRecords",
   ],
 };
 

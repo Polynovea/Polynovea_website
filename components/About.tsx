@@ -12,7 +12,7 @@ export default function About() {
         <div className="hero-content">
           <h1 className="hero-heading">Measurement Changes Everything</h1>
           <p className="hero-subheading">Most systems operate without behavioral intelligence. Polynovea built the infrastructure layer that changes that.</p>
-          <p className="hero-byline">By Polynovea Intelligence Team · Founded 2023 · Navi Mumbai, India · Updated June 27, 2026</p>
+          <p className="hero-byline">By Polynovea Intelligence Team · Founded 2023 · Navi Mumbai, India · Updated July 28, 2026</p>
         </div>
       </div>
 
@@ -47,58 +47,45 @@ export default function About() {
         {/* THE ECOSYSTEM */}
         <div className="ecosystem-section">
           <h2 className="section-title">How is the Polynovea behavioral intelligence ecosystem structured?</h2>
-          <p className="section-subtitle">Four compounding milestones — Intelligence Infrastructure, IP &amp; Records, External Services, Distribution &amp; Ownership — each converting the previous layer&apos;s output into a higher-order leverage position.</p>
+          <p className="section-subtitle">Domain, product, intelligence — three tiers, each domain building its own version of the first two, all of them sharpening one thing underneath.</p>
 
           <div className="milestones-grid">
             <div className="milestone">
               <div className="milestone-header">
                 <span className="milestone-number">1</span>
-                <h3>Intelligence Infrastructure</h3>
+                <h3>Domain Product</h3>
               </div>
-              <p>Behavioral intelligence layer. Data infrastructure. Operational systems. Decision frameworks. This is the foundation.</p>
+              <p>Every domain HBIF enters gets its own purpose-built product — not a reconfiguration of an existing one. Hospitality&apos;s is the Acquisition System, live today. A Workplace product is in development.</p>
               <ul>
-                <li>Module 1: Decision Framework</li>
-                <li>Module 2: Acquisition System</li>
-                <li>Module 3: Optimization System</li>
+                <li>Decision Framework</li>
+                <li>Acquisition layer</li>
+                <li>Optimisation layer</li>
               </ul>
             </div>
 
             <div className="milestone">
               <div className="milestone-header">
                 <span className="milestone-number">2</span>
-                <h3>IP & Records Layer</h3>
+                <h3>Shared Intelligence</h3>
               </div>
-              <p>Cultural execution surface. Artist development. Owned IP creation. Music-facing identity. The public expression of intelligence.</p>
+              <p>Underneath every domain&apos;s product sits a deeper layer of the infrastructure — one that reads behavioral state and decision-making directly, independent of industry.</p>
               <ul>
-                <li>Artist discovery</li>
-                <li>IP creation</li>
-                <li>Audience ownership</li>
+                <li>Domain-agnostic by design</li>
+                <li>Shared across every product</li>
+                <li>Gets sharper with each domain</li>
               </ul>
             </div>
 
             <div className="milestone">
               <div className="milestone-header">
                 <span className="milestone-number">3</span>
-                <h3>External Services</h3>
+                <h3>The Flywheel</h3>
               </div>
-              <p>Commercialize infrastructure externally. Artist services. Optimization systems. Production support. Behavioral frameworks.</p>
+              <p>Operating a domain&apos;s product generates the behavioral data that sharpens the shared intelligence layer — which makes every other domain&apos;s product smarter from day one.</p>
               <ul>
-                <li>Artist infrastructure</li>
-                <li>Service monetization</li>
-                <li>External leverage</li>
-              </ul>
-            </div>
-
-            <div className="milestone">
-              <div className="milestone-header">
-                <span className="milestone-number">4</span>
-                <h3>Distribution & Ownership</h3>
-              </div>
-              <p>Complete the stack. Distribution control. Rights management. Broadcasting leverage. Long-term ecosystem sovereignty.</p>
-              <ul>
-                <li>Distribution infrastructure</li>
-                <li>Rights control</li>
-                <li>Monetization sovereignty</li>
+                <li>Data compounds across domains</li>
+                <li>Each new product starts ahead</li>
+                <li>The moat deepens with scale</li>
               </ul>
             </div>
           </div>
@@ -118,12 +105,12 @@ export default function About() {
               <p>Behavior is not random. Human systems contain patterns, incentives, triggers, environmental responses, and repeatable structures. Most organizations never build the infrastructure required to capture, structure, interpret, and operationalize those patterns. This exposes blindness where clarity should exist.</p>
             </div>
             <div className="why-block">
-              <h3>Why Music & Live Environments</h3>
-              <p>Live environments became our proving ground because behavioral response becomes visible quickly, emotional shifts become observable, environmental changes create measurable effects, and feedback loops happen in real time. This allows us to observe, test, measure, compare, iterate, and identify repeatable patterns faster than in most traditional industries.</p>
+              <h3>Why Hospitality First</h3>
+              <p>Hospitality became our proving ground because behavioral response becomes visible quickly, spend decisions happen in real time, and feedback loops close fast. This allows us to observe, test, measure, compare, iterate, and identify repeatable patterns faster than in most industries — before building the second domain&apos;s product.</p>
             </div>
             <div className="why-block">
               <h3>The Long-Term Purpose</h3>
-              <p>The ecosystem exists to build behavioral intelligence and operational decision systems capable of improving execution quality, pattern recognition, and strategic decision-making across layered ecosystems. The music layer matters. The IP layer matters. But underneath all of them is the same foundational pursuit: understanding behavior well enough to build systems that become more intelligent over time.</p>
+              <p>The ecosystem exists to build behavioral intelligence and operational decision systems capable of improving execution quality, pattern recognition, and strategic decision-making across every domain we operate in. Each domain&apos;s product matters on its own — but underneath all of them is the same foundational pursuit: understanding behavior well enough to build systems that become more intelligent over time.</p>
             </div>
           </div>
         </div>
@@ -151,31 +138,11 @@ export default function About() {
             </div>
             <div className="phil-item">
               <h4>Responsible Intelligence</h4>
-              <p>Understand behavior responsibly. Reduce friction intelligently. Improve experiences intentionally. Create alignment between audience, artist, and business. The goal is better systems and clearer decisions, not exploitation.</p>
+              <p>Understand behavior responsibly. Reduce friction intelligently. Improve experiences intentionally. Create alignment between customer, operator, and business. The goal is better systems and clearer decisions, not exploitation.</p>
             </div>
             <div className="phil-item">
               <h4>Infrastructure Over Personality</h4>
               <p>Build systems that scale without founder dependency. Operational intelligence should be repeatable, documented, and transferable. Long-term value comes from infrastructure, not individual intuition.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* WHAT POLYNOVEA RECORDS IS */}
-        <div className="records-section">
-          <h2 className="section-title">What is Polynovea Records within the behavioral intelligence ecosystem?</h2>
-          <p className="section-subtitle">Polynovea Records is the cultural and IP execution layer — the music-facing identity of the broader behavioral intelligence operation, not the parent company itself.</p>
-          <div className="records-grid">
-            <div className="records-item">
-              <h3>The IP & Cultural Layer</h3>
-              <p>Polynovea Records is the cultural and IP expression layer of the ecosystem. It converts live discovery, audience intelligence, and behavioral understanding into artist development, owned IP, and audience assets.</p>
-            </div>
-            <div className="records-item">
-              <h3>Not the Parent Ecosystem</h3>
-              <p>The parent ecosystem is the behavioral intelligence infrastructure itself — AI, data, decision systems, and operational optimization. Records is one major commercial expression of that infrastructure.</p>
-            </div>
-            <div className="records-item">
-              <h3>The Music-Facing Identity</h3>
-              <p>Records embodies the artist development layer, the audience ownership strategy, and the long-term cultural asset approach. It&apos;s where intelligence becomes music.</p>
             </div>
           </div>
         </div>
@@ -191,15 +158,11 @@ export default function About() {
               },
               {
                 q: "What does Polynovea do?",
-                a: "Polynovea builds the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making, identifies repeatable behavioral patterns, and converts them into operational systems. Hospitality and music are the first 2 live domains. Education and workplace are in design.",
+                a: "Polynovea builds the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making, identifies repeatable behavioral patterns, and converts them into operational systems. Each domain we enter gets its own purpose-built product. Hospitality's is live; a Workplace product is in development; Education is in design.",
               },
               {
                 q: "What is the Human Behavioral Intelligence Framework (HBIF)?",
-                a: "The HBIF is Polynovea's core architecture: a 4-milestone system progressing from behavioral data infrastructure (M1) through cultural execution and IP development (M2), external services and licensing (M3), to distribution control and ecosystem ownership (M4). The same framework deploys across hospitality, music, education, and workplace environments.",
-              },
-              {
-                q: "What is Polynovea Records?",
-                a: "Polynovea Records is the cultural and IP execution layer of the Polynovea ecosystem — not the parent company. It converts behavioral intelligence from live environments into artist development, owned IP, and audience assets. It is one deployment surface of the broader HBIF, operating in the music domain.",
+                a: "HBIF is domain, product, and shared intelligence. Every domain gets its own product — Hospitality's is the Acquisition System. Underneath every domain's product sits a deeper, shared layer of the infrastructure that reads behavioral state and decision-making directly, independent of industry — and gets sharper with every domain it operates across.",
               },
               {
                 q: "Where is Polynovea based and when was it founded?",
@@ -371,7 +334,7 @@ export default function About() {
 
         .milestones-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 30px;
           margin-bottom: 60px;
         }
@@ -536,52 +499,6 @@ export default function About() {
           line-height: 1.5;
         }
 
-        /* POLYNOVEA RECORDS */
-        .records-section {
-          margin: 140px 0;
-        }
-
-        .records-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 30px;
-          margin-top: 60px;
-        }
-
-        .records-item {
-          background: linear-gradient(135deg, rgba(230, 211, 163, 0.08) 0%, rgba(124, 58, 237, 0.05) 100%);
-          border: 1px solid rgba(124, 58, 237, 0.2);
-          border-radius: 12px;
-          padding: 40px;
-          backdrop-filter: blur(32px);
-          -webkit-backdrop-filter: blur(32px);
-          box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 4px 24px rgba(0, 0, 0, 0.4);
-          transition: border-color var(--duration-default) var(--ease-state),
-                      box-shadow var(--duration-default) var(--ease-state),
-                      transform var(--duration-default) var(--ease-state);
-        }
-
-        .records-item:hover {
-          border-color: rgba(124, 58, 237, 0.4);
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6),
-                      inset 0 1px 1px rgba(255, 255, 255, 0.15),
-                      0 0 32px rgba(230, 211, 163, 0.15);
-          transform: translateY(-2px);
-        }
-
-        .records-item h3 {
-          font-size: 20px;
-          font-weight: 600;
-          color: var(--text-primary);
-          margin-bottom: 15px;
-        }
-
-        .records-item p {
-          color: var(--text-secondary);
-          line-height: 1.6;
-          font-size: 15px;
-        }
-
         .faq-section {
           margin: 140px 0 80px;
         }
@@ -655,10 +572,6 @@ export default function About() {
           }
 
           .why-exists-content {
-            grid-template-columns: 1fr;
-          }
-
-          .records-grid {
             grid-template-columns: 1fr;
           }
         }

@@ -31,7 +31,7 @@ const articleSchema = {
     logo: { "@type": "ImageObject", url: "https://www.polynovea.in/logo.png" },
   },
   datePublished: "2024-01-01",
-  dateModified: "2026-06-27",
+  dateModified: "2026-07-28",
   url: "https://www.polynovea.in/architecture",
   mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.polynovea.in/architecture" },
 };
@@ -66,10 +66,10 @@ const faqSchema = {
     },
     {
       "@type": "Question",
-      name: "What is the 8-phase acquisition system?",
+      name: "What is Polynovea's acquisition pipeline?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The 8-phase acquisition system is Polynovea's field execution framework within the Acquisition System. It extracts multi-source behavioral signals from commercial environments, structures them through an ontology layer, scores venues using Bayesian inference across fitness dimensions and audience archetypes, and converts that intelligence into a repeatable venue playbook.",
+        text: "Polynovea's acquisition pipeline runs in six stages — Signal Extraction, Pattern Clustering, Governance Validation, Behavioral Scoring, Similarity Enrichment, and Output & Intervention Playbooks. It extracts multi-source behavioral signals from commercial environments, structures them through an ontology layer, and scores venues using pure percentile calibration across fitness dimensions and audience archetypes — decoupling score from review volume so new or low-review venues are ranked on true signal, not penalized for data sparsity. The output is a repeatable venue playbook.",
       },
     },
     {
@@ -77,7 +77,7 @@ const faqSchema = {
       name: "Which industries does Polynovea's behavioral intelligence infrastructure serve?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Hospitality and Music & Live Events are the two live deployment domains. Education and Workplace are currently in design. The same HBIF infrastructure deploys across all domains without a rebuild — the behavioral intelligence layer is domain-agnostic.",
+        text: "Hospitality is live today via the Acquisition System. A product for the Workplace domain is in development. Education is in design. Each domain gets its own purpose-built product, not a redeployment of an existing one — but every product is built on a shared underlying layer of the infrastructure that gets sharper with every domain it operates across.",
       },
     },
     {

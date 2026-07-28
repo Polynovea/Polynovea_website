@@ -18,7 +18,7 @@ const articleSchema = {
     logo: { "@type": "ImageObject", url: "https://www.polynovea.in/logo.png" },
   },
   datePublished: "2026-01-01",
-  dateModified: "2026-06-27",
+  dateModified: "2026-07-28",
   url: "https://www.polynovea.in/about",
   mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.polynovea.in/about" },
 };
@@ -40,7 +40,7 @@ const faqSchema = {
       name: "What does Polynovea do?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Polynovea builds the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making in commercial environments, identifies repeatable behavioral patterns, and converts them into operational systems. Hospitality is the first live domain. Music and live events are the second. Education and workplace environments are in design.",
+        text: "Polynovea builds the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making in commercial environments, identifies repeatable behavioral patterns, and converts them into operational systems. Each domain gets its own purpose-built product. Hospitality's is live. A Workplace product is in development. Education is in design.",
       },
     },
     {
@@ -48,15 +48,7 @@ const faqSchema = {
       name: "What is the Human Behavioral Intelligence Framework (HBIF)?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The HBIF is Polynovea's behavioral intelligence infrastructure — three sequential modules that convert raw behavioral signals into operational intelligence. The Decision Framework defines what to measure. The Acquisition System extracts and models behavioral signals from commercial environments. The Optimisation System generates recommendations and learns from observed outcomes. It is domain-agnostic: the same framework deploys across hospitality, music, education, and workplace environments.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is Polynovea Records?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Polynovea Records is the cultural and IP execution layer of the Polynovea ecosystem — not the parent company. It converts behavioral intelligence from live environments into artist development, owned IP, and audience assets. It is the music-facing identity of a broader behavioral intelligence operation.",
+        text: "HBIF is domain, product, and shared intelligence. In Hospitality, the framework runs as three sequential modules: the Decision Framework defines what to measure, the Acquisition System extracts and models behavioral signals from commercial environments, and the Optimisation System generates recommendations and learns from observed outcomes. Each new domain gets its own purpose-built version of this — but every domain's product is built on a shared, deeper layer of the infrastructure that reads behavioral state directly, independent of industry, and gets sharper with every domain it operates across.",
       },
     },
     {
@@ -72,7 +64,7 @@ const faqSchema = {
       name: "What industries does Polynovea's behavioral intelligence serve?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Polynovea currently operates live in Hospitality and Music/Live Events. Education Intelligence and Workplace Intelligence are in the design phase. The HBIF infrastructure is built to be domain-agnostic — it does not require a rebuild to deploy across new industries.",
+        text: "Polynovea currently operates live in Hospitality via the Acquisition System. A Workplace product is in development. Education is in the design phase. Each domain gets its own purpose-built product, built on a shared underlying layer of the infrastructure that gets sharper with every domain it operates across.",
       },
     },
   ],

@@ -77,7 +77,7 @@ export default function ContactPage() {
                 if there&apos;s a match.
               </p>
               <div className="contact-tags">
-                {["Venues & Institutions", "Artists & Musicians", "Brands & Orgs", "Partnerships"].map((tag) => (
+                {["Venues & Institutions", "Businesses & Workplaces", "Brands & Orgs", "Partnerships"].map((tag) => (
                   <span key={tag} className="contact-tag">{tag}</span>
                 ))}
               </div>
@@ -115,7 +115,7 @@ export default function ContactPage() {
                     <select className="form-select" id="who" name="who" required defaultValue="">
                       <option value="" disabled>Select who you are</option>
                       <option value="venue">Venue / Institution</option>
-                      <option value="artist">Artist / Musician</option>
+                      <option value="business">Business / Workplace</option>
                       <option value="brand">Brand / Organisation</option>
                       <option value="partner">Potential Partner</option>
                       <option value="other">Something else</option>
@@ -130,10 +130,9 @@ export default function ContactPage() {
                         <option value="optimisation">Revenue optimisation services</option>
                         <option value="intelligence">Behavioral intelligence reports</option>
                       </optgroup>
-                      <optgroup label="For Artists & Professionals">
-                        <option value="acquisition">Audience growth and acquisition support</option>
-                        <option value="distribution">Distribution and publishing guidance</option>
-                        <option value="development">Artist development</option>
+                      <optgroup label="For Businesses & Workplaces">
+                        <option value="infrakinetic">Infrakinetic early access</option>
+                        <option value="operations">Operational intelligence</option>
                       </optgroup>
                       <optgroup label="General">
                         <option value="partnership">Partnership or collaboration</option>
@@ -155,6 +154,35 @@ export default function ContactPage() {
                   </button>
                 </form>
               )}
+            </div>
+          </div>
+
+          <div className="contact-faq" data-reveal>
+            <h2 className="t-display-sm contact-faq-title">Frequently asked questions</h2>
+            <div className="contact-faq-list">
+              {[
+                {
+                  q: "How long does Polynovea take to reply?",
+                  a: "Polynovea reads every submission and evaluates fit based on what you're building. If there's a match, you'll hear back within 48 hours — no automated sequences, no discovery-call theatre.",
+                },
+                {
+                  q: "Does Polynovea only work with hospitality venues?",
+                  a: "Hospitality is Polynovea's live domain today via the Acquisition System, but Infrakinetic — the Workplace domain's product — is in development. Reach out if you're operating a venue, running a business, or managing a workforce.",
+                },
+                {
+                  q: "Is there a cost to reach out?",
+                  a: "No. Sending a message costs nothing. Polynovea evaluates fit before any engagement begins and will tell you directly whether there's a match — no obligation either way.",
+                },
+                {
+                  q: "What should I include in my message?",
+                  a: "Tell Polynovea what you're building and what problem you're trying to solve. Specifics about your venue, business, or workforce help the team evaluate fit faster and respond with a direct answer.",
+                },
+              ].map(({ q, a }) => (
+                <div key={q} className="contact-faq-item">
+                  <h3 className="contact-faq-q">{q}</h3>
+                  <p className="contact-faq-a">{a}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -256,6 +284,35 @@ export default function ContactPage() {
           justify-content: center;
           font-size: 22px;
           color: var(--accent-intelligence);
+        }
+        .contact-faq {
+          margin-top: var(--space-4xl);
+          padding-top: var(--space-3xl);
+          border-top: 1px solid var(--border-muted);
+        }
+        .contact-faq-title {
+          margin-bottom: var(--space-xl);
+        }
+        .contact-faq-list {
+          display: grid;
+          gap: var(--space-lg);
+          max-width: 760px;
+        }
+        .contact-faq-item {
+          border-left: 2px solid rgba(124, 58, 237, 0.35);
+          padding-left: var(--space-md);
+        }
+        .contact-faq-q {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin: 0 0 6px;
+        }
+        .contact-faq-a {
+          font-size: 14px;
+          color: var(--text-secondary);
+          line-height: 1.65;
+          margin: 0;
         }
         @media (max-width: 900px) { .contact-inner { grid-template-columns: 1fr; } }
         @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }

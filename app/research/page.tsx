@@ -370,6 +370,24 @@ export default function ResearchPage() {
           .rp-area { padding: 40px 20px 60px; }
           .rp-opt { min-height: 46px; font-size: 14px; }
         }
+        .rp-faq-section {
+          position: relative;
+          background: rgba(9, 8, 16, 0.68);
+          padding: 64px 24px;
+          border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .rp-faq-inner { max-width: 760px; margin: 0 auto; }
+        .rp-faq-title {
+          font-family: "Clash Display", sans-serif;
+          font-size: clamp(22px, 3vw, 30px);
+          font-weight: 600;
+          color: #fff;
+          margin-bottom: 32px;
+        }
+        .rp-faq-list { display: grid; gap: 24px; }
+        .rp-faq-item { border-left: 2px solid rgba(230,211,163,0.35); padding-left: 16px; }
+        .rp-faq-q { font-size: 16px; font-weight: 600; color: #fff; margin: 0 0 6px; }
+        .rp-faq-a { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.65; margin: 0; }
       `}</style>
 
       <Navbar />
@@ -498,6 +516,37 @@ export default function ResearchPage() {
               </>
             )}
 
+          </div>
+        </div>
+      </div>
+
+      <div className="rp-faq-section">
+        <div className="rp-faq-inner">
+          <h2 className="rp-faq-title">Frequently asked questions</h2>
+          <div className="rp-faq-list">
+            {[
+              {
+                q: "How long does the behavioral study take?",
+                a: "The study is 16 short questions about what makes a great night out — most people complete it in under three minutes. There are no long-form answers required, just quick single-choice and multi-choice questions.",
+              },
+              {
+                q: "Is my data anonymous?",
+                a: "Yes. Responses feed the Human Behavioral Intelligence Framework in aggregate — no personally identifying information is required to participate or published in any research output.",
+              },
+              {
+                q: "Why does Polynovea run this study?",
+                a: "Polynovea's Acquisition System reads behavioral signals from reviews, but this study captures decision-making directly from people themselves — what triggers a night out, what keeps them at a venue, and what makes them leave.",
+              },
+              {
+                q: "Who can participate in the study?",
+                a: "Anyone who goes out to restaurants, bars, or live venues in India can participate — the study is designed around real nightlife and dining decisions, not a specific city or demographic.",
+              },
+            ].map(({ q, a }) => (
+              <div key={q} className="rp-faq-item">
+                <h3 className="rp-faq-q">{q}</h3>
+                <p className="rp-faq-a">{a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

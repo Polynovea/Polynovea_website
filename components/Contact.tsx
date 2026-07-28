@@ -33,7 +33,7 @@ export default function Contact() {
               if there&apos;s a match.
             </p>
             <div className="contact-tags">
-              {["Venues & Institutions", "Artists & Musicians", "Brands & Orgs", "Partnerships"].map((tag) => (
+              {["Venues & Institutions", "Businesses & Workplaces", "Brands & Orgs", "Partnerships"].map((tag) => (
                 <span key={tag} className="contact-tag">{tag}</span>
               ))}
             </div>
@@ -67,7 +67,7 @@ export default function Contact() {
                   <select className="form-select" id="who" name="who" required defaultValue="">
                     <option value="" disabled>Select who you are</option>
                     <option value="venue">Venue / Institution</option>
-                    <option value="artist">Artist / Musician</option>
+                    <option value="business">Business / Workplace</option>
                     <option value="brand">Brand / Organisation</option>
                     <option value="partner">Potential Partner</option>
                     <option value="other">Something else</option>
@@ -82,10 +82,9 @@ export default function Contact() {
                       <option value="optimisation">Revenue optimisation services</option>
                       <option value="intelligence">Behavioral intelligence reports</option>
                     </optgroup>
-                    <optgroup label="For Artists & Professionals">
-                      <option value="acquisition">Audience growth and acquisition support</option>
-                      <option value="distribution">Distribution and publishing guidance</option>
-                      <option value="development">Artist development</option>
+                    <optgroup label="For Businesses & Workplaces">
+                      <option value="infrakinetic">Infrakinetic early access</option>
+                      <option value="operations">Operational intelligence</option>
                     </optgroup>
                     <optgroup label="General">
                       <option value="partnership">Partnership or collaboration</option>

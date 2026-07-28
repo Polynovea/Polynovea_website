@@ -4,9 +4,9 @@ import ProjectsExpanded from "@/components/ProjectsExpanded";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Behavioral Intelligence Projects — Active Initiatives",
+  title: "Behavioral Intelligence Projects & Products",
   description:
-    "Active projects across the Polynovea ecosystem — behavioral intelligence infrastructure, live experience operations through Polynovea Records, and product development including Cappella.",
+    "Active behavioral intelligence projects across Polynovea — Hospitality live via the Acquisition System, Workplace product Infrakinetic in development.",
   alternates: { canonical: "https://www.polynovea.in/projects" },
   openGraph: {
     title: "Behavioral Intelligence Projects | Polynovea",
@@ -31,7 +31,7 @@ const articleSchema = {
     logo: { "@type": "ImageObject", url: "https://www.polynovea.in/logo.png" },
   },
   datePublished: "2024-01-01",
-  dateModified: "2026-06-27",
+  dateModified: "2026-07-28",
   url: "https://www.polynovea.in/projects",
   mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.polynovea.in/projects" },
 };
@@ -45,7 +45,7 @@ const faqSchema = {
       name: "What projects is Polynovea currently working on?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Polynovea is actively building three behavioral intelligence modules that form the Human Behavioral Intelligence Framework (HBIF): the Decision Framework which defines what to measure and why, the Acquisition System which extracts behavioral signals from commercial environments using a live 8-phase execution framework, and the Optimisation System which instruments live environments and converts intelligence into measurable revenue optimisation.",
+        text: "Hospitality's product, the Acquisition System, is live: the Decision Framework defines what to measure and why, the Acquisition System extracts behavioral signals through a six-stage extraction-to-output pipeline, and the Optimisation System converts intelligence into measurable revenue optimisation. Infrakinetic, the Workplace domain's product, is in development.",
       },
     },
     {
@@ -61,7 +61,7 @@ const faqSchema = {
       name: "What is Polynovea's Acquisition System?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The Acquisition System is a behavioral signal extraction pipeline — not review sentiment analysis. It processes Google Reviews and multi-source data to extract Stimuli (what drew someone in), Frictions (what created resistance), Compensations (what people tolerate despite friction), and Emotional context (the occasion driving the visit). These signals map to six fitness dimensions and score venues using Bayesian inference. Currently live across 11,063 venues across the Mumbai Metro Region. Output feeds a live 8-phase field execution framework per venue.",
+        text: "The Acquisition System is a behavioral signal extraction pipeline — not review sentiment analysis. It processes Google Reviews and multi-source data to extract Stimuli (what drew someone in), Frictions (what created resistance), Compensations (what people tolerate despite friction), and Emotional context (the occasion driving the visit). These signals map to five fitness dimensions and score venues using pure percentile calibration, which decouples score from review volume — a five-review venue and a five-hundred-review venue are ranked on the same true-standing basis, with confidence tracked separately via a HIGH/MED/LOW/SPARSE badge. Currently live across 11,063 venues across the Mumbai Metro Region. Output feeds a six-stage acquisition pipeline that produces a repeatable venue playbook.",
       },
     },
     {
@@ -74,10 +74,10 @@ const faqSchema = {
     },
     {
       "@type": "Question",
-      name: "What is Cappella by Polynovea?",
+      name: "What is Infrakinetic?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Cappella is a behavioral software product built by Polynovea that operates within the music context. It is a product-layer expression of the behavioral intelligence infrastructure — applying the HBIF's measurement and pattern-recognition capabilities to the artist and audience relationship in the music domain.",
+        text: "Infrakinetic is the Workplace domain's product — a full operational platform covering finance, HR, payroll, and commercial operations. Running the business through Infrakinetic generates the behavioral signal this domain's intelligence is built on, the same way the Acquisition System is built on Hospitality's data. Currently in development.",
       },
     },
   ],

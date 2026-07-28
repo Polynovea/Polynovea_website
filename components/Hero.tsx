@@ -66,8 +66,8 @@ export default function Hero() {
         </h1>
 
         <p className="hero-sub" style={{ opacity: 0 }}>
-          Domain-agnostic behavioral intelligence infrastructure. Built once.
-          Deployed across hospitality, music, education, and beyond.
+          Behavioral intelligence infrastructure. Live in Hospitality — each new
+          domain gets its own product, and every one sharpens the same intelligence underneath.
         </p>
 
         <div className="hero-ctas" style={{ opacity: 0 }}>

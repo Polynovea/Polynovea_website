@@ -56,7 +56,6 @@ export const REVEAL_OPEN_EVENT = "polynovea:reveal-open";
 export function routeClusterIndex(pathname: string): number {
   if (pathname === "/") return 0;
   if (pathname.startsWith("/architecture")) return 1;
-  if (pathname.startsWith("/cappella")) return 2;
   if (pathname.startsWith("/blog")) return 3;
   if (pathname.startsWith("/about")) return 4;
   if (pathname.startsWith("/projects")) return 5;

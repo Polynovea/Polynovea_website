@@ -14,14 +14,14 @@ const blogSchema = {
     logo: { "@type": "ImageObject", url: "https://www.polynovea.in/logo.png" },
   },
   author: { "@type": "Organization", name: "Polynovea Intelligence Team" },
-  dateModified: "2026-06-27",
+  dateModified: "2026-07-28",
   inLanguage: "en",
 };
 
 export const metadata: Metadata = {
-  title: "Behavioral Intelligence Blog — Systems & Patterns",
+  title: "Behavioral Intelligence Blog — Insights",
   description:
-    "Behavioral intelligence insights, systems thinking, and operational patterns from Polynovea. Covering human behavior in live environments, decision frameworks, and the intelligence infrastructure behind the HBIF.",
+    "Behavioral intelligence insights, systems thinking, and operational patterns from the Polynovea team — covering decision frameworks, HBIF, and venue data.",
   alternates: { canonical: "https://www.polynovea.in/blog" },
   openGraph: {
     title: "Behavioral Intelligence Blog | Polynovea",
@@ -32,12 +32,47 @@ export const metadata: Metadata = {
   },
 };
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "What topics does the Polynovea blog cover?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "The blog covers behavioral intelligence as a discipline — how it differs from sentiment analysis and traditional analytics, systems thinking, decision frameworks, and operational patterns from building the Human Behavioral Intelligence Framework.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How often does Polynovea publish new content?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "New posts are published as the team develops real findings from operating the Acquisition System and building HBIF — not on a fixed weekly schedule, so each post reflects genuine progress rather than filler content.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Who writes the Polynovea blog?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Posts are written by the Polynovea Intelligence Team, the same group building and operating the Human Behavioral Intelligence Framework and the Acquisition System.",
+      },
+    },
+  ],
+};
+
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       {children}
     </>

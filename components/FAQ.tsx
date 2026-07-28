@@ -8,8 +8,8 @@ const faqs = [
     a: "A closed-loop system that observes how humans make decisions, extracts the underlying patterns, and converts them into repeatable frameworks — then deploys those frameworks as products, optimisations, or client engagements. The goal is to reduce blind decision-making inside systems that should be measurable.",
   },
   {
-    q: "How does Polynovea Records connect to the intelligence system?",
-    a: "Records is the IP and cultural layer of the ecosystem — the artist-facing, music-facing execution surface. The intelligence infrastructure sits underneath it and powers everything: artist selection, performance optimisation, audience understanding. The ecosystem is larger than the label. Records is one deployment surface, not the parent.",
+    q: "How does Polynovea's intelligence scale across domains?",
+    a: "Each domain gets its own purpose-built product — Hospitality's is the Acquisition System, live today; a Workplace product is in development. Underneath every domain's product sits a deeper, shared layer of the infrastructure that gets sharper the more domains it operates across — every new product starts smarter because of the ones before it.",
   },
   {
     q: "Are you available for external projects or clients?",
@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     q: "How do I know if Polynovea is relevant to what I'm building?",
-    a: "If you're operating in live entertainment, artist development, venue management, or audience behaviour — and decisions are being made on intuition rather than structured intelligence — we're likely relevant. The ecosystem exists precisely to address that gap. Send us a message and we'll tell you directly.",
+    a: "If you're operating a venue, running a business, or managing a workforce — and decisions are being made on intuition rather than structured intelligence — we're likely relevant. The ecosystem exists precisely to address that gap. Send us a message and we'll tell you directly.",
   },
 ];
 
@@ -35,12 +35,12 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   return (
     <div className={`faq-item${open ? " open" : ""}`}>
       <button className="faq-question" onClick={handleToggle} aria-expanded={open}>
-        <span>{q}</span>
+        <h3 className="faq-question-text">{q}</h3>
         <span className="faq-icon">{open ? "−" : "+"}</span>
       </button>
       <div className={`faq-answer-wrap${open ? " open" : ""}`}>
         <div className="faq-answer-inner">
-          <div className="faq-answer">{a}</div>
+          <p className="faq-answer">{a}</p>
         </div>
       </div>
 
@@ -74,12 +74,15 @@ function FAQItem({ q, a }: { q: string; a: string }) {
           border: none;
           cursor: pointer;
           text-align: left;
+          outline: none;
+        }
+        .faq-question-text {
+          margin: 0;
           font-size: 15px;
           font-weight: 500;
           color: var(--text-primary);
           font-family: var(--font-body);
           line-height: 1.4;
-          outline: none;
         }
         .faq-icon {
           color: var(--accent-authority);

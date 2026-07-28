@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { BentoGrid, type BentoItem } from "@/components/ui/bento-grid";
 
-const systemModules: BentoItem[] = [
+const hospitalityModules: BentoItem[] = [
   {
     num: "01",
     tag: "01",
@@ -15,7 +15,7 @@ const systemModules: BentoItem[] = [
     num: "02",
     tag: "02",
     title: "Acquisition System",
-    desc: "Not review sentiment analysis — behavioral signal extraction. Each Google Review is run through the HBIF extraction layer to pull out Stimuli, Frictions, Compensations, and Emotional context. 11,063 venues behaviourally analysed across Mumbai. Signals map to six fitness dimensions and feed a live 8-phase acquisition playbook that tells you who to target, how to reach them, and what they respond to before a show runs.",
+    desc: "Not review sentiment analysis — behavioral signal extraction. Each Google Review is run through the HBIF extraction layer to pull out Stimuli, Frictions, Compensations, and Emotional context. 11,063 venues behaviourally analysed across Mumbai. Signals map to five fitness dimensions, scored via pure percentile calibration so new venues aren't penalized for low review counts, and feed a live acquisition playbook that tells you who to target, how to reach them, and what they respond to before they walk in.",
     colSpan: 2,
   },
   {
@@ -27,26 +27,32 @@ const systemModules: BentoItem[] = [
   },
 ];
 
+const workplaceModules: BentoItem[] = [
+  {
+    num: "01",
+    tag: "Workplace",
+    title: "Infrakinetic",
+    desc: "The Workplace domain's product — a different domain, a different build. A full operational platform — finance, HR, payroll, commercial — that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on. In development.",
+    colSpan: 3,
+  },
+];
+
 const faqItems = [
   {
     q: "What projects is Polynovea currently working on?",
-    a: "Polynovea is actively building three behavioral intelligence modules: the Decision Framework which defines what to measure and why; the Acquisition System which maps behavioral mechanics of commercial environments using an 8-phase live execution framework; and the Optimisation System which instruments live environments and converts behavioral intelligence into measurable revenue optimisation.",
+    a: "Hospitality's product, the Acquisition System, is live: the Decision Framework defines what to measure and why, the Acquisition System maps behavioral mechanics through a six-stage extraction-to-output pipeline, and the Optimisation System converts behavioral intelligence into measurable revenue optimisation. Infrakinetic, the Workplace domain's product, is in development.",
   },
   {
     q: "What is the behavioral intelligence Decision Framework?",
     a: "The Decision Framework is the foundation of Polynovea's behavioral intelligence system. It defines what behavior to measure, establishes success metrics, and creates measurement baselines before any optimization occurs. Output: KPIs, decision criteria, and a behavioral baseline for each operating environment.",
   },
   {
-    q: "What is the 8-phase Acquisition System?",
-    a: "The Acquisition System extracts multi-source behavioral signals from commercial environments and structures them through an ontology layer that maps how human behavior operates. It scores venues across fitness dimensions and audience archetypes using Bayesian inference, then converts that intelligence into an 8-phase field execution framework.",
+    q: "What is Polynovea's Acquisition System?",
+    a: "The Acquisition System extracts multi-source behavioral signals from commercial environments and structures them through an ontology layer that maps how human behavior operates. It scores venues across five fitness dimensions and audience archetypes using pure percentile calibration — decoupling score from review volume so low-review venues aren't diluted toward a neutral average — then converts that intelligence into a six-stage acquisition pipeline.",
   },
   {
     q: "What is the Optimisation System?",
     a: "The Optimisation System is a two-part behavioral intelligence system. Part 1 instruments the live environment — capturing POS data, venue flow, and audience behavior in real time. Part 2 converts that intelligence into measurable revenue optimisation decisions for venue operators.",
-  },
-  {
-    q: "What is Cappella by Polynovea?",
-    a: "Cappella is a behavioral software product built by Polynovea operating within the music context. It applies the HBIF's measurement and pattern-recognition capabilities to the artist–audience relationship, creating a data layer for the music domain.",
   },
 ];
 
@@ -62,23 +68,35 @@ export default function ProjectsExpanded() {
             <h1>
               Behavioral intelligence <span className="gradient-text">infrastructure</span> in motion.
             </h1>
-            <p>Three behavioral intelligence modules. One compounding system. Live inside every domain Polynovea operates — hospitality, music, and beyond.</p>
-            <p className="hero-byline">By Polynovea Intelligence Team · 3 active modules · Updated June 27, 2026</p>
+            <p>Hospitality&apos;s three-module product, live. Infrakinetic, the Workplace domain&apos;s product, in development. Every domain gets its own — all sharpening one intelligence layer underneath.</p>
+            <p className="hero-byline">By Polynovea Intelligence Team · 1 live domain, 1 in development · Updated July 28, 2026</p>
           </div>
           <div className="hero-actions">
             <Link href="/" className="btn btn-secondary">Back to Home</Link>
           </div>
         </div>
 
-        {/* Intelligence System — bento */}
+        {/* Intelligence System — bento, split by domain */}
         <div className="content-section">
           <div className="block-header" data-reveal="true" data-reveal-delay="40">
             <h2 className="block-label-h2">What are the active behavioral intelligence modules?</h2>
-            <p className="block-answer">The behavioral intelligence system comprises 3 compounding modules, each converting the output of the previous into higher-order operational leverage. Together they form an end-to-end pipeline from signal extraction to revenue optimisation.</p>
+            <p className="block-answer">Each domain gets its own product, built on its own timeline. Hospitality&apos;s is live. Workplace&apos;s is in development. They aren&apos;t modules of the same system — they&apos;re separate products, each sharpening the shared intelligence layer underneath.</p>
           </div>
 
-          <div data-reveal="true" data-reveal-delay="80">
-            <BentoGrid items={systemModules} />
+          <div className="domain-block" data-reveal="true" data-reveal-delay="80">
+            <div className="domain-block-header">
+              <span className="domain-block-name">Hospitality</span>
+              <span className="domain-block-status domain-block-status-live">Live</span>
+            </div>
+            <BentoGrid items={hospitalityModules} />
+          </div>
+
+          <div className="domain-block" data-reveal="true" data-reveal-delay="120">
+            <div className="domain-block-header">
+              <span className="domain-block-name">Workplace</span>
+              <span className="domain-block-status domain-block-status-dev">In development</span>
+            </div>
+            <BentoGrid items={workplaceModules} />
           </div>
         </div>
 
@@ -86,24 +104,24 @@ export default function ProjectsExpanded() {
         <div className="content-section" data-reveal="true">
           <div className="block-header">
             <h2 className="block-label-h2">How does the behavioral intelligence system compound across domains?</h2>
-            <p className="block-answer">Each module is deployed live in the hospitality domain first, then the same infrastructure runs inside the music domain without a rebuild. Behavioral patterns observed in live hospitality environments surface mechanisms that improve accuracy in music — and vice versa. The system becomes more intelligent the more domains it operates in.</p>
+            <p className="block-answer">Hospitality's Acquisition System proved the model first. Each new domain gets its own purpose-built product, not a copy of Hospitality's — but every product is built on a shared, deeper layer of the infrastructure that gets sharper with every domain it operates across.</p>
           </div>
           <div className="stats-row">
             <div className="stat-item">
               <span className="stat-num">3</span>
-              <span className="stat-label">active behavioral intelligence modules</span>
+              <span className="stat-label">modules in Hospitality's product</span>
             </div>
             <div className="stat-item">
-              <span className="stat-num">2</span>
-              <span className="stat-label">live deployment domains</span>
+              <span className="stat-num">1</span>
+              <span className="stat-label">live domain</span>
             </div>
             <div className="stat-item">
-              <span className="stat-num">8</span>
-              <span className="stat-label">phase acquisition execution framework</span>
+              <span className="stat-num">6-stage</span>
+              <span className="stat-label">acquisition pipeline</span>
             </div>
             <div className="stat-item">
-              <span className="stat-num">3</span>
-              <span className="stat-label">intelligence modules</span>
+              <span className="stat-num">11,063</span>
+              <span className="stat-label">venues behaviourally analysed</span>
             </div>
           </div>
         </div>
@@ -185,6 +203,38 @@ export default function ProjectsExpanded() {
 
         /* ── Section chrome ── */
         .content-section { margin-top: var(--space-4xl); }
+
+        .domain-block { margin-bottom: var(--space-xl); }
+        .domain-block:last-child { margin-bottom: 0; }
+
+        .domain-block-header {
+          display: flex;
+          align-items: center;
+          gap: var(--space-sm);
+          margin-bottom: var(--space-md);
+        }
+
+        .domain-block-name {
+          font-family: var(--font-display);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--text-primary);
+        }
+
+        .domain-block-status {
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          padding: 3px 10px;
+          border-radius: var(--radius-pill);
+          border: 1px solid currentColor;
+        }
+
+        .domain-block-status-live { color: #4ade80; }
+        .domain-block-status-dev { color: var(--accent-authority, #e6d3a3); opacity: 0.85; }
 
         .block-header {
           margin-bottom: var(--space-xl);

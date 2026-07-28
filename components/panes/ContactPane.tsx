@@ -3,10 +3,8 @@
 import Contact from "@/components/Contact";
 
 const socials = [
-  { label: "Instagram", href: "https://www.instagram.com/polynovearecords/" },
+  { label: "Instagram", href: "https://www.instagram.com/polynovea.in/" },
   { label: "X", href: "https://x.com/Polynovea" },
-  { label: "YouTube", href: "https://www.youtube.com/@PolynoveaRecords" },
-  { label: "Threads", href: "https://www.threads.net/@polynovearecords" },
 ];
 
 /** Contact section plus a slim end-of-journey footer strip. */

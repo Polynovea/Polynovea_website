@@ -9,7 +9,7 @@ const milestones = [
   {
     num: "02",
     title: "Domain Deployment",
-    desc: "The first live deployment environments. Hospitality and Music — chosen because they are behaviourally rich, measurable, and generate rapid feedback. This is where the infrastructure is proven against real human decisions at scale.",
+    desc: "The first live deployment environment. Hospitality — chosen because it is behaviourally rich, measurable, and generates rapid feedback. This is where the infrastructure is proven against real human decisions at scale.",
   },
   {
     num: "03",
