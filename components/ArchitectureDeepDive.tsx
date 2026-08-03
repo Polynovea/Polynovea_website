@@ -96,7 +96,7 @@ const surfaces: Record<SurfaceKey, { label: string; status: "live" | "in develop
     label: "Workplace Intelligence",
     status: "in development",
     examples: [
-      "Infrakinetic — the Workplace domain's product. A full operational platform (finance, HR, payroll, commercial) that runs the business and, underneath, generates the behavioral signal this domain's intelligence layer is built on.",
+      "Infrakinetic — the Workplace domain's product. A full enterprise operating system (commercial/CRM, finance with an immutable cryptographic ledger, HR & payroll, workflow automation, governance, marketing) that runs the business and, underneath, generates the behavioral signal this domain's intelligence layer is built on.",
       "Organisational behavior mapping: how teams make decisions under pressure and at scale.",
       "Performance intelligence: patterns from work environments correlated against outcomes.",
       "Currently in development. Product architecture is built; the behavioral data and signal collection this domain's intelligence depends on is still being generated.",

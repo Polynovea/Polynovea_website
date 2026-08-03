@@ -12,7 +12,7 @@ export default function About() {
         <div className="hero-content">
           <h1 className="hero-heading">Measurement Changes Everything</h1>
           <p className="hero-subheading">Most systems operate without behavioral intelligence. Polynovea built the infrastructure layer that changes that.</p>
-          <p className="hero-byline">By Polynovea Intelligence Team · Founded 2023 · Navi Mumbai, India · Updated July 28, 2026</p>
+          <p className="hero-byline">By Polynovea Intelligence Team · Founded April 2026 · Navi Mumbai, India · Updated July 28, 2026</p>
         </div>
       </div>
 
@@ -166,7 +166,7 @@ export default function About() {
               },
               {
                 q: "Where is Polynovea based and when was it founded?",
-                a: "Polynovea was founded in 2023 by Subrojit Roy and is based in Navi Mumbai, Maharashtra, India.",
+                a: "Polynovea was founded in April 2026 by Subrojit Roy and is based in Navi Mumbai, Maharashtra, India.",
               },
             ].map(({ q, a }) => (
               <div key={q} className="faq-item">

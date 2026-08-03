@@ -77,7 +77,7 @@ const faqSchema = {
       name: "What is Infrakinetic?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Infrakinetic is the Workplace domain's product — a full operational platform covering finance, HR, payroll, and commercial operations. Running the business through Infrakinetic generates the behavioral signal this domain's intelligence is built on, the same way the Acquisition System is built on Hospitality's data. Currently in development.",
+        text: "Infrakinetic is the Workplace domain's product — a full enterprise operating system covering commercial/CRM, finance (with an immutable cryptographic ledger), HR & payroll, workflow automation, governance, and marketing. Running the business through Infrakinetic generates the behavioral signal this domain's intelligence is built on, the same way the Acquisition System is built on Hospitality's data. Currently in development.",
       },
     },
   ],

@@ -40,7 +40,7 @@ const domains: Record<
       {
         tag: "Infrakinetic",
         title: "Infrakinetic",
-        desc: "The Workplace domain's product. A full operational platform — finance, HR, payroll, commercial — that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on. Module breakdown lands as the product ships.",
+        desc: "The Workplace domain's product. A full enterprise operating system — commercial/CRM, finance with an immutable cryptographic ledger, HR & payroll, workflow automation, governance, marketing — that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on. Module breakdown lands as the product ships.",
       },
     ],
   },

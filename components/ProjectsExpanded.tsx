@@ -32,7 +32,7 @@ const workplaceModules: BentoItem[] = [
     num: "01",
     tag: "Workplace",
     title: "Infrakinetic",
-    desc: "The Workplace domain's product — a different domain, a different build. A full operational platform — finance, HR, payroll, commercial — that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on. In development.",
+    desc: "The Workplace domain's product — a different domain, a different build. A full enterprise operating system — commercial/CRM, finance with an immutable cryptographic ledger, HR & payroll, workflow automation, governance, marketing — that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on. In development.",
     colSpan: 3,
   },
 ];
