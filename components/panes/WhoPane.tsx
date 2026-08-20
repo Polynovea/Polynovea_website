@@ -29,7 +29,7 @@ export default function WhoPane() {
       <div className="container">
         <div className="who-header">
           <h2 className="t-display-md" style={{ color: "var(--text-primary)" }}>
-            Who We Are
+            Who is Polynovea?
           </h2>
           <p className="t-body" style={{ marginTop: "var(--space-sm)" }}>
             Our founding thesis on behavioral intelligence and measurable systems

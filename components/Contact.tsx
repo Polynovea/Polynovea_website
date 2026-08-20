@@ -23,14 +23,14 @@ export default function Contact() {
               Contact
             </span>
             <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
-              Not everyone gets in.
+              Let&apos;s understand your
               <br />
-              <span className="gold-accent">Start a conversation.</span>
+              <span className="gold-accent">operating environment.</span>
             </h2>
             <p className="t-body" style={{ marginTop: "var(--space-md)" }}>
-              We evaluate fit before we engage. Tell us what you&apos;re building
-              and what problem you&apos;re trying to solve — we&apos;ll tell you directly
-              if there&apos;s a match.
+              Tell us where your systems are fragmented, what workflows are difficult
+              to govern, and what you&apos;re trying to improve - we&apos;ll tell you directly
+              whether Infrakinetic is relevant.
             </p>
             <div className="contact-tags">
               {["Venues & Institutions", "Businesses & Workplaces", "Brands & Orgs", "Partnerships"].map((tag) => (
@@ -83,7 +83,7 @@ export default function Contact() {
                       <option value="intelligence">Behavioral intelligence reports</option>
                     </optgroup>
                     <optgroup label="For Businesses & Workplaces">
-                      <option value="infrakinetic">Infrakinetic early access</option>
+                      <option value="infrakinetic">Infrakinetic product evaluation</option>
                       <option value="operations">Operational intelligence</option>
                     </optgroup>
                     <optgroup label="General">

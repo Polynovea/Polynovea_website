@@ -16,11 +16,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Polynovea — Behavioral Intelligence Infrastructure",
+    default: "Polynovea - Deep-Tech AI & Decision Infrastructure",
     template: "%s | Polynovea",
   },
   description:
-    "Polynovea builds the Human Behavioral Intelligence Framework — live in Hospitality, expanding domain by domain, sharpening one intelligence layer underneath.",
+    "Polynovea is a deep-tech AI and decision-infrastructure company. Infrakinetic, our enterprise operating system, is the current lead product for commercialisation.",
   metadataBase: new URL("https://www.polynovea.in"),
   keywords: [
     "behavioral intelligence",
@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     "behavioral data systems",
     "human behavior AI",
     "behavioral intelligence india",
+    "infrakinetic",
+    "decision infrastructure",
+    "enterprise operating system",
   ],
   icons: {
     icon: [
@@ -41,9 +44,9 @@ export const metadata: Metadata = {
     apple: "/icon.png",
   },
   openGraph: {
-    title: "Polynovea — Behavioral Intelligence Infrastructure",
+    title: "Polynovea - Deep-Tech AI & Decision Infrastructure",
     description:
-      "An AI and data company building the Human Behavioral Intelligence Framework. We observe human decision-making, extract patterns, and convert them into repeatable systems. Each domain we enter gets its own purpose-built product, all sharpening one shared intelligence layer underneath.",
+      "A deep-tech AI, behavioral-intelligence and decision-infrastructure company. Infrakinetic - Polynovea's enterprise operating system - is the current lead product for commercialisation and revenue, backed by the Human Behavioral Intelligence Framework.",
     siteName: "Polynovea",
     url: "https://www.polynovea.in",
     type: "website",
@@ -51,9 +54,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Polynovea — Behavioral Intelligence Infrastructure",
+    title: "Polynovea - Deep-Tech AI & Decision Infrastructure",
     description:
-      "An AI and data company building the Human Behavioral Intelligence Framework. We observe human decision-making, extract patterns, and convert them into repeatable systems. Each domain we enter gets its own purpose-built product, all sharpening one shared intelligence layer underneath.",
+      "A deep-tech AI, behavioral-intelligence and decision-infrastructure company. Infrakinetic - Polynovea's enterprise operating system - is the current lead product for commercialisation and revenue, backed by the Human Behavioral Intelligence Framework.",
     images: ["/og-image.png"],
   },
   alternates: {
@@ -68,8 +71,8 @@ const organizationSchema = {
   url: "https://www.polynovea.in",
   logo: "https://www.polynovea.in/logo.png",
   description:
-    "Behavioral intelligence operation based in Navi Mumbai, India. We map human decision-making in commercial environments and convert it into repeatable frameworks, products, and automated systems.",
-  foundingDate: "2023",
+    "Deep-tech AI, behavioral-intelligence and decision-infrastructure company based in Navi Mumbai, India. Infrakinetic, our enterprise operating system, is the current lead product for commercialisation; Hospitality is undergoing an architectural rebuild.",
+  foundingDate: "2026-04",
   location: {
     "@type": "Place",
     name: "Navi Mumbai, Maharashtra, India",

@@ -10,9 +10,9 @@ export default function Footer() {
           <div className="footer-brand">
             <div className="footer-logo">Polynovea</div>
             <p className="footer-tagline">
-              Behavioral intelligence infrastructure.
+              Deep-tech AI, behavioral-intelligence and decision infrastructure.
               <br />
-              Live in Hospitality. One product per domain, one intelligence underneath.
+              Infrakinetic is the current commercial lead. One product per domain, one intelligence underneath.
             </p>
           </div>
 

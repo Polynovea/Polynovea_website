@@ -17,11 +17,11 @@ export default function SystemPane() {
             The Architecture
           </span>
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
-            The System
+            What is Polynovea&apos;s behavioral intelligence system?
           </h2>
           <p className="t-body-lg" style={{ marginTop: "var(--space-md)" }}>
             Polynovea is not a creative agency or a tech startup. It is a
-            behavioral intelligence operation — a closed loop that observes
+            behavioral intelligence operation - a closed loop that observes
             human decision-making, extracts patterns, and converts them into
             repeatable frameworks, products, and automated systems.
           </p>

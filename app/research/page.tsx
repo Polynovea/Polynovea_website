@@ -78,7 +78,7 @@ const STEPS: Step[] = [
   {
     type: "single", key: "loyalty_formation",
     q: "What most likely turns a place into a regular spot for you?",
-    options: ["Events or live experiences worth returning for", "Consistency — I know what I'll get", "My group starts treating it as our place", "The experience feels personally familiar"],
+    options: ["Events or live experiences worth returning for", "Consistency - I know what I'll get", "My group starts treating it as our place", "The experience feels personally familiar"],
   },
   {
     type: "single", key: "validation_behavior",
@@ -527,19 +527,19 @@ export default function ResearchPage() {
             {[
               {
                 q: "How long does the behavioral study take?",
-                a: "The study is 16 short questions about what makes a great night out — most people complete it in under three minutes. There are no long-form answers required, just quick single-choice and multi-choice questions.",
+                a: "The study is 16 short questions about what makes a great night out - most people complete it in under three minutes. There are no long-form answers required, just quick single-choice and multi-choice questions.",
               },
               {
                 q: "Is my data anonymous?",
-                a: "Yes. Responses feed the Human Behavioral Intelligence Framework in aggregate — no personally identifying information is required to participate or published in any research output.",
+                a: "Yes. Responses feed the Human Behavioral Intelligence Framework in aggregate - no personally identifying information is required to participate or published in any research output.",
               },
               {
                 q: "Why does Polynovea run this study?",
-                a: "Polynovea's Acquisition System reads behavioral signals from reviews, but this study captures decision-making directly from people themselves — what triggers a night out, what keeps them at a venue, and what makes them leave.",
+                a: "Polynovea's Acquisition System reads behavioral signals from reviews, but this study captures decision-making directly from people themselves - what triggers a night out, what keeps them at a venue, and what makes them leave.",
               },
               {
                 q: "Who can participate in the study?",
-                a: "Anyone who goes out to restaurants, bars, or live venues in India can participate — the study is designed around real nightlife and dining decisions, not a specific city or demographic.",
+                a: "Anyone who goes out to restaurants, bars, or live venues in India can participate - the study is designed around real nightlife and dining decisions, not a specific city or demographic.",
               },
             ].map(({ q, a }) => (
               <div key={q} className="rp-faq-item">

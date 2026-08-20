@@ -19,15 +19,23 @@ async function getPublishedPosts(): Promise<BlogPost[]> {
 const blogFaqs = [
   {
     q: "What topics does the Polynovea blog cover?",
-    a: "The blog covers behavioral intelligence as a discipline — how it differs from sentiment analysis and traditional analytics, systems thinking, decision frameworks, and operational patterns from building the Human Behavioral Intelligence Framework.",
+    a: "The blog covers behavioral intelligence as a discipline - how it differs from sentiment analysis and traditional analytics, systems thinking, decision frameworks, and operational patterns from building the Human Behavioral Intelligence Framework.",
   },
   {
     q: "How often does Polynovea publish new content?",
-    a: "New posts are published as the team develops real findings from operating the Acquisition System and building HBIF — not on a fixed weekly schedule, so each post reflects genuine progress rather than filler content.",
+    a: "New posts are published as the team develops real findings from operating Infrakinetic, rebuilding Hospitality's Acquisition System, and building HBIF - not on a fixed weekly schedule, so each post reflects genuine progress rather than filler content.",
   },
   {
     q: "Who writes the Polynovea blog?",
     a: "Posts are written by the Polynovea Intelligence Team, the same group building and operating the Human Behavioral Intelligence Framework and the Acquisition System.",
+  },
+  {
+    q: "Is the Polynovea blog only about Hospitality?",
+    a: "No. The blog covers enterprise systems and decision infrastructure alongside behavioral intelligence - reflecting work across Infrakinetic, the Workplace domain's current commercial lead, and Hospitality's architectural rebuild.",
+  },
+  {
+    q: "Can I get notified about new Polynovea blog posts?",
+    a: "There is no email subscription yet. Check back on the blog directly, or reach out through the contact page to ask about specific topics you're interested in.",
   },
 ];
 

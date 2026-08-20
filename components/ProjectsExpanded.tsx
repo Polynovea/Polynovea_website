@@ -15,14 +15,14 @@ const hospitalityModules: BentoItem[] = [
     num: "02",
     tag: "02",
     title: "Acquisition System",
-    desc: "Not review sentiment analysis — behavioral signal extraction. Each Google Review is run through the HBIF extraction layer to pull out Stimuli, Frictions, Compensations, and Emotional context. 11,063 venues behaviourally analysed across Mumbai. Signals map to five fitness dimensions, scored via pure percentile calibration so new venues aren't penalized for low review counts, and feed a live acquisition playbook that tells you who to target, how to reach them, and what they respond to before they walk in.",
+    desc: "Not review sentiment analysis - behavioral signal extraction. Each Google Review is run through the HBIF extraction layer to pull out Stimuli, Frictions, Compensations, and Emotional context. 11,063 venues behaviourally analysed across Mumbai. Signals map to five fitness dimensions, scored via pure percentile calibration so new venues aren't penalized for low review counts, and feed a live acquisition playbook that tells you who to target, how to reach them, and what they respond to before they walk in.",
     colSpan: 2,
   },
   {
     num: "03",
     tag: "03",
     title: "Optimisation System",
-    desc: "Two-part system. Part 1 instruments the live environment — POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
+    desc: "Two-part system. Part 1 instruments the live environment - POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
     colSpan: 3,
   },
 ];
@@ -32,7 +32,7 @@ const workplaceModules: BentoItem[] = [
     num: "01",
     tag: "Workplace",
     title: "Infrakinetic",
-    desc: "The Workplace domain's product — a different domain, a different build. A full enterprise operating system — commercial/CRM, finance with an immutable cryptographic ledger, HR & payroll, workflow automation, governance, marketing — that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on. In development.",
+    desc: "The Workplace domain's product and Polynovea's current lead product for commercialisation and revenue. A full enterprise operating system - commercial/CRM, finance with an immutable cryptographic ledger, HR & payroll, workflow automation, governance, marketing - that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on. 121/121 Billing + Payments tests passing (Source: Infrakinetic Product Guide, Aug 2026).",
     colSpan: 3,
   },
 ];
@@ -40,7 +40,7 @@ const workplaceModules: BentoItem[] = [
 const faqItems = [
   {
     q: "What projects is Polynovea currently working on?",
-    a: "Hospitality's product, the Acquisition System, is live: the Decision Framework defines what to measure and why, the Acquisition System maps behavioral mechanics through a six-stage extraction-to-output pipeline, and the Optimisation System converts behavioral intelligence into measurable revenue optimisation. Infrakinetic, the Workplace domain's product, is in development.",
+    a: "Infrakinetic, the Workplace domain's product, is Polynovea's current lead product for commercialisation and revenue. Hospitality's historical product - the Decision Framework, the Acquisition System, and the Optimisation System - is undergoing an architectural rebuild; the six-stage extraction pipeline and revenue-optimisation mechanics below are reference assets from that build.",
   },
   {
     q: "What is the behavioral intelligence Decision Framework?",
@@ -48,11 +48,15 @@ const faqItems = [
   },
   {
     q: "What is Polynovea's Acquisition System?",
-    a: "The Acquisition System extracts multi-source behavioral signals from commercial environments and structures them through an ontology layer that maps how human behavior operates. It scores venues across five fitness dimensions and audience archetypes using pure percentile calibration — decoupling score from review volume so low-review venues aren't diluted toward a neutral average — then converts that intelligence into a six-stage acquisition pipeline.",
+    a: "The Acquisition System extracts multi-source behavioral signals from commercial environments and structures them through an ontology layer that maps how human behavior operates. It scores venues across five fitness dimensions and audience archetypes using pure percentile calibration - decoupling score from review volume so low-review venues aren't diluted toward a neutral average - then converts that intelligence into a six-stage acquisition pipeline.",
   },
   {
     q: "What is the Optimisation System?",
-    a: "The Optimisation System is a two-part behavioral intelligence system. Part 1 instruments the live environment — capturing POS data, venue flow, and audience behavior in real time. Part 2 converts that intelligence into measurable revenue optimisation decisions for venue operators.",
+    a: "The Optimisation System is a two-part behavioral intelligence system. Part 1 instruments the live environment - capturing POS data, venue flow, and audience behavior in real time. Part 2 converts that intelligence into measurable revenue optimisation decisions for venue operators.",
+  },
+  {
+    q: "What is Infrakinetic?",
+    a: "Infrakinetic is the Workplace domain's product and Polynovea's current lead product for commercialisation and revenue - a full enterprise operating system covering commercial/CRM, finance (with an immutable cryptographic ledger), HR & payroll, workflow automation, governance, and marketing.",
   },
 ];
 
@@ -64,12 +68,12 @@ export default function ProjectsExpanded() {
         {/* Hero */}
         <div className="hero-section" data-reveal="true">
           <div className="hero-copy">
-            <span className="hero-label">Projects</span>
+            <span className="hero-label">Products</span>
             <h1>
               Behavioral intelligence <span className="gradient-text">infrastructure</span> in motion.
             </h1>
-            <p>Hospitality&apos;s three-module product, live. Infrakinetic, the Workplace domain&apos;s product, in development. Every domain gets its own — all sharpening one intelligence layer underneath.</p>
-            <p className="hero-byline">By Polynovea Intelligence Team · 1 live domain, 1 in development · Updated July 28, 2026</p>
+            <p>Infrakinetic, the Workplace domain&apos;s product, is Polynovea&apos;s current commercial lead. Hospitality&apos;s three-module product is undergoing an architectural rebuild. Every domain gets its own - all sharpening one intelligence layer underneath.</p>
+            <p className="hero-byline">By Polynovea Intelligence Team · 1 commercial lead, 1 in architectural rebuild · Updated July 28, 2026</p>
           </div>
           <div className="hero-actions">
             <Link href="/" className="btn btn-secondary">Back to Home</Link>
@@ -80,23 +84,23 @@ export default function ProjectsExpanded() {
         <div className="content-section">
           <div className="block-header" data-reveal="true" data-reveal-delay="40">
             <h2 className="block-label-h2">What are the active behavioral intelligence modules?</h2>
-            <p className="block-answer">Each domain gets its own product, built on its own timeline. Hospitality&apos;s is live. Workplace&apos;s is in development. They aren&apos;t modules of the same system — they&apos;re separate products, each sharpening the shared intelligence layer underneath.</p>
+            <p className="block-answer">Each domain gets its own product, built on its own timeline. Infrakinetic (Workplace) is Polynovea&apos;s current commercial lead. Hospitality is undergoing an architectural rebuild. They aren&apos;t modules of the same system - they&apos;re separate products, each sharpening the shared intelligence layer underneath.</p>
           </div>
 
           <div className="domain-block" data-reveal="true" data-reveal-delay="80">
             <div className="domain-block-header">
-              <span className="domain-block-name">Hospitality</span>
-              <span className="domain-block-status domain-block-status-live">Live</span>
+              <span className="domain-block-name">Workplace</span>
+              <span className="domain-block-status domain-block-status-live">Commercial lead</span>
             </div>
-            <BentoGrid items={hospitalityModules} />
+            <BentoGrid items={workplaceModules} />
           </div>
 
           <div className="domain-block" data-reveal="true" data-reveal-delay="120">
             <div className="domain-block-header">
-              <span className="domain-block-name">Workplace</span>
-              <span className="domain-block-status domain-block-status-dev">In development</span>
+              <span className="domain-block-name">Hospitality</span>
+              <span className="domain-block-status domain-block-status-dev">Architectural rebuild</span>
             </div>
-            <BentoGrid items={workplaceModules} />
+            <BentoGrid items={hospitalityModules} />
           </div>
         </div>
 
@@ -104,7 +108,7 @@ export default function ProjectsExpanded() {
         <div className="content-section" data-reveal="true">
           <div className="block-header">
             <h2 className="block-label-h2">How does the behavioral intelligence system compound across domains?</h2>
-            <p className="block-answer">Hospitality's Acquisition System proved the model first. Each new domain gets its own purpose-built product, not a copy of Hospitality's — but every product is built on a shared, deeper layer of the infrastructure that gets sharper with every domain it operates across.</p>
+            <p className="block-answer">Hospitality's Acquisition System proved the model first. Each new domain gets its own purpose-built product, not a copy of Hospitality's - but every product is built on a shared, deeper layer of the infrastructure that gets sharper with every domain it operates across.</p>
           </div>
           <div className="stats-row">
             <div className="stat-item">
@@ -113,7 +117,7 @@ export default function ProjectsExpanded() {
             </div>
             <div className="stat-item">
               <span className="stat-num">1</span>
-              <span className="stat-label">live domain</span>
+              <span className="stat-label">current commercial lead</span>
             </div>
             <div className="stat-item">
               <span className="stat-num">6-stage</span>

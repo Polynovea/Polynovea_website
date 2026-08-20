@@ -71,7 +71,7 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
               maxWidth: "640px",
             }}
           >
-            Systems thinking, operational insights, and patterns in human behavior — from the Polynovea team.
+            Systems thinking, operational insights, and patterns in human behavior - from the Polynovea team. Posts cover enterprise systems and decision infrastructure around Infrakinetic, the Workplace domain's current commercial lead, alongside behavioral intelligence research from Hospitality's architectural rebuild and the shared Human Behavioral Intelligence Framework underneath both.
           </p>
         </div>
 
@@ -232,7 +232,7 @@ export default function BlogContent({ initialPosts }: { initialPosts: BlogPost[]
           gap: var(--space-lg);
         }
 
-        /* ── Card shell — glass-card handles border/backdrop, we layer on top ── */
+        /* ── Card shell - glass-card handles border/backdrop, we layer on top ── */
         .blog-card {
           display: flex;
           flex-direction: column;

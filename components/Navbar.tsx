@@ -6,10 +6,10 @@ import { depthState, REVEAL_OPEN_EVENT } from "@/lib/depthStore";
 
 const homeLinks = [
   { href: "/", label: "Home" },
-  { href: "/architecture", label: "The Architecture" },
-  { href: "/projects", label: "Projects" },
-  { href: "/blog", label: "Blog" },
-  { href: "/about", label: "About" },
+  { href: "/architecture", label: "Platform" },
+  { href: "/projects", label: "Products" },
+  { href: "/blog", label: "Insights" },
+  { href: "/about", label: "Company" },
   { href: "/research", label: "Research" },
 ];
 
@@ -107,11 +107,11 @@ export default function Navbar() {
           </ul>
 
           <Link
-            href="/#contact"
+            href="/contact"
             className="btn btn-primary nav-cta"
-            onClick={(e) => handleAnchorClick(e, "/#contact")}
+            onClick={(e) => handleAnchorClick(e, "/contact")}
           >
-            Contact Us
+            Discuss Deployment
           </Link>
 
           <button
@@ -141,11 +141,11 @@ export default function Navbar() {
           ))}
           <li>
             <Link
-              href="/#contact"
+              href="/contact"
               className="btn btn-primary"
-              onClick={(e) => handleAnchorClick(e, "/#contact")}
+              onClick={(e) => handleAnchorClick(e, "/contact")}
             >
-              Contact Us
+              Discuss Deployment
             </Link>
           </li>
         </ul>

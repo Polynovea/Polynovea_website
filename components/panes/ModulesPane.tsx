@@ -8,13 +8,13 @@ const domains: Record<
   DomainKey,
   {
     label: string;
-    status: "live" | "in development" | "in design";
+    status: "architectural rebuild" | "commercial lead" | "in design";
     modules: { tag: string; title: string; desc: string }[];
   }
 > = {
   hospitality: {
     label: "Hospitality",
-    status: "live",
+    status: "architectural rebuild",
     modules: [
       {
         tag: "Module 01",
@@ -29,18 +29,18 @@ const domains: Record<
       {
         tag: "Module 03",
         title: "Optimisation System",
-        desc: "Two-part system. Part 1 instruments the live environment — POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
+        desc: "Two-part system. Part 1 instruments the live environment - POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
       },
     ],
   },
   workplace: {
     label: "Workplace",
-    status: "in development",
+    status: "commercial lead",
     modules: [
       {
         tag: "Infrakinetic",
         title: "Infrakinetic",
-        desc: "The Workplace domain's product. A full enterprise operating system — commercial/CRM, finance with an immutable cryptographic ledger, HR & payroll, workflow automation, governance, marketing — that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on. Module breakdown lands as the product ships.",
+        desc: "The Workplace domain's product and Polynovea's current lead product for commercialisation and revenue. A full enterprise operating system - commercial/CRM, finance with an immutable cryptographic ledger, HR & payroll, workflow automation, governance, marketing - that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on.",
       },
     ],
   },
@@ -51,14 +51,14 @@ const domains: Record<
       {
         tag: "In Design",
         title: "Education Intelligence",
-        desc: "The Education domain's product is still in design. Same underlying pattern as Hospitality and Workplace — a purpose-built product on top, sharpening the shared intelligence layer underneath.",
+        desc: "The Education domain's product is still in design. Same underlying pattern as Hospitality and Workplace - a purpose-built product on top, sharpening the shared intelligence layer underneath.",
       },
     ],
   },
 };
 
 export default function ModulesPane() {
-  const [selected, setSelected] = useState<DomainKey>("hospitality");
+  const [selected, setSelected] = useState<DomainKey>("workplace");
   const domain = domains[selected];
 
   return (
@@ -69,7 +69,7 @@ export default function ModulesPane() {
             Infrastructure
           </span>
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
-            The Infrastructure Layer
+            How is Polynovea&apos;s infrastructure organized?
           </h2>
           <p className="t-body" style={{ marginTop: "var(--space-sm)", maxWidth: 640, marginInline: "auto" }}>
             Every domain gets its own product. Every one of them runs on something deeper, shared, and still growing underneath.
@@ -85,7 +85,7 @@ export default function ModulesPane() {
             >
               {(Object.keys(domains) as DomainKey[]).map((key) => (
                 <option key={key} value={key}>
-                  {domains[key].label} — {domains[key].status === "live" ? "Live" : domains[key].status === "in development" ? "In development" : "In design"}
+                  {domains[key].label} - {domains[key].status === "architectural rebuild" ? "Architectural rebuild" : domains[key].status === "commercial lead" ? "Commercial lead" : "In design"}
                 </option>
               ))}
             </select>

@@ -4,25 +4,31 @@ import ProjectsExpanded from "@/components/ProjectsExpanded";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Behavioral Intelligence Projects & Products",
+  title: "Infrakinetic Enterprise Operating System - Products",
   description:
-    "Active behavioral intelligence projects across Polynovea — Hospitality live via the Acquisition System, Workplace product Infrakinetic in development.",
+    "Polynovea's products - Infrakinetic, the Workplace domain's product and current commercial lead, and Hospitality, undergoing an architectural rebuild.",
   alternates: { canonical: "https://www.polynovea.in/projects" },
   openGraph: {
-    title: "Behavioral Intelligence Projects | Polynovea",
+    title: "Infrakinetic Enterprise Operating System - Products | Polynovea",
     description:
-      "Active initiatives across the Polynovea ecosystem — intelligence infrastructure, live operations, and product development.",
+      "Polynovea's products across domains - Infrakinetic as the current commercial lead, Hospitality's architectural rebuild, and the shared intelligence layer underneath both.",
     url: "https://www.polynovea.in/projects",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Polynovea Projects" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Infrakinetic Enterprise Operating System - Products | Polynovea",
+    description:
+      "Polynovea's products across domains - Infrakinetic as the current commercial lead, Hospitality's architectural rebuild, and the shared intelligence layer underneath both.",
   },
 };
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Behavioral Intelligence Projects — Active Initiatives",
+  headline: "Infrakinetic Enterprise Operating System - Polynovea Products",
   description:
-    "Active projects across the Polynovea ecosystem — behavioral intelligence infrastructure, live experience operations, and product development.",
+    "Polynovea's products - Infrakinetic, the Workplace domain's product and current commercial lead, and Hospitality, undergoing an architectural rebuild.",
   author: { "@type": "Organization", name: "Polynovea" },
   publisher: {
     "@type": "Organization",
@@ -45,7 +51,7 @@ const faqSchema = {
       name: "What projects is Polynovea currently working on?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Hospitality's product, the Acquisition System, is live: the Decision Framework defines what to measure and why, the Acquisition System extracts behavioral signals through a six-stage extraction-to-output pipeline, and the Optimisation System converts intelligence into measurable revenue optimisation. Infrakinetic, the Workplace domain's product, is in development.",
+        text: "Infrakinetic, the Workplace domain's product, is Polynovea's current lead product for commercialisation and revenue. Hospitality's historical product - the Decision Framework, the Acquisition System, and the Optimisation System - is undergoing an architectural rebuild; the six-stage extraction pipeline and revenue-optimisation mechanics described below are reference assets from that build.",
       },
     },
     {
@@ -61,7 +67,7 @@ const faqSchema = {
       name: "What is Polynovea's Acquisition System?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The Acquisition System is a behavioral signal extraction pipeline — not review sentiment analysis. It processes Google Reviews and multi-source data to extract Stimuli (what drew someone in), Frictions (what created resistance), Compensations (what people tolerate despite friction), and Emotional context (the occasion driving the visit). These signals map to five fitness dimensions and score venues using pure percentile calibration, which decouples score from review volume — a five-review venue and a five-hundred-review venue are ranked on the same true-standing basis, with confidence tracked separately via a HIGH/MED/LOW/SPARSE badge. Currently live across 11,063 venues across the Mumbai Metro Region. Output feeds a six-stage acquisition pipeline that produces a repeatable venue playbook.",
+        text: "The Acquisition System is a behavioral signal extraction pipeline - not review sentiment analysis. It processes Google Reviews and multi-source data to extract Stimuli (what drew someone in), Frictions (what created resistance), Compensations (what people tolerate despite friction), and Emotional context (the occasion driving the visit). These signals map to five fitness dimensions and score venues using pure percentile calibration, which decouples score from review volume - a five-review venue and a five-hundred-review venue are ranked on the same true-standing basis, with confidence tracked separately via a HIGH/MED/LOW/SPARSE badge. Currently live across 11,063 venues across the Mumbai Metro Region. Output feeds a six-stage acquisition pipeline that produces a repeatable venue playbook.",
       },
     },
     {
@@ -69,7 +75,7 @@ const faqSchema = {
       name: "What is the Optimisation System?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The Optimisation System is a two-part system. Part 1 instruments the live environment by capturing POS data, venue flow, and audience behavior in real time. Part 2 converts that intelligence into measurable revenue optimisation decisions for venue operators — turning raw behavioral data into actionable recommendations.",
+        text: "The Optimisation System is a two-part system. Part 1 instruments the live environment by capturing POS data, venue flow, and audience behavior in real time. Part 2 converts that intelligence into measurable revenue optimisation decisions for venue operators - turning raw behavioral data into actionable recommendations.",
       },
     },
     {
@@ -77,7 +83,7 @@ const faqSchema = {
       name: "What is Infrakinetic?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Infrakinetic is the Workplace domain's product — a full enterprise operating system covering commercial/CRM, finance (with an immutable cryptographic ledger), HR & payroll, workflow automation, governance, and marketing. Running the business through Infrakinetic generates the behavioral signal this domain's intelligence is built on, the same way the Acquisition System is built on Hospitality's data. Currently in development.",
+        text: "Infrakinetic is the Workplace domain's product and Polynovea's current lead product for commercialisation and revenue - a full enterprise operating system covering commercial/CRM, finance (with an immutable cryptographic ledger), HR & payroll, workflow automation, governance, and marketing. Running the business through Infrakinetic generates the behavioral signal this domain's intelligence is built on, the same way the Acquisition System was built on Hospitality's data.",
       },
     },
   ],

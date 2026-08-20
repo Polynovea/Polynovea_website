@@ -66,16 +66,21 @@ export default function Hero() {
         </h1>
 
         <p className="hero-sub" style={{ opacity: 0 }}>
-          Behavioral intelligence infrastructure. Live in Hospitality — each new
-          domain gets its own product, and every one sharpens the same intelligence underneath.
+          Deep-tech AI, behavioral-intelligence and decision infrastructure. Infrakinetic -
+          our enterprise operating system - is the current commercial lead, with each domain
+          sharpening the same intelligence underneath.
+        </p>
+
+        <p className="hero-byline" style={{ opacity: 0 }}>
+          By Polynovea Intelligence Team · Updated August 20, 2026
         </p>
 
         <div className="hero-ctas" style={{ opacity: 0 }}>
-          <Link href="/architecture" className="btn btn-primary">
-            Explore the Architecture
+          <Link href="/projects" className="btn btn-primary">
+            Explore Products
           </Link>
-          <Link href="/projects" className="btn btn-secondary">
-            View Progress
+          <Link href="/architecture" className="btn btn-secondary">
+            See the Architecture
           </Link>
         </div>
       </div>
@@ -128,6 +133,14 @@ export default function Hero() {
           max-width: 680px;
           margin-inline: auto;
           margin-bottom: var(--space-2xl);
+        }
+
+        .hero-byline {
+          font-size: 12px;
+          color: var(--text-disabled);
+          font-family: var(--font-mono, monospace);
+          letter-spacing: 0.06em;
+          margin-bottom: var(--space-lg);
         }
 
         .hero-ctas {

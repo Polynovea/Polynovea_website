@@ -47,7 +47,7 @@ export default function About() {
         {/* THE ECOSYSTEM */}
         <div className="ecosystem-section">
           <h2 className="section-title">How is the Polynovea behavioral intelligence ecosystem structured?</h2>
-          <p className="section-subtitle">Domain, product, intelligence — three tiers, each domain building its own version of the first two, all of them sharpening one thing underneath.</p>
+          <p className="section-subtitle">Domain, product, intelligence - three tiers, each domain building its own version of the first two, all of them sharpening one thing underneath.</p>
 
           <div className="milestones-grid">
             <div className="milestone">
@@ -55,7 +55,7 @@ export default function About() {
                 <span className="milestone-number">1</span>
                 <h3>Domain Product</h3>
               </div>
-              <p>Every domain HBIF enters gets its own purpose-built product — not a reconfiguration of an existing one. Hospitality&apos;s is the Acquisition System, live today. A Workplace product is in development.</p>
+              <p>Every domain HBIF enters gets its own purpose-built product - not a reconfiguration of an existing one. Infrakinetic, the Workplace domain&apos;s product, is Polynovea&apos;s current lead product for commercialisation and revenue, with 121/121 Billing + Payments tests passing and a canary migration that promoted 626/626 staged records with 12/12 reconciliation checks passed (Source: Infrakinetic Product Guide, Aug 2026). Hospitality&apos;s Acquisition System is undergoing an architectural rebuild.</p>
               <ul>
                 <li>Decision Framework</li>
                 <li>Acquisition layer</li>
@@ -68,7 +68,7 @@ export default function About() {
                 <span className="milestone-number">2</span>
                 <h3>Shared Intelligence</h3>
               </div>
-              <p>Underneath every domain&apos;s product sits a deeper layer of the infrastructure — one that reads behavioral state and decision-making directly, independent of industry.</p>
+              <p>Underneath every domain&apos;s product sits a deeper layer of the infrastructure - one that reads behavioral state and decision-making directly, independent of industry.</p>
               <ul>
                 <li>Domain-agnostic by design</li>
                 <li>Shared across every product</li>
@@ -81,7 +81,7 @@ export default function About() {
                 <span className="milestone-number">3</span>
                 <h3>The Flywheel</h3>
               </div>
-              <p>Operating a domain&apos;s product generates the behavioral data that sharpens the shared intelligence layer — which makes every other domain&apos;s product smarter from day one.</p>
+              <p>Operating a domain&apos;s product generates the behavioral data that sharpens the shared intelligence layer - which makes every other domain&apos;s product smarter from day one.</p>
               <ul>
                 <li>Data compounds across domains</li>
                 <li>Each new product starts ahead</li>
@@ -98,19 +98,19 @@ export default function About() {
           <div className="why-exists-content">
             <div className="why-block">
               <h3>The Pattern We Noticed</h3>
-              <p>Important decisions across industries are made blindly inside systems that should be measurable. The problem isn&apos;t weak activity — it&apos;s weak measurement. Weak measurement creates weak decisions, wasted resources, and repeated mistakes.</p>
+              <p>Important decisions across industries are made blindly inside systems that should be measurable. The problem isn&apos;t weak activity - it&apos;s weak measurement. Weak measurement creates weak decisions, wasted resources, and repeated mistakes.</p>
             </div>
             <div className="why-block">
               <h3>The Core Insight</h3>
               <p>Behavior is not random. Human systems contain patterns, incentives, triggers, environmental responses, and repeatable structures. Most organizations never build the infrastructure required to capture, structure, interpret, and operationalize those patterns. This exposes blindness where clarity should exist.</p>
             </div>
             <div className="why-block">
-              <h3>Why Hospitality First</h3>
-              <p>Hospitality became our proving ground because behavioral response becomes visible quickly, spend decisions happen in real time, and feedback loops close fast. This allows us to observe, test, measure, compare, iterate, and identify repeatable patterns faster than in most industries — before building the second domain&apos;s product.</p>
+              <h3>What Hospitality taught us</h3>
+              <p>Hospitality became our first proving ground because behavioral response becomes visible quickly, spend decisions happen in real time, and feedback loops close fast. That work produced data, engineering, and intervention history we carry forward into its architectural rebuild - while Infrakinetic, the Workplace domain&apos;s product, now carries the model into commercialisation as Polynovea&apos;s current lead product for revenue.</p>
             </div>
             <div className="why-block">
               <h3>The Long-Term Purpose</h3>
-              <p>The ecosystem exists to build behavioral intelligence and operational decision systems capable of improving execution quality, pattern recognition, and strategic decision-making across every domain we operate in. Each domain&apos;s product matters on its own — but underneath all of them is the same foundational pursuit: understanding behavior well enough to build systems that become more intelligent over time.</p>
+              <p>The ecosystem exists to build behavioral intelligence and operational decision systems capable of improving execution quality, pattern recognition, and strategic decision-making across every domain we operate in. Each domain&apos;s product matters on its own - but underneath all of them is the same foundational pursuit: understanding behavior well enough to build systems that become more intelligent over time.</p>
             </div>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default function About() {
             </div>
             <div className="phil-item">
               <h4>Systems Over Intuition</h4>
-              <p>Creativity becomes more powerful when patterns are visible, feedback loops are active, variables are isolated, and outcomes are measurable. We don&apos;t reject creativity — we reject unmeasured execution.</p>
+              <p>Creativity becomes more powerful when patterns are visible, feedback loops are active, variables are isolated, and outcomes are measurable. We don&apos;t reject creativity - we reject unmeasured execution.</p>
             </div>
             <div className="phil-item">
               <h4>Baseline Before Intervention</h4>
@@ -158,15 +158,19 @@ export default function About() {
               },
               {
                 q: "What does Polynovea do?",
-                a: "Polynovea builds the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making, identifies repeatable behavioral patterns, and converts them into operational systems. Each domain we enter gets its own purpose-built product. Hospitality's is live; a Workplace product is in development; Education is in design.",
+                a: "Polynovea is a deep-tech AI, behavioral-intelligence and decision-infrastructure company building the Human Behavioral Intelligence Framework (HBIF) - infrastructure that observes human decision-making, identifies repeatable behavioral patterns, and converts them into operational systems. Each domain we enter gets its own purpose-built product. Infrakinetic (Workplace) is the current lead product for commercialisation; Hospitality is undergoing an architectural rebuild; Education is in design.",
               },
               {
                 q: "What is the Human Behavioral Intelligence Framework (HBIF)?",
-                a: "HBIF is domain, product, and shared intelligence. Every domain gets its own product — Hospitality's is the Acquisition System. Underneath every domain's product sits a deeper, shared layer of the infrastructure that reads behavioral state and decision-making directly, independent of industry — and gets sharper with every domain it operates across.",
+                a: "HBIF is domain, product, and shared intelligence. Every domain gets its own product - Infrakinetic for Workplace, the Acquisition System for Hospitality (currently being rebuilt). Underneath every domain's product sits a deeper, shared layer of the infrastructure that reads behavioral state and decision-making directly, independent of industry - and gets sharper with every domain it operates across.",
               },
               {
                 q: "Where is Polynovea based and when was it founded?",
                 a: "Polynovea was founded in April 2026 by Subrojit Roy and is based in Navi Mumbai, Maharashtra, India.",
+              },
+              {
+                q: "What industries does Polynovea's behavioral intelligence serve?",
+                a: "Infrakinetic, the Workplace domain's product, is Polynovea's current lead product for commercialisation and revenue. Hospitality's Acquisition System is undergoing an architectural rebuild. Education is in the design phase.",
               },
             ].map(({ q, a }) => (
               <div key={q} className="faq-item">

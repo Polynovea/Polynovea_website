@@ -7,9 +7,9 @@ const About = dynamic(() => import("@/components/About"));
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Behavioral Intelligence Company — About Polynovea",
+  headline: "Deep-Tech AI & Decision Infrastructure - About Polynovea",
   description:
-    "Polynovea is a behavioral intelligence company building the Human Behavioral Intelligence Framework (HBIF) — infrastructure that maps human decision-making into repeatable operational systems.",
+    "Polynovea is a deep-tech AI, behavioral-intelligence and decision-infrastructure company building the Human Behavioral Intelligence Framework (HBIF). Infrakinetic is the current lead product for commercialisation; Hospitality is undergoing an architectural rebuild.",
   author: { "@type": "Organization", name: "Polynovea" },
   publisher: {
     "@type": "Organization",
@@ -40,7 +40,7 @@ const faqSchema = {
       name: "What does Polynovea do?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Polynovea builds the Human Behavioral Intelligence Framework (HBIF) — infrastructure that observes human decision-making in commercial environments, identifies repeatable behavioral patterns, and converts them into operational systems. Each domain gets its own purpose-built product. Hospitality's is live. A Workplace product is in development. Education is in design.",
+        text: "Polynovea is a deep-tech AI, behavioral-intelligence and decision-infrastructure company building the Human Behavioral Intelligence Framework (HBIF) - infrastructure that observes human decision-making in commercial environments, identifies repeatable behavioral patterns, and converts them into operational systems. Each domain gets its own purpose-built product. Infrakinetic (Workplace) is the current lead product for commercialisation and revenue. Hospitality is undergoing an architectural rebuild. Education is in design.",
       },
     },
     {
@@ -48,7 +48,7 @@ const faqSchema = {
       name: "What is the Human Behavioral Intelligence Framework (HBIF)?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "HBIF is domain, product, and shared intelligence. In Hospitality, the framework runs as three sequential modules: the Decision Framework defines what to measure, the Acquisition System extracts and models behavioral signals from commercial environments, and the Optimisation System generates recommendations and learns from observed outcomes. Each new domain gets its own purpose-built version of this — but every domain's product is built on a shared, deeper layer of the infrastructure that reads behavioral state directly, independent of industry, and gets sharper with every domain it operates across.",
+        text: "HBIF is domain, product, and shared intelligence. In Hospitality, the framework historically ran as three sequential modules - the Decision Framework, the Acquisition System, and the Optimisation System - now being carried into an architectural rebuild. Each new domain gets its own purpose-built version of this; Infrakinetic is the Workplace domain's version and Polynovea's current lead product for commercialisation. Every domain's product is built on a shared, deeper layer of the infrastructure that reads behavioral state directly, independent of industry, and gets sharper with every domain it operates across.",
       },
     },
     {
@@ -64,7 +64,7 @@ const faqSchema = {
       name: "What industries does Polynovea's behavioral intelligence serve?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Polynovea currently operates live in Hospitality via the Acquisition System. A Workplace product is in development. Education is in the design phase. Each domain gets its own purpose-built product, built on a shared underlying layer of the infrastructure that gets sharper with every domain it operates across.",
+        text: "Infrakinetic, the Workplace domain's product, is Polynovea's current lead product for commercialisation and revenue. Hospitality's Acquisition System is undergoing an architectural rebuild. Education is in the design phase. Each domain gets its own purpose-built product, built on a shared underlying layer of the infrastructure that gets sharper with every domain it operates across.",
       },
     },
   ],

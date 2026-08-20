@@ -67,14 +67,14 @@ export default function ContactPage() {
             <div className="contact-copy" data-reveal>
               <span className="t-label">Contact</span>
               <h1 className="t-display-md" style={{ marginTop: "var(--space-md)" }}>
-                Not everyone gets in.
+                Let&apos;s understand your
                 <br />
-                <span className="gradient-text">Start a conversation.</span>
+                <span className="gradient-text">operating environment.</span>
               </h1>
               <p className="t-body" style={{ marginTop: "var(--space-md)" }}>
-                We evaluate fit before we engage. Tell us what you&apos;re building
-                and what problem you&apos;re trying to solve — we&apos;ll tell you directly
-                if there&apos;s a match.
+                Tell us where your systems are fragmented, what workflows are difficult
+                to govern, and what you&apos;re trying to improve - we&apos;ll tell you directly
+                whether Infrakinetic is relevant.
               </p>
               <div className="contact-tags">
                 {["Venues & Institutions", "Businesses & Workplaces", "Brands & Orgs", "Partnerships"].map((tag) => (
@@ -131,7 +131,7 @@ export default function ContactPage() {
                         <option value="intelligence">Behavioral intelligence reports</option>
                       </optgroup>
                       <optgroup label="For Businesses & Workplaces">
-                        <option value="infrakinetic">Infrakinetic early access</option>
+                        <option value="infrakinetic">Infrakinetic product evaluation</option>
                         <option value="operations">Operational intelligence</option>
                       </optgroup>
                       <optgroup label="General">
@@ -159,23 +159,28 @@ export default function ContactPage() {
 
           <div className="contact-faq" data-reveal>
             <h2 className="t-display-sm contact-faq-title">Frequently asked questions</h2>
+            <p className="contact-faq-updated">Last updated: August 20, 2026</p>
             <div className="contact-faq-list">
               {[
                 {
                   q: "How long does Polynovea take to reply?",
-                  a: "Polynovea reads every submission and evaluates fit based on what you're building. If there's a match, you'll hear back within 48 hours — no automated sequences, no discovery-call theatre.",
+                  a: "Polynovea reads every submission and evaluates fit based on what you're building. If there's a match, you'll hear back within 48 hours - no automated sequences, no discovery-call theatre.",
                 },
                 {
                   q: "Does Polynovea only work with hospitality venues?",
-                  a: "Hospitality is Polynovea's live domain today via the Acquisition System, but Infrakinetic — the Workplace domain's product — is in development. Reach out if you're operating a venue, running a business, or managing a workforce.",
+                  a: "No - Infrakinetic, the Workplace domain's product, is Polynovea's current lead product for commercialisation and revenue. Hospitality's Acquisition System is undergoing an architectural rebuild. Reach out if you're operating a venue, running a business, or managing a workforce.",
                 },
                 {
                   q: "Is there a cost to reach out?",
-                  a: "No. Sending a message costs nothing. Polynovea evaluates fit before any engagement begins and will tell you directly whether there's a match — no obligation either way.",
+                  a: "No. Sending a message costs nothing. Polynovea evaluates fit before any engagement begins and will tell you directly whether there's a match - no obligation either way.",
                 },
                 {
                   q: "What should I include in my message?",
                   a: "Tell Polynovea what you're building and what problem you're trying to solve. Specifics about your venue, business, or workforce help the team evaluate fit faster and respond with a direct answer.",
+                },
+                {
+                  q: "What happens after I request an Infrakinetic product evaluation?",
+                  a: "The team reviews what you've shared about your current systems and operating problem, then replies directly with whether Infrakinetic is a fit and what a product review or deployment discussion would look like next.",
                 },
               ].map(({ q, a }) => (
                 <div key={q} className="contact-faq-item">
@@ -291,7 +296,14 @@ export default function ContactPage() {
           border-top: 1px solid var(--border-muted);
         }
         .contact-faq-title {
-          margin-bottom: var(--space-xl);
+          margin-bottom: var(--space-xs);
+        }
+        .contact-faq-updated {
+          font-size: 12px;
+          color: var(--text-disabled);
+          font-family: var(--font-mono, monospace);
+          letter-spacing: 0.06em;
+          margin: 0 0 var(--space-xl);
         }
         .contact-faq-list {
           display: grid;

@@ -4,12 +4,12 @@ const milestones = [
   {
     num: "01",
     title: "Behavioral Intelligence Infrastructure",
-    desc: "The foundation. HBIF — a system built to read, map, and model human behaviour at the pattern level. M1, M2, and M3 are the intelligence, acquisition, and optimisation layers that make it operational. Everything that follows is built on this.",
+    desc: "The foundation. HBIF - a system built to read, map, and model human behaviour at the pattern level. M1, M2, and M3 are the intelligence, acquisition, and optimisation layers that make it operational. Everything that follows is built on this.",
   },
   {
     num: "02",
     title: "Domain Deployment",
-    desc: "The first live deployment environment. Hospitality — chosen because it is behaviourally rich, measurable, and generates rapid feedback. This is where the infrastructure is proven against real human decisions at scale.",
+    desc: "Hospitality was the first proving ground - chosen because it is behaviourally rich, measurable, and generates rapid feedback. Infrakinetic, the Workplace domain's product, is now Polynovea's current lead product for commercialisation, while Hospitality undergoes an architectural rebuild.",
   },
   {
     num: "03",
@@ -19,7 +19,7 @@ const milestones = [
   {
     num: "04",
     title: "Behavioral Operating System",
-    desc: "The long-term destination. Infrastructure capable of deploying behavioral intelligence across Education, Workplace, and additional sectors — compounding signal across domains without rebuilding from scratch in each new environment.",
+    desc: "The long-term destination. Infrastructure capable of deploying behavioral intelligence across Education, Workplace, and additional sectors - compounding signal across domains without rebuilding from scratch in each new environment.",
   },
 ];
 
