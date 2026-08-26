@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -12,7 +14,8 @@ export default function Footer() {
             <p className="footer-tagline">
               Deep-tech AI, behavioral-intelligence and decision infrastructure.
               <br />
-              Infrakinetic is the current commercial lead. One product per domain, one intelligence underneath.
+              Infrakinetic is the current commercial lead. One product per
+              domain, one intelligence underneath.
             </p>
           </div>
 
@@ -52,6 +55,18 @@ export default function Footer() {
                     </a>
                   </li>
                 ))}
+              </ul>
+            </div>
+
+            <div className="footer-col">
+              <div className="footer-col-label">Legal</div>
+              <ul>
+                <li>
+                  <Link href="/privacy">Privacy Policy</Link>
+                </li>
+                <li>
+                  <Link href="/terms">Terms of Use</Link>
+                </li>
               </ul>
             </div>
           </div>
