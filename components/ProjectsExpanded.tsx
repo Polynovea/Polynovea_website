@@ -93,6 +93,14 @@ export default function ProjectsExpanded() {
               <span className="domain-block-status domain-block-status-live">Commercial lead</span>
             </div>
             <BentoGrid items={workplaceModules} />
+            <a
+              href="https://www.infrakinetic.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="domain-block-link"
+            >
+              Visit infrakinetic.in &rarr;
+            </a>
           </div>
 
           <div className="domain-block" data-reveal="true" data-reveal-delay="120">
@@ -210,6 +218,18 @@ export default function ProjectsExpanded() {
 
         .domain-block { margin-bottom: var(--space-xl); }
         .domain-block:last-child { margin-bottom: 0; }
+
+        .domain-block-link {
+          display: inline-block;
+          margin-top: var(--space-md);
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--accent-intelligence);
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+
+        .domain-block-link:hover { color: var(--accent-authority); }
 
         .domain-block-header {
           display: flex;

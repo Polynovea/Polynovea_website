@@ -14,8 +14,15 @@ export default function Footer() {
             <p className="footer-tagline">
               Deep-tech AI, behavioral-intelligence and decision infrastructure.
               <br />
-              Infrakinetic is the current commercial lead. One product per
-              domain, one intelligence underneath.
+              <a
+                href="https://www.infrakinetic.in"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Infrakinetic
+              </a>{" "}
+              is the current commercial lead. One product per domain, one
+              intelligence underneath.
             </p>
           </div>
 
@@ -111,6 +118,17 @@ export default function Footer() {
           font-size: 14px;
           line-height: 1.6;
           color: var(--text-disabled);
+        }
+
+        .footer-tagline a {
+          color: var(--text-secondary);
+          text-decoration: underline;
+          text-underline-offset: 2px;
+          transition: color var(--duration-fast) ease;
+        }
+
+        .footer-tagline a:hover {
+          color: var(--text-primary);
         }
 
         .footer-links {
