@@ -4,7 +4,7 @@ const milestones = [
   {
     num: "01",
     title: "Behavioral Intelligence Infrastructure",
-    desc: "The foundation. HBIF - a system built to read, map, and model human behaviour at the pattern level. M1, M2, and M3 are the intelligence, acquisition, and optimisation layers that make it operational. Everything that follows is built on this.",
+    desc: "The foundation. HBIF - a system built to read, map, and model human behaviour at the pattern level, structured as three layers: domain-specific products (Layer 1), shared behavioral state (Layer 2), and frontier decision-mechanism research (Layer 3). Everything that follows is built on this.",
   },
   {
     num: "02",

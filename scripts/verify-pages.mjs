@@ -17,7 +17,6 @@ const ROUTES = [
   ["blog", "/blog"],
   ["research", "/research"],
   ["contact", "/contact"],
-  ["cappella", "/cappella-account-deletion"],
 ];
 
 const browser = await chromium.launch({

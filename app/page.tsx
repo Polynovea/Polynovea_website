@@ -1,25 +1,6 @@
 import Navbar from "@/components/Navbar";
 import HomeExperience from "@/components/HomeExperience";
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  headline: "Polynovea - Deep-Tech AI & Decision Infrastructure",
-  description:
-    "Polynovea is a deep-tech AI and decision-infrastructure company. Infrakinetic, our enterprise operating system, is the current lead product for commercialisation.",
-  author: { "@type": "Organization", name: "Polynovea" },
-  publisher: {
-    "@type": "Organization",
-    name: "Polynovea",
-    url: "https://www.polynovea.in",
-    logo: { "@type": "ImageObject", url: "https://www.polynovea.in/logo.png" },
-  },
-  datePublished: "2026-01-01",
-  dateModified: "2026-08-20",
-  url: "https://www.polynovea.in",
-  mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.polynovea.in" },
-};
-
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -70,10 +51,6 @@ const faqSchema = {
 export default function Home() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

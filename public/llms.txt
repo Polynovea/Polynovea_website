@@ -1,8 +1,8 @@
 # Polynovea
 
-> Polynovea builds the Human Behavioral Intelligence Framework (HBIF) — infrastructure for observing, modeling, and acting on human decision-making in commercial environments. Based in Navi Mumbai, India.
+> Polynovea is a deep-tech AI, data, behavioural-intelligence and decision-infrastructure company building the Human Behavioral Intelligence Framework (HBIF) — infrastructure for observing, modeling, and acting on human decision-making across commercial and organisational environments. Based in Navi Mumbai, India.
 
-Polynovea is an AI and data company that maps human behavioral patterns in live commercial environments and converts them into repeatable frameworks, products, and automated systems. The primary domain is hospitality and live events. The long-term trajectory is aerospace and defense.
+Polynovea builds systems that observe human decision-making, extract the underlying patterns, and convert them into repeatable frameworks, products, and automated systems. Each domain HBIF enters gets its own purpose-built product; underneath every domain's product sits a deeper, shared layer of the infrastructure that gets sharper the more domains it operates across.
 
 ## What is Behavioral Intelligence?
 
@@ -17,39 +17,37 @@ Behavioral Intelligence works with revealed behavior in real environments, in re
 
 ## The Human Behavioral Intelligence Framework (HBIF)
 
-The HBIF is Polynovea's core product: a three-module system that closes the loop from observation to automated action.
+HBIF is Polynovea's implementation of behavioral intelligence infrastructure, structured as three layers:
 
-- **Module 1 — Acquisition Intelligence**: Observes and models how audiences decide to attend or engage with events. Maps decision triggers, timing patterns, and channel behavior to optimize acquisition spend and targeting.
-- **Module 2 — Revenue Optimization**: Converts real-time behavioral signals during live events into pricing, inventory, and upsell decisions. Runs on AWS infrastructure.
-- **Module 3 — Retention Intelligence**: Post-event behavioral modeling to predict return behavior, churn risk, and lifetime engagement value. Runs on Azure infrastructure.
+- **Layer 1 — Domain Intelligence**: Purpose-built products, one per domain. **Infrakinetic** (Workplace domain) is Polynovea's current lead product for commercialisation and revenue — a full enterprise operating system covering commercial/CRM, finance, HR & payroll, workflow automation, governance, and marketing. **Hospitality's Acquisition System** (Decision Framework, Acquisition System, Optimisation System) is undergoing an architectural rebuild. Education is in the design phase.
+- **Layer 2 — Behavioral State & Dynamics**: A shared layer of the infrastructure underneath every domain's product, reading behavioral state and decision-making mechanisms directly, independent of industry. Still being built.
+- **Layer 3 — Frontier Decision-Mechanism Research**: Research into human decision mechanisms at the model level. Still being built.
 
-## Polynovea Records
+Every new domain's product makes Layers 2 and 3 sharper for every other domain — that's what compounds over time.
 
-Polynovea Records is the cultural and operational arm of Polynovea — a live music and events operation in India that serves as the primary real-world data environment for the HBIF. It is not a separate company; it is the substrate through which behavioral data is collected at scale.
+## Infrakinetic
 
-## Blog — Behavioral Intelligence Insights
+Infrakinetic is a Polynovea product: the Workplace domain's Layer 1 system, and Polynovea's current commercial/revenue lead. It is an integrated enterprise business operating system — commercial/CRM, sales, finance, billing & payments, HR/payroll, customer success, workflow, approvals, governance, documents, and business data migration — running on one shared data model instead of disconnected point tools.
 
-The Polynovea blog publishes research on behavioral intelligence, systems thinking, and operational patterns observed in live environments. Topics include:
-- The difference between behavioral intelligence and sentiment analysis
-- How human decision-making compounds over time
-- Why aggregated data fails to predict individual behavior
-- Infrastructure for behavioral intelligence at scale
+Learn more at [infrakinetic.in](https://www.infrakinetic.in).
 
 ## Key Pages
 
 - [Home](https://www.polynovea.in) — Company overview and mission
-- [The Architecture](https://www.polynovea.in/architecture) — Technical deep-dive into the HBIF modules and infrastructure
-- [Blog](https://www.polynovea.in/blog) — Behavioral intelligence research and operational insights
+- [About](https://www.polynovea.in/about) — The company, the team, and the mission
+- [The Architecture](https://www.polynovea.in/architecture) — Technical deep-dive into HBIF's three-layer structure
+- [Projects](https://www.polynovea.in/projects) — Active domain products (Infrakinetic, Hospitality)
 - [Research](https://www.polynovea.in/research) — Research framework and methodology
-- [Projects](https://www.polynovea.in/projects) — Active and completed intelligence projects
-- [About](https://www.polynovea.in/about) — The team and the mission
+- [Blog](https://www.polynovea.in/blog) — Behavioral intelligence research and operational insights
 - [Contact](https://www.polynovea.in/contact) — Get in touch
 
 ## Company Details
 
-- **Founded**: 2026
-- **Location**: Navi Mumbai, Maharashtra, India
+- **Founded**: April 2026
 - **Founder**: Subrojit Roy
+- **Location**: Navi Mumbai, Maharashtra, India
+- **Primary fields**: Behavioural Intelligence, Artificial Intelligence, Decision Infrastructure, Data Systems
+- **Current commercial product**: Infrakinetic ([infrakinetic.in](https://www.infrakinetic.in))
 - **Contact**: subrojitroy@polynovea.in
 - **Website**: https://www.polynovea.in
 - **LinkedIn**: https://www.linkedin.com/company/111494249/

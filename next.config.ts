@@ -8,11 +8,6 @@ const nextConfig: NextConfig = {
         destination: "/blog",
         permanent: true,
       },
-      {
-        source: "/cappella-account-deletion",
-        destination: "https://records.polynovea.in/cappella-account-deletion",
-        permanent: true,
-      },
     ];
   },
   async headers() {

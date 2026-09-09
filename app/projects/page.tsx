@@ -36,7 +36,7 @@ const articleSchema = {
     url: "https://www.polynovea.in",
     logo: { "@type": "ImageObject", url: "https://www.polynovea.in/logo.png" },
   },
-  datePublished: "2024-01-01",
+  datePublished: "2026-01-01",
   dateModified: "2026-07-28",
   url: "https://www.polynovea.in/projects",
   mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.polynovea.in/projects" },
