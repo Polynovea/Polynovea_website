@@ -67,11 +67,18 @@ export const metadata: Metadata = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": "https://www.polynovea.in/#organization",
   name: "Polynovea",
   url: "https://www.polynovea.in",
   logo: "https://www.polynovea.in/logo.png",
   description:
     "Deep-tech AI, behavioral-intelligence and decision-infrastructure company based in Navi Mumbai, India. Infrakinetic, our enterprise operating system, is the current lead product for commercialisation; Hospitality is undergoing an architectural rebuild.",
+  brand: {
+    "@type": "Brand",
+    "@id": "https://www.infrakinetic.in/#brand",
+    name: "Infrakinetic",
+    url: "https://www.infrakinetic.in/",
+  },
   foundingDate: "2026-04",
   location: {
     "@type": "Place",
@@ -117,6 +124,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
+        <Script id="clarity-init" strategy="beforeInteractive">{`
+          (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window, document, "clarity", "script", "yfm60pcdpr");
+        `}</Script>
       </head>
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-153C7YTRNT"

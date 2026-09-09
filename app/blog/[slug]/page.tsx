@@ -177,7 +177,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   </>
                 )}
                 {post.published_at && (
-                  <span>{new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
+                  <span>{new Date(post.published_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}</span>
                 )}
                 {post.published_at && <span className={styles.metaDot}>·</span>}
                 <span>{post.author}</span>
