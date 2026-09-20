@@ -56,6 +56,11 @@ const FRAG = /* glsl */ `
   }
 `;
 
+function pseudoRandom(index: number, salt: number): number {
+  const value = Math.sin((index + 1) * 12.9898 + salt * 78.233) * 43758.5453;
+  return value - Math.floor(value);
+}
+
 export default function ClusterIgnite({ lowPower }: { lowPower: boolean }) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const perCluster = lowPower ? 22 : 48;
@@ -71,9 +76,9 @@ export default function ClusterIgnite({ lowPower }: { lowPower: boolean }) {
     for (let i = 0; i < SECTION_COUNT; i++) {
       const c = clusterCenter(i);
       for (let n = 0; n < perCluster; n++) {
-        // Random point on a sphere for an even radial burst.
-        const u = Math.random();
-        const v = Math.random();
+        // Deterministic pseudo-random point on a sphere for an even radial burst.
+        const u = pseudoRandom(p, 1);
+        const v = pseudoRandom(p, 2);
         const theta = u * Math.PI * 2;
         const phi = Math.acos(2 * v - 1);
         const sinPhi = Math.sin(phi);
@@ -84,7 +89,7 @@ export default function ClusterIgnite({ lowPower }: { lowPower: boolean }) {
         dirs[p * 3 + 1] = Math.sin(theta) * sinPhi;
         dirs[p * 3 + 2] = Math.cos(phi);
         clusters[p] = i;
-        seeds[p] = Math.random();
+        seeds[p] = pseudoRandom(p, 3);
         p++;
       }
     }

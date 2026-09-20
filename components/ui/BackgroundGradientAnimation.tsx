@@ -34,11 +34,7 @@ export const BackgroundGradientAnimation = ({
   containerClassName?: string;
 }) => {
   const interactiveRef = useRef<HTMLDivElement>(null);
-
-  const [curX, setCurX] = useState(0);
-  const [curY, setCurY] = useState(0);
-  const [tgX, setTgX] = useState(0);
-  const [tgY, setTgY] = useState(0);
+  const current = useRef({ x: 0, y: 0 });
   useEffect(() => {
     document.body.style.setProperty(
       "--gradient-background-start",
@@ -56,34 +52,36 @@ export const BackgroundGradientAnimation = ({
     document.body.style.setProperty("--pointer-color", pointerColor);
     document.body.style.setProperty("--size", size);
     document.body.style.setProperty("--blending-value", blendingValue);
-  }, []);
-
-  useEffect(() => {
-    function move() {
-      if (!interactiveRef.current) {
-        return;
-      }
-      setCurX(curX + (tgX - curX) / 20);
-      setCurY(curY + (tgY - curY) / 20);
-      interactiveRef.current.style.transform = `translate(${Math.round(
-        curX
-      )}px, ${Math.round(curY)}px)`;
-    }
-
-    move();
-  }, [tgX, tgY]);
+  }, [
+    blendingValue,
+    fifthColor,
+    firstColor,
+    fourthColor,
+    gradientBackgroundEnd,
+    gradientBackgroundStart,
+    pointerColor,
+    secondColor,
+    size,
+    thirdColor,
+  ]);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (interactiveRef.current) {
       const rect = interactiveRef.current.getBoundingClientRect();
-      setTgX(event.clientX - rect.left);
-      setTgY(event.clientY - rect.top);
+      const targetX = event.clientX - rect.left;
+      const targetY = event.clientY - rect.top;
+      current.current.x += (targetX - current.current.x) / 20;
+      current.current.y += (targetY - current.current.y) / 20;
+      interactiveRef.current.style.transform = `translate(${Math.round(current.current.x)}px, ${Math.round(current.current.y)}px)`;
     }
   };
 
   const [isSafari, setIsSafari] = useState(false);
   useEffect(() => {
-    setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
+    const raf = requestAnimationFrame(() => {
+      setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (

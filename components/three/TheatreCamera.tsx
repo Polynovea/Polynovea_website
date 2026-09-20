@@ -50,32 +50,34 @@ export default function TheatreCamera({
     };
   }, []);
 
-  const tmpPos = useMemo(() => new THREE.Vector3(), []);
-  const tmpLook = useMemo(() => new THREE.Vector3(), []);
+  const tmpPos = useRef(new THREE.Vector3());
+  const tmpLook = useRef(new THREE.Vector3());
 
   useFrame(({ camera, clock }, delta) => {
     const time = clock.elapsedTime;
+    const pos = tmpPos.current;
+    const look = tmpLook.current;
 
     if (depthState.sceneMode === "ambient") {
       const k = keyframes[depthState.ambientIndex % SECTION_COUNT];
       const a = time * 0.07 + depthState.ambientIndex * 1.3;
-      tmpPos.copy(k.pos);
-      tmpPos.x += Math.sin(a) * 2.4;
-      tmpPos.y += Math.cos(a * 0.8) * 1.3;
-      tmpPos.z += Math.sin(a * 0.6) * 1.1;
-      tmpLook.copy(k.look);
+      pos.copy(k.pos);
+      pos.x += Math.sin(a) * 2.4;
+      pos.y += Math.cos(a * 0.8) * 1.3;
+      pos.z += Math.sin(a * 0.6) * 1.1;
+      look.copy(k.look);
     } else {
       const p = THREE.MathUtils.clamp(depthState.progress, 0, 1);
-      posCurve.getPoint(p, tmpPos);
-      lookCurve.getPoint(p, tmpLook);
+      posCurve.getPoint(p, pos);
+      lookCurve.getPoint(p, look);
     }
 
     // Idle drift + mouse parallax
-    tmpPos.x += Math.sin(time * 0.23) * 0.35 + mouse.current.x * 0.7;
-    tmpPos.y += Math.cos(time * 0.31) * 0.22 - mouse.current.y * 0.45;
+    pos.x += Math.sin(time * 0.23) * 0.35 + mouse.current.x * 0.7;
+    pos.y += Math.cos(time * 0.31) * 0.22 - mouse.current.y * 0.45;
 
-    camera.position.lerp(tmpPos, 1 - Math.pow(0.0015, delta));
-    camera.lookAt(tmpLook);
+    camera.position.lerp(pos, 1 - Math.pow(0.0015, delta));
+    camera.lookAt(look);
 
     // FOV punch at section crossings
     const targetFov = 58 + boundaryTakeover() * 14;
@@ -86,7 +88,7 @@ export default function TheatreCamera({
     }
 
     if (lightRef.current) {
-      lightRef.current.position.set(tmpLook.x, tmpLook.y + 2, tmpLook.z + 3);
+      lightRef.current.position.set(look.x, look.y + 2, look.z + 3);
     }
   });
 

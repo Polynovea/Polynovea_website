@@ -19,54 +19,58 @@ function isVideo(url: string) {
   return /\.(mp4|webm|mov)/i.test(url.split("?")[0]);
 }
 
-function PostBody({ content, styles: s }: { content: string; styles: Record<string, string> }) {
+function parseContentBlocks(content: string): ContentBlock[] | null {
   try {
-    const blocks: ContentBlock[] = JSON.parse(content);
-    if (Array.isArray(blocks)) {
-      return (
-        <div className={s.postBody}>
-          {blocks.map((block, i) => (
-            <div key={block.id ?? i} className={s.postBlock}>
-              {block.title && <h2 className={s.postBlockTitle}>{block.title}</h2>}
-              {block.body && (
-                <div className={s.postBlockBody}>
-                  {block.body.split("\n\n").map((para, pi) => (
-                    <p key={pi}>{para}</p>
-                  ))}
-                </div>
-              )}
-              {block.media && (
-                <div className={s.postBlockMedia}>
-                  {isVideo(block.media) ? (
-                    <VideoBlock src={block.media} className={s.postBlockVideo} />
-                  ) : (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={block.media} alt={block.title || `Block ${i + 1}`} className={s.postBlockImage} />
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      );
-    }
-  } catch {}
+    const parsed: unknown = JSON.parse(content);
+    return Array.isArray(parsed) ? (parsed as ContentBlock[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+function PostBody({ content, styles: s }: { content: string; styles: Record<string, string> }) {
+  const blocks = parseContentBlocks(content);
+  if (blocks) {
+    return (
+      <div className={s.postBody}>
+        {blocks.map((block, i) => (
+          <div key={block.id ?? i} className={s.postBlock}>
+            {block.title && <h2 className={s.postBlockTitle}>{block.title}</h2>}
+            {block.body && (
+              <div className={s.postBlockBody}>
+                {block.body.split("\n\n").map((para, pi) => (
+                  <p key={pi}>{para}</p>
+                ))}
+              </div>
+            )}
+            {block.media && (
+              <div className={s.postBlockMedia}>
+                {isVideo(block.media) ? (
+                  <VideoBlock src={block.media} className={s.postBlockVideo} />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={block.media} alt={block.title || `Block ${i + 1}`} className={s.postBlockImage} />
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  }
   // Fallback: legacy HTML content
   return <div className={s.postBody} dangerouslySetInnerHTML={{ __html: content }} />;
 }
 
 function countWords(content?: string): number {
   if (!content) return 0;
-  try {
-    const blocks: { title?: string; body?: string }[] = JSON.parse(content);
-    if (Array.isArray(blocks)) {
-      return blocks.reduce((sum, b) => {
-        const text = `${b.title ?? ""} ${b.body ?? ""}`;
-        return sum + text.split(/\s+/).filter(Boolean).length;
-      }, 0);
-    }
-    return 0;
-  } catch {}
+  const blocks = parseContentBlocks(content);
+  if (blocks) {
+    return blocks.reduce((sum, b) => {
+      const text = `${b.title ?? ""} ${b.body ?? ""}`;
+      return sum + text.split(/\s+/).filter(Boolean).length;
+    }, 0);
+  }
   return content.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
 }
 

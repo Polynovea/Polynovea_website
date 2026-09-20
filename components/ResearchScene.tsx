@@ -101,7 +101,7 @@ function Scene({ pulse }: { pulse: number }) {
     return () => window.removeEventListener("mousemove", fn);
   }, []);
 
-  useFrame((_, dt) => {
+  useFrame(() => {
     if (!g.current) return;
     mouse.current.x += (target.current.x - mouse.current.x) * 0.05;
     mouse.current.y += (target.current.y - mouse.current.y) * 0.05;

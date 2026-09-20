@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { NetworkData } from "./networkData";
-import { SECTION_COUNT } from "@/lib/depthStore";
-import { clusterCenter } from "./networkData";
 import { clusterFocus, journeyPosition, boundaryTakeover } from "@/lib/clusterFocus";
 
 // ── Violet bloom cloud ──────────────────────────────────────────────────────

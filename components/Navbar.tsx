@@ -25,10 +25,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
-
   return (
     <>
       <nav className={`navbar${scrolled ? " scrolled" : ""}`} aria-label="Primary navigation">
@@ -87,14 +83,18 @@ export default function Navbar() {
               return (
                 <li key={link.href}>
                   <span>{String(index + 1).padStart(2, "0")}</span>
-                  <Link href={link.href} aria-current={active ? "page" : undefined}>
+                  <Link
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    onClick={() => setMenuOpen(false)}
+                  >
                     {link.label}
                   </Link>
                 </li>
               );
             })}
           </ul>
-          <Link href="/contact" className="mobile-contact">
+          <Link href="/contact" className="mobile-contact" onClick={() => setMenuOpen(false)}>
             Discuss deployment <span aria-hidden="true">↗</span>
           </Link>
         </div>

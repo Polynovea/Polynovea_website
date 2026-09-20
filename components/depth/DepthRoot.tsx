@@ -36,8 +36,9 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
     const isDepth = !reduced && !isMobile;
     const isTouch = isDepth && window.matchMedia("(pointer: coarse)").matches;
 
-    depthState.mode = isDepth ? "depth" : "flow";
-    setMode(depthState.mode);
+    const nextMode = isDepth ? "depth" : "flow";
+    depthState.mode = nextMode;
+    const modeRaf = requestAnimationFrame(() => setMode(nextMode));
 
     if (isDepth) {
       svhRef.current = measureSvh();
@@ -47,6 +48,7 @@ export default function DepthRoot({ panes }: { panes: DepthPaneDef[] }) {
     }
 
     return () => {
+      cancelAnimationFrame(modeRaf);
       document.documentElement.classList.remove("depth-touch");
     };
   }, []);

@@ -97,7 +97,6 @@ function CameraLight() {
 
 /** Subtle cursor parallax — the whole field leans toward the pointer. */
 function CursorLook() {
-  const { camera } = useThree();
   const target = useRef({ x: 0, y: 0 });
   const cur = useRef({ x: 0, y: 0 });
   useEffect(() => {
@@ -110,7 +109,7 @@ function CursorLook() {
   }, []);
   // Runs after TheatreCamera (which resets rotation each frame) and before
   // ClusterProjector, so the offset is consistent between render and card anchoring.
-  useFrame(() => {
+  useFrame(({ camera }) => {
     cur.current.x += (target.current.x - cur.current.x) * 0.04;
     cur.current.y += (target.current.y - cur.current.y) * 0.04;
     camera.rotation.y += cur.current.x * 0.05;
@@ -126,7 +125,10 @@ export default function NeuralScene() {
   const goldLightRef = useRef<THREE.PointLight>(null);
 
   useEffect(() => {
-    setLowPower(window.innerWidth < 900 || navigator.hardwareConcurrency <= 4);
+    const raf = requestAnimationFrame(() => {
+      setLowPower(window.innerWidth < 900 || navigator.hardwareConcurrency <= 4);
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   const data = useMemo(
