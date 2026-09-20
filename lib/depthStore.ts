@@ -18,8 +18,6 @@ export interface ScreenPoint {
 export interface DepthState {
   /** 0..1 across the whole journey */
   progress: number;
-  /** true once the curtain reveal has begun opening (camera intro dolly) */
-  revealOpen: boolean;
   /** 'depth' = z-axis pager (desktop), 'flow' = normal scroll (mobile / reduced motion) */
   mode: "depth" | "flow";
   /** 'journey' = scroll-driven camera (home), 'ambient' = parked drift (subpages) */
@@ -38,7 +36,6 @@ export interface DepthState {
 
 export const depthState: DepthState = {
   progress: 0,
-  revealOpen: false,
   mode: "flow",
   sceneMode: "journey",
   ambientIndex: 0,
@@ -47,7 +44,6 @@ export const depthState: DepthState = {
 };
 
 export const SCENE_READY_EVENT = "polynovea:scene-ready";
-export const REVEAL_OPEN_EVENT = "polynovea:reveal-open";
 
 /**
  * Each route parks the ambient camera at its own neural cluster, so client

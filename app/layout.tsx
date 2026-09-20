@@ -4,9 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import ExperienceLayer from "@/components/ExperienceLayer";
-import CustomCursor from "@/components/CustomCursor";
 import ScrollReveal from "@/components/ScrollReveal";
-import TiltEffect from "@/components/TiltEffect";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,11 +14,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Polynovea - Deep-Tech AI & Decision Infrastructure",
+    default: "Polynovea - AI, Behavioural Intelligence & Decision Infrastructure",
     template: "%s | Polynovea",
   },
   description:
-    "Polynovea is a deep-tech AI and decision-infrastructure company. Infrakinetic, our enterprise operating system, is the current lead product for commercialisation.",
+    "Polynovea is a deep-tech AI, data, behavioural-intelligence and decision-infrastructure company. Infrakinetic is the current commercial lead; HBIF is the longer-horizon research architecture; and the Content Operations Platform is moving toward open source and a managed cloud edition.",
   metadataBase: new URL("https://www.polynovea.in"),
   keywords: [
     "behavioral intelligence",
@@ -33,6 +31,9 @@ export const metadata: Metadata = {
     "human behavior AI",
     "behavioral intelligence india",
     "infrakinetic",
+    "content operations platform",
+    "open source cms",
+    "self hosted cms",
     "decision infrastructure",
     "enterprise operating system",
   ],
@@ -44,9 +45,9 @@ export const metadata: Metadata = {
     apple: "/icon.png",
   },
   openGraph: {
-    title: "Polynovea - Deep-Tech AI & Decision Infrastructure",
+    title: "Polynovea - AI, Behavioural Intelligence & Decision Infrastructure",
     description:
-      "A deep-tech AI, behavioral-intelligence and decision-infrastructure company. Infrakinetic - Polynovea's enterprise operating system - is the current lead product for commercialisation and revenue, backed by the Human Behavioral Intelligence Framework.",
+      "A deep-tech AI, data, behavioural-intelligence and decision-infrastructure company building commercially independent products alongside a longer-horizon research architecture.",
     siteName: "Polynovea",
     url: "https://www.polynovea.in",
     type: "website",
@@ -54,9 +55,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Polynovea - Deep-Tech AI & Decision Infrastructure",
+    title: "Polynovea - AI, Behavioural Intelligence & Decision Infrastructure",
     description:
-      "A deep-tech AI, behavioral-intelligence and decision-infrastructure company. Infrakinetic - Polynovea's enterprise operating system - is the current lead product for commercialisation and revenue, backed by the Human Behavioral Intelligence Framework.",
+      "A deep-tech AI, data, behavioural-intelligence and decision-infrastructure company building commercially independent products alongside a longer-horizon research architecture.",
     images: ["/og-image.png"],
   },
   alternates: {
@@ -72,7 +73,7 @@ const organizationSchema = {
   url: "https://www.polynovea.in",
   logo: "https://www.polynovea.in/logo.png",
   description:
-    "Deep-tech AI, behavioral-intelligence and decision-infrastructure company based in Navi Mumbai, India. Infrakinetic, our enterprise operating system, is the current lead product for commercialisation; Hospitality is undergoing an architectural rebuild.",
+    "Deep-tech AI, data, behavioural-intelligence and decision-infrastructure company based in Navi Mumbai, India. Infrakinetic is the current commercial lead; Polynovea also develops HBIF and an upcoming open-source Content Operations Platform.",
   brand: {
     "@type": "Brand",
     "@id": "https://www.infrakinetic.in/#brand",
@@ -146,73 +147,11 @@ export default function RootLayout({
         {/* Skip-to-content for keyboard / screen-reader users */}
         <a href="#main-content" className="skip-link">Skip to content</a>
 
-        {/* Persistent WebGL backdrop: must render before content so positioned content paints above it */}
+        {/* Persistent Polynovea Field backdrop: content paints above it on every route. */}
         <ExperienceLayer />
-        <CustomCursor />
         <ScrollReveal />
-        <TiltEffect />
         <SmoothScroll>{children}</SmoothScroll>
 
-        {/* Global SVG Filters for Liquid Glass Effect */}
-        <svg style={{ display: "none", position: "absolute", width: 0, height: 0 }} aria-hidden="true">
-          <defs>
-            <filter id="container-glass">
-              <feTurbulence
-                type="fractalNoise"
-                baseFrequency="0.015 0.015"
-                numOctaves="2"
-                seed="5"
-                result="turbulence"
-              />
-              <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
-              <feSpecularLighting
-                in="softMap"
-                surfaceScale="4"
-                specularConstant="1.2"
-                specularExponent="80"
-                lightingColor="#ffffff"
-                result="specLight"
-              >
-                <fePointLight x="-200" y="-200" z="300" />
-              </feSpecularLighting>
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="softMap"
-                scale="25"
-                xChannelSelector="R"
-                yChannelSelector="G"
-              />
-            </filter>
-
-            <filter id="btn-glass">
-              <feTurbulence
-                type="fractalNoise"
-                baseFrequency="0.03 0.03"
-                numOctaves="1"
-                seed="17"
-                result="turbulence"
-              />
-              <feGaussianBlur in="turbulence" stdDeviation="1.5" result="softMap" />
-              <feSpecularLighting
-                in="softMap"
-                surfaceScale="3"
-                specularConstant="1.5"
-                specularExponent="120"
-                lightingColor="#ffffff"
-                result="specLight"
-              >
-                <fePointLight x="-100" y="-100" z="200" />
-              </feSpecularLighting>
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="softMap"
-                scale="12"
-                xChannelSelector="R"
-                yChannelSelector="G"
-              />
-            </filter>
-          </defs>
-        </svg>
       </body>
     </html>
   );

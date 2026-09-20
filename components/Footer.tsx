@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="footer-brand">
             <div className="footer-logo">Polynovea</div>
             <p className="footer-tagline">
-              Deep-tech AI, behavioral-intelligence and decision infrastructure.
+              Deep-tech AI, data, behavioural intelligence and decision infrastructure.
               <br />
               <a
                 href="https://www.infrakinetic.in"
@@ -21,8 +21,11 @@ export default function Footer() {
               >
                 Infrakinetic
               </a>{" "}
-              is the current commercial lead. One product per domain, one
-              intelligence underneath.
+              is the current commercial lead; HBIF is the research architecture; and{" "}
+              <Link href="/open-source">
+                Polynovea Open Source
+              </Link>{" "}
+              is the separate home for our open-source software.
             </p>
           </div>
 
@@ -31,10 +34,13 @@ export default function Footer() {
               <div className="footer-col-label">Navigate</div>
               <ul>
                 {[
-                  ["#home", "Home"],
-                  ["#architecture", "The Architecture"],
-                  ["#projects", "Projects"],
-                  ["#contact", "Contact"],
+                  ["/", "Home"],
+                  ["/projects", "Products"],
+                  ["/open-source", "Open Source"],
+                  ["/architecture", "HBIF Architecture"],
+                  ["/research", "Research"],
+                  ["/about", "Company"],
+                  ["/contact", "Contact"],
                 ].map(([href, label]) => (
                   <li key={href}>
                     <a href={href}>{label}</a>
@@ -49,7 +55,7 @@ export default function Footer() {
                 {[
                   ["https://www.instagram.com/polynovea.in/", "Instagram"],
                   ["https://x.com/Polynovea", "X (Twitter)"],
-                  ["#contact", "Contact Us"],
+                  ["/contact", "Contact Us"],
                 ].map(([href, label]) => (
                   <li key={label}>
                     <a
@@ -84,7 +90,7 @@ export default function Footer() {
             © {year} Polynovea. All rights reserved.
           </span>
           <span className="footer-note">
-            Not Creative. Not Consulting. Something Else.
+            Build evidence faster than narrative.
           </span>
         </div>
       </div>

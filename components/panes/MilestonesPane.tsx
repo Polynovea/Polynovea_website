@@ -3,23 +3,23 @@
 const milestones = [
   {
     num: "01",
-    title: "Behavioral Intelligence Infrastructure",
-    desc: "The foundation. HBIF - a system built to read, map, and model human behaviour at the pattern level, structured as three layers: domain-specific products (Layer 1), shared behavioral state (Layer 2), and frontier decision-mechanism research (Layer 3). Everything that follows is built on this.",
+    title: "Commercial Products",
+    desc: "Products have to create independent customer value first. Infrakinetic is Polynovea's Phase-1-complete Workplace operating system and current commercial lead.",
   },
   {
     num: "02",
-    title: "Domain Deployment",
-    desc: "Hospitality was the first proving ground - chosen because it is behaviourally rich, measurable, and generates rapid feedback. Infrakinetic, the Workplace domain's product, is now Polynovea's current lead product for commercialisation, while Hospitality undergoes an architectural rebuild.",
+    title: "Open Infrastructure",
+    desc: "Polynovea's Content Operations Platform is a substantial self-hostable software asset moving toward an open-source release, with a managed cloud SaaS planned alongside the OSS path.",
   },
   {
     num: "03",
-    title: "Behavioral Automation",
-    desc: "Converting extracted patterns into automated decision systems. Once the infrastructure has sufficient signal from a domain, human decision overhead at the execution layer is replaced by systems that act on what they know.",
+    title: "HBIF Research",
+    desc: "HBIF is the longer-horizon behavioural-intelligence architecture: domain-specific systems at Layer 1, shared behavioural state and dynamics at Layer 2, and evidence-gated frontier research at Layer 3.",
   },
   {
     num: "04",
-    title: "Behavioral Operating System",
-    desc: "The long-term destination. Infrastructure capable of deploying behavioral intelligence across Education, Workplace, and additional sectors - compounding signal across domains without rebuilding from scratch in each new environment.",
+    title: "Evidence-Gated Transfer",
+    desc: "Domain learning can inform shared research and return to products only where evidence supports transfer. Polynovea is building for compounding intelligence without pretending every domain is already the same system.",
   },
 ];
 
@@ -29,10 +29,10 @@ export default function MilestonesPane() {
       <div className="container">
         <div className="ms-header">
           <h2 className="t-display-md" style={{ color: "var(--text-primary)" }}>
-            Four Phases. One Infrastructure.
+            Four parts of one operating model.
           </h2>
           <p className="t-body" style={{ marginTop: "var(--space-sm)" }}>
-            The same behavioral intelligence system, extended into progressively broader environments.
+            Products, open infrastructure and research reinforce one another without collapsing into one claim.
           </p>
         </div>
 

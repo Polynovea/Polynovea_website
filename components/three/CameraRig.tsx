@@ -3,11 +3,10 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { depthState, REVEAL_OPEN_EVENT, SECTION_COUNT } from "@/lib/depthStore";
+import { depthState, SECTION_COUNT } from "@/lib/depthStore";
 import { clusterCenter } from "./networkData";
 
 const CAMERA_BACKOFF = 11;
-const INTRO_EXTRA_DISTANCE = 14;
 
 function smoothstep(t: number): number {
   return t * t * (3 - 2 * t);
@@ -23,8 +22,6 @@ export default function CameraRig({
 }: {
   lightRef: React.RefObject<THREE.PointLight | null>;
 }) {
-  const introT = useRef(0);
-  const revealOpen = useRef(false);
   const mouse = useRef({ x: 0, y: 0 });
 
   const keyframes = useMemo(() => {
@@ -40,17 +37,12 @@ export default function CameraRig({
   }, []);
 
   useEffect(() => {
-    const onReveal = () => { revealOpen.current = true; };
     const onMove = (e: PointerEvent) => {
       mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
       mouse.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
     };
-    window.addEventListener(REVEAL_OPEN_EVENT, onReveal);
     window.addEventListener("pointermove", onMove, { passive: true });
-    // If the reveal already ran (e.g. client nav back to home), skip the dolly.
-    if (depthState.revealOpen) revealOpen.current = true;
     return () => {
-      window.removeEventListener(REVEAL_OPEN_EVENT, onReveal);
       window.removeEventListener("pointermove", onMove);
     };
   }, []);
@@ -62,7 +54,6 @@ export default function CameraRig({
     const time = clock.elapsedTime;
 
     if (depthState.sceneMode === "ambient") {
-      // Subpages: park at the route's cluster and orbit it slowly.
       const k = keyframes[depthState.ambientIndex % SECTION_COUNT];
       const a = time * 0.07 + depthState.ambientIndex * 1.3;
       tmpPos.copy(k.pos);
@@ -71,20 +62,12 @@ export default function CameraRig({
       tmpPos.z += Math.sin(a * 0.6) * 1.1;
       tmpLook.copy(k.look);
     } else {
-      // Home: scroll progress drives the dolly along the cluster path.
       const f = depthState.progress * (SECTION_COUNT - 1);
       const i0 = Math.min(Math.floor(f), SECTION_COUNT - 2);
       const t = smoothstep(THREE.MathUtils.clamp(f - i0, 0, 1));
       tmpPos.lerpVectors(keyframes[i0].pos, keyframes[i0 + 1].pos, t);
       tmpLook.lerpVectors(keyframes[i0].look, keyframes[i0 + 1].look, t);
     }
-
-    // Intro dolly: hold far back behind the curtain, ease in once it opens.
-    if (revealOpen.current && introT.current < 1) {
-      introT.current = Math.min(1, introT.current + delta * 0.55);
-    }
-    const introEase = 1 - Math.pow(1 - introT.current, 4);
-    tmpPos.z += INTRO_EXTRA_DISTANCE * (1 - introEase);
 
     // Idle drift + mouse parallax keep the frame alive between scrolls.
     tmpPos.x += Math.sin(time * 0.23) * 0.35 + mouse.current.x * 0.7;
@@ -93,7 +76,6 @@ export default function CameraRig({
     camera.position.lerp(tmpPos, 1 - Math.pow(0.0015, delta));
     camera.lookAt(tmpLook);
 
-    // The gold "active section" light travels with the journey.
     if (lightRef.current) {
       lightRef.current.position.set(tmpLook.x, tmpLook.y + 2, tmpLook.z + 3);
     }

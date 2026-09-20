@@ -4,22 +4,22 @@ const theses = [
   {
     num: "01",
     title: "The Real Problem",
-    body: "Important decisions across industries are made blindly inside systems that should be measurable. Weak measurement creates weak decisions, wasted resources, and repeated mistakes.",
+    body: "Organisations run critical work across fragmented systems, fragmented data and weak feedback loops. Decisions are often separated from the evidence and outcomes that should improve them.",
   },
   {
     num: "02",
     title: "The Insight",
-    body: "Behavior is not random. Human systems contain patterns, incentives, triggers, and repeatable structures. Most organizations never build infrastructure to capture and optimize them.",
+    body: "Operational systems produce more than transactions. They can preserve context around state, decisions, interventions and outcomes - the raw material required for better intelligence.",
   },
   {
     num: "03",
     title: "Our Approach",
-    body: "Observe → Measure → Identify Patterns → Design Intervention → Execute → Measure Again → Scale. Skip one step and you return to guessing.",
+    body: "Build useful products first. Measure what happens. Learn inside each domain. Test what transfers across domains. Return validated intelligence to products without turning hypotheses into claims.",
   },
   {
     num: "04",
     title: "The Goal",
-    body: "Build behavioral intelligence infrastructure capable of improving execution quality, pattern recognition, and decision-making across layered ecosystems.",
+    body: "Build decision infrastructure that can become more intelligent over time while preserving governance, evidence boundaries and human authority where decisions are consequential.",
   },
 ];
 
@@ -32,7 +32,7 @@ export default function WhoPane() {
             Who is Polynovea?
           </h2>
           <p className="t-body" style={{ marginTop: "var(--space-sm)" }}>
-            Our founding thesis on behavioral intelligence and measurable systems
+            Our operating thesis on products, evidence and measurable systems
           </p>
         </div>
 

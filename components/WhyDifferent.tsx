@@ -2,24 +2,24 @@
 
 const rows = [
   {
-    left: "Reacts to briefs and client requests",
-    right: "Operates from a pre-built intelligence framework",
+    left: "Point tools preserve fragmented context",
+    right: "Connected systems preserve the handoffs between decisions and outcomes",
   },
   {
-    left: "Delivers outputs and invoices",
-    right: "Converts every engagement into system data",
+    left: "AI is allowed to become operational authority",
+    right: "Deterministic controls remain authoritative; AI stays bounded and governed",
   },
   {
-    left: "Makes decisions on intuition and trend",
-    right: "Runs measurement-first decision systems",
+    left: "Research claims outrun the evidence",
+    right: "Research, implementation and commercial availability stay explicitly separated",
   },
   {
-    left: "Grows by getting more clients",
-    right: "Grows by compounding its own intelligence",
+    left: "Product usage is treated as unrestricted research data",
+    right: "Research use is permissioned, purpose-bound and governed separately",
   },
   {
-    left: "Replaces itself with the next trend",
-    right: "Builds systems that become more valuable over time",
+    left: "One domain is assumed to generalise everywhere",
+    right: "Cross-domain transfer is tested, falsified and promoted only where it survives",
   },
 ];
 
@@ -32,15 +32,15 @@ export default function WhyDifferent() {
             The Difference
           </span>
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
-            Not Creative. Not Consulting.
+            Products that stand alone.
             <br />
-            <span className="gold-accent">Something Else.</span>
+            <span className="gold-accent">Research that has to earn its claims.</span>
           </h2>
         </div>
 
         <div className="contrast-table" data-reveal data-reveal-delay="100">
           <div className="contrast-header-row">
-            <div className="col-label col-label-left">Everyone Else</div>
+            <div className="col-label col-label-left">Common Pattern</div>
             <div className="col-divider-head" />
             <div className="col-label col-label-right">Polynovea</div>
           </div>
@@ -48,7 +48,7 @@ export default function WhyDifferent() {
           {rows.map((row, i) => (
             <div key={i} className="contrast-row">
               <div className="contrast-cell left-cell">
-                <span className="mobile-prefix">Everyone Else</span>
+                <span className="mobile-prefix">Common Pattern</span>
                 {row.left}
               </div>
               <div className="contrast-divider">

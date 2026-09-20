@@ -1,315 +1,320 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { depthState, REVEAL_OPEN_EVENT } from "@/lib/depthStore";
+import { usePathname } from "next/navigation";
 
-const homeLinks = [
-  { href: "/", label: "Home" },
-  { href: "/architecture", label: "Platform" },
+const links = [
   { href: "/projects", label: "Products" },
+  { href: "/open-source", label: "Open Source" },
+  { href: "/architecture", label: "Architecture" },
+  { href: "/research", label: "Research" },
   { href: "/blog", label: "Insights" },
   { href: "/about", label: "Company" },
-  { href: "/research", label: "Research" },
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 18);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Assemble the navbar into place: on the home page this is held until the
-  // curtain parts (REVEAL_OPEN_EVENT); on subpages it plays as the scene eases in.
   useEffect(() => {
-    const nav = navRef.current;
-    if (!nav) return;
-    const isHome = window.location.pathname === "/";
-    let played = false;
-
-    const play = () => {
-      if (played) return;
-      played = true;
-      import("gsap").then(({ gsap }) => {
-        const q = gsap.utils.selector(nav);
-        const tl = gsap.timeline();
-        tl.fromTo(
-          nav,
-          { opacity: 0, y: -18 },
-          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }
-        );
-        tl.fromTo(
-          q(".nav-logo, .nav-link, .nav-cta"),
-          { opacity: 0, y: -10 },
-          { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power2.out" },
-          "-=0.4"
-        );
-      });
-    };
-
-    if (depthState.revealOpen || !isHome) {
-      play();
-    } else {
-      window.addEventListener(REVEAL_OPEN_EVENT, play, { once: true });
-    }
-    const fallback = setTimeout(play, isHome ? 5200 : 600);
-    return () => {
-      window.removeEventListener(REVEAL_OPEN_EVENT, play);
-      clearTimeout(fallback);
-    };
-  }, []);
-
-  const handleAnchorClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) => {
     setMenuOpen(false);
-    if (href.startsWith("#")) {
-      e.preventDefault();
-      const el = document.querySelector(href);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  }, [pathname]);
 
   return (
     <>
-      <nav ref={navRef} className={`navbar${scrolled ? " scrolled" : ""}`} aria-label="Primary navigation">
+      <nav className={`navbar${scrolled ? " scrolled" : ""}`} aria-label="Primary navigation">
         <div className="nav-inner">
-          <Link href="/" className="nav-logo">
+          <Link href="/" className="nav-logo" aria-label="Polynovea home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
-              alt="Polynovea logo"
-              width={36}
-              height={36}
+              src="/polynovea-nav-mark.png"
+              alt=""
+              width={38}
+              height={38}
               className="nav-logo-img"
             />
-            Polynovea
+            <span>Polynovea</span>
           </Link>
 
           <ul className="nav-links">
-            {homeLinks.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="nav-link"
-                  onClick={(e) => handleAnchorClick(e, l.href)}
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
+            {links.map((link) => {
+              const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={`nav-link${active ? " active" : ""}`}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
-          <Link
-            href="/contact"
-            className="btn btn-primary nav-cta"
-            onClick={(e) => handleAnchorClick(e, "/contact")}
-          >
-            Discuss Deployment
+          <Link href="/contact" className="nav-contact">
+            Discuss deployment
           </Link>
 
           <button
             className={`hamburger${menuOpen ? " open" : ""}`}
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setMenuOpen((value) => !value)}
             aria-label="Toggle menu"
+            aria-expanded={menuOpen}
           >
-            <span />
             <span />
             <span />
           </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      <div className={`mobile-menu${menuOpen ? " open" : ""}`}>
-        <ul>
-          {homeLinks.map((l) => (
-            <li key={l.href}>
-              <Link
-                href={l.href}
-                onClick={(e) => handleAnchorClick(e, l.href)}
-              >
-                {l.label}
-              </Link>
-            </li>
-          ))}
-          <li>
-            <Link
-              href="/contact"
-              className="btn btn-primary"
-              onClick={(e) => handleAnchorClick(e, "/contact")}
-            >
-              Discuss Deployment
-            </Link>
-          </li>
-        </ul>
+      <div className={`mobile-menu${menuOpen ? " open" : ""}`} aria-hidden={!menuOpen}>
+        <div className="mobile-menu-inner">
+          <div className="mobile-label">Navigate Polynovea</div>
+          <ul>
+            {links.map((link, index) => {
+              const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
+              return (
+                <li key={link.href}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <Link href={link.href} aria-current={active ? "page" : undefined}>
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <Link href="/contact" className="mobile-contact">
+            Discuss deployment <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
       </div>
 
       <style jsx>{`
         .navbar {
           position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
+          inset: 0 0 auto;
           z-index: 100;
           height: var(--nav-height);
+          border-bottom: 1px solid transparent;
+          background: linear-gradient(180deg, rgba(8, 8, 11, 0.72), rgba(8, 8, 11, 0));
+          transition: background 220ms ease, border-color 220ms ease, backdrop-filter 220ms ease;
         }
 
-        .navbar::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: -1;
-          pointer-events: none;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          background-color: transparent;
-          opacity: 0;
-          transition: opacity var(--duration-default) var(--ease-state);
-        }
-
-        .navbar::after {
-          content: "";
-          position: absolute;
-          z-index: -2;
-          inset: 0;
-          -webkit-backdrop-filter: blur(0px);
-          backdrop-filter: blur(0px);
-          -webkit-filter: url(#container-glass);
-          filter: url(#container-glass);
-          background-color: rgba(24, 24, 27, 0.35);
-          opacity: 0;
-          transition: opacity var(--duration-default) var(--ease-state);
-        }
-
-        .navbar.scrolled::before,
-        .navbar.scrolled::after {
-          opacity: 1;
+        .navbar.scrolled {
+          border-bottom-color: rgba(221, 216, 232, 0.09);
+          background: rgba(8, 8, 11, 0.88);
+          -webkit-backdrop-filter: blur(14px) saturate(115%);
+          backdrop-filter: blur(14px) saturate(115%);
         }
 
         .nav-inner {
-          max-width: var(--max-width);
+          width: min(100%, var(--max-width));
+          height: 100%;
           margin-inline: auto;
           padding-inline: var(--space-xl);
-          height: 100%;
           display: flex;
           align-items: center;
-          gap: var(--space-xl);
+          gap: clamp(18px, 2.2vw, 30px);
         }
 
-        .nav-logo {
-          font-family: var(--font-display);
-          font-size: 18px;
-          font-weight: 600;
-          color: var(--text-primary);
-          letter-spacing: -0.02em;
+        :global(.nav-logo) {
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
           margin-right: auto;
-          display: flex;
-          align-items: center;
-          gap: 10px;
+          color: var(--text-primary);
+          font-family: var(--font-display);
+          font-size: 17px;
+          font-weight: 580;
+          letter-spacing: -0.02em;
+          text-decoration: none;
         }
 
-        .nav-logo :global(.nav-logo-img) {
-          border-radius: 8px;
-          flex-shrink: 0;
+        .nav-logo-img {
+          width: 38px;
+          height: 38px;
+          object-fit: contain;
         }
 
         .nav-links {
           display: flex;
           align-items: center;
-          gap: var(--space-lg);
+          gap: clamp(16px, 1.7vw, 24px);
           list-style: none;
         }
 
-        .nav-link {
-          font-size: 14px;
-          color: var(--text-secondary);
-          transition: color var(--duration-fast) var(--ease-state);
+        :global(.nav-link) {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          min-height: var(--nav-height);
+          color: #98959f;
+          font-size: 12px;
+          font-weight: 560;
+          letter-spacing: 0.015em;
+          text-decoration: none;
+          transition: color 180ms ease;
         }
 
-        .nav-link:hover {
+        :global(.nav-link::after) {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -1px;
+          height: 1px;
+          background: var(--accent-authority);
+          transform: scaleX(0);
+          transform-origin: center;
+          transition: transform 180ms ease;
+        }
+
+        :global(.nav-link:hover),
+        :global(.nav-link.active) {
           color: var(--text-primary);
         }
 
-        .nav-cta {
-          font-size: 13px;
-          padding: 9px 20px;
+        :global(.nav-link.active::after) {
+          transform: scaleX(1);
+        }
+
+        :global(.nav-contact) {
+          display: inline-flex;
+          align-items: center;
+          min-height: 38px;
+          padding: 0 15px;
+          border: 1px solid rgba(230, 211, 163, 0.22);
+          border-radius: 9px;
+          color: var(--accent-authority);
+          background: rgba(230, 211, 163, 0.035);
+          font-size: 12px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+        }
+
+        :global(.nav-contact:hover) {
+          border-color: rgba(230, 211, 163, 0.46);
+          background: rgba(230, 211, 163, 0.07);
+          color: var(--accent-authority-hover);
         }
 
         .hamburger {
           display: none;
-          flex-direction: column;
-          gap: 5px;
-          background: none;
-          border: none;
+          width: 42px;
+          height: 42px;
+          padding: 0 10px;
+          border: 1px solid rgba(221, 216, 232, 0.10);
+          border-radius: 9px;
+          background: rgba(13, 14, 18, 0.68);
           cursor: pointer;
-          padding: 4px;
         }
 
         .hamburger span {
           display: block;
-          width: 22px;
-          height: 2px;
+          width: 100%;
+          height: 1px;
           background: var(--text-primary);
-          border-radius: 2px;
-          transition: all var(--duration-default) var(--ease-state);
+          transition: transform 180ms ease;
         }
 
-        .hamburger.open span:nth-child(1) {
-          transform: translateY(7px) rotate(45deg);
+        .hamburger span + span {
+          margin-top: 7px;
         }
 
-        .hamburger.open span:nth-child(2) {
-          opacity: 0;
+        .hamburger.open span:first-child {
+          transform: translateY(4px) rotate(45deg);
         }
 
-        .hamburger.open span:nth-child(3) {
-          transform: translateY(-7px) rotate(-45deg);
+        .hamburger.open span:last-child {
+          transform: translateY(-4px) rotate(-45deg);
         }
 
         .mobile-menu {
-          display: none;
           position: fixed;
           inset: 0;
-          z-index: 99;
-          background: var(--bg-primary);
-          padding: calc(var(--nav-height) + var(--space-xl)) var(--space-xl)
-            var(--space-xl);
-          flex-direction: column;
+          z-index: 90;
+          display: none;
+          background: rgba(8, 8, 11, 0.98);
+          padding: calc(var(--nav-height) + 44px) var(--space-lg) 36px;
+          overflow-y: auto;
         }
 
         .mobile-menu.open {
-          display: flex;
+          display: block;
+        }
+
+        .mobile-menu-inner {
+          width: min(100%, 620px);
+          margin-inline: auto;
+        }
+
+        .mobile-label {
+          color: var(--text-disabled);
+          font-family: var(--font-mono);
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+          margin-bottom: 22px;
         }
 
         .mobile-menu ul {
           list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-lg);
+          border-top: 1px solid rgba(221, 216, 232, 0.10);
         }
 
-        .mobile-menu a {
-          font-family: var(--font-display);
-          font-size: 28px;
-          font-weight: 500;
+        .mobile-menu li {
+          display: grid;
+          grid-template-columns: 34px 1fr;
+          align-items: center;
+          border-bottom: 1px solid rgba(221, 216, 232, 0.10);
+        }
+
+        .mobile-menu li > span {
+          color: var(--accent-authority-muted);
+          font-family: var(--font-mono);
+          font-size: 10px;
+        }
+
+        .mobile-menu li :global(a) {
+          display: block;
+          padding: 18px 0;
           color: var(--text-primary);
-          letter-spacing: -0.02em;
+          font-family: var(--font-display);
+          font-size: clamp(28px, 8vw, 42px);
+          font-weight: 520;
+          letter-spacing: -0.025em;
+          text-decoration: none;
         }
 
-        @media (max-width: 768px) {
+        :global(.mobile-contact) {
+          display: inline-flex;
+          gap: 8px;
+          margin-top: 30px;
+          color: var(--accent-authority);
+          font-size: 14px;
+          text-decoration: none;
+        }
+
+        @media (max-width: 1080px) {
           .nav-links,
-          .nav-cta {
+          :global(.nav-contact) {
             display: none;
           }
 
           .hamburger {
-            display: flex;
+            display: block;
           }
         }
       `}</style>

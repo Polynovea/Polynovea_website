@@ -7,170 +7,176 @@ export default function About() {
 
   return (
     <section className="about-section">
-      {/* Hero rides on the global neural scene */}
       <div className="hero-container">
         <div className="hero-content">
-          <h1 className="hero-heading">Measurement Changes Everything</h1>
-          <p className="hero-subheading">Most systems operate without behavioral intelligence. Polynovea built the infrastructure layer that changes that.</p>
-          <p className="hero-byline">By Polynovea Intelligence Team · Founded April 2026 · Navi Mumbai, India · Updated July 28, 2026</p>
+          <h1 className="hero-heading">Build Evidence Faster Than Narrative.</h1>
+          <p className="hero-subheading">Polynovea builds commercial software, open infrastructure and a longer-horizon behavioural-intelligence research architecture - with product value and research claims kept deliberately separate.</p>
+          <p className="hero-byline">By Polynovea Intelligence Team · Founded April 2026 · Navi Mumbai, India · Updated September 19, 2026</p>
         </div>
       </div>
 
-      {/* FOUNDER THESIS */}
       <div className="container">
         <div className="thesis-section">
           <div className="thesis-card">
             <div className="card-number">01</div>
-            <h3>The Real Problem</h3>
-            <p>Important decisions across industries are made blindly inside systems that should be measurable. Weak measurement creates weak decisions, wasted resources, and repeated mistakes.</p>
+            <h3>The Problem</h3>
+            <p>Organisations run critical work across fragmented systems, fragmented data and weak feedback loops. Decisions are often separated from the evidence and outcomes that should improve them.</p>
           </div>
 
           <div className="thesis-card">
             <div className="card-number">02</div>
-            <h3>The Insight</h3>
-            <p>Behavior is not random. Human systems contain patterns, incentives, triggers, and repeatable structures. Most organizations never build infrastructure to capture and optimize them.</p>
+            <h3>Products First</h3>
+            <p>Every product must solve a real problem without requiring the deepest HBIF thesis to be true. Customer value is not conditional on becoming part of a research programme.</p>
           </div>
 
           <div className="thesis-card">
             <div className="card-number">03</div>
-            <h3>The Approach</h3>
-            <p>Observe → Measure → Identify Patterns → Design Intervention → Execute → Measure Again → Scale. Skip one step and you return to guessing.</p>
+            <h3>Evidence Before Transfer</h3>
+            <p>Layer 1 stays domain-specific. Shared intelligence is earned through replication, falsification and evidence - not declared because two products happen to sit inside the same company.</p>
           </div>
 
           <div className="thesis-card">
             <div className="card-number">04</div>
             <h3>The Goal</h3>
-            <p>Build behavioral intelligence infrastructure capable of improving execution quality, pattern recognition, and decision-making across layered ecosystems.</p>
+            <p>Build systems that preserve operational context, improve decisions and create measurable learning while keeping governance, uncertainty and human authority explicit.</p>
           </div>
         </div>
 
-        {/* THE ECOSYSTEM */}
         <div className="ecosystem-section">
-          <h2 className="section-title">How is the Polynovea behavioral intelligence ecosystem structured?</h2>
-          <p className="section-subtitle">Domain, product, intelligence - three tiers, each domain building its own version of the first two, all of them sharpening one thing underneath.</p>
+          <h2 className="section-title">How is Polynovea structured?</h2>
+          <p className="section-subtitle">Three public realities matter today: a commercial operating product, an upcoming open-source platform with a managed cloud path, and a deeper behavioural-intelligence research architecture.</p>
 
           <div className="milestones-grid">
             <div className="milestone">
               <div className="milestone-header">
                 <span className="milestone-number">1</span>
-                <h3>Domain Product</h3>
+                <h3>Commercial Products</h3>
               </div>
-              <p>Every domain HBIF enters gets its own purpose-built product - not a reconfiguration of an existing one. Infrakinetic, the Workplace domain&apos;s product, is Polynovea&apos;s current lead product for commercialisation and revenue, with 121/121 Billing + Payments tests passing and a canary migration that promoted 626/626 staged records with 12/12 reconciliation checks passed (Source: Infrakinetic Product Guide, Aug 2026). Hospitality&apos;s Acquisition System is undergoing an architectural rebuild.</p>
+              <p><strong>Infrakinetic</strong> is Polynovea&apos;s current commercial lead and Workplace Layer 1 product. Its Phase 1 programme milestone is complete. Hospitality remains a Layer 1 domain under architectural rebuild.</p>
               <ul>
-                <li>Decision Framework</li>
-                <li>Acquisition layer</li>
-                <li>Optimisation layer</li>
+                <li>Independent customer value</li>
+                <li>Domain-specific product architecture</li>
+                <li>Infrakinetic-first commercialisation</li>
               </ul>
             </div>
 
             <div className="milestone">
               <div className="milestone-header">
                 <span className="milestone-number">2</span>
-                <h3>Shared Intelligence</h3>
+                <h3>Open Infrastructure</h3>
               </div>
-              <p>Underneath every domain&apos;s product sits a deeper layer of the infrastructure - one that reads behavioral state and decision-making directly, independent of industry.</p>
+              <p>The <strong>Content Operations Platform</strong> is being prepared for open-source/self-hosted distribution. A managed Polynovea Cloud SaaS is planned alongside the OSS path rather than replacing it.</p>
               <ul>
-                <li>Domain-agnostic by design</li>
-                <li>Shared across every product</li>
-                <li>Gets sharper with each domain</li>
+                <li>Open-source and self-hostable</li>
+                <li>Developer, agent and extension surfaces</li>
+                <li>Managed cloud path planned</li>
               </ul>
             </div>
 
             <div className="milestone">
               <div className="milestone-header">
                 <span className="milestone-number">3</span>
-                <h3>The Flywheel</h3>
+                <h3>HBIF Research</h3>
               </div>
-              <p>Operating a domain&apos;s product generates the behavioral data that sharpens the shared intelligence layer - which makes every other domain&apos;s product smarter from day one.</p>
+              <p>HBIF is the broader behavioural-intelligence framework. Layer 1 is domain-specific; Layer 2 studies shared behavioural state and dynamics; Layer 3 is evidence-gated frontier research into deeper decision mechanisms.</p>
               <ul>
-                <li>Data compounds across domains</li>
-                <li>Each new product starts ahead</li>
-                <li>The moat deepens with scale</li>
+                <li>BPM is the current Layer 2 technical reference</li>
+                <li>Cross-domain validity remains unproven</li>
+                <li>Research is not automatically product capability</li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* WHY WE EXIST */}
         <div className="why-exists-section">
-          <h2 className="section-title">Why did Polynovea build behavioral intelligence infrastructure?</h2>
-          <p className="section-subtitle">Important decisions across industries are made blindly inside systems that should be measurable. Behavioral intelligence infrastructure fixes that by converting observed human behavior into repeatable operational systems.</p>
+          <h2 className="section-title">Why does Polynovea exist?</h2>
+          <p className="section-subtitle">The problem is not a lack of activity or software. It is the lack of structured intelligence around the activity - what changed, why a decision was made, what happened next, and what the system should learn from it.</p>
           <div className="why-exists-content">
             <div className="why-block">
-              <h3>The Pattern We Noticed</h3>
-              <p>Important decisions across industries are made blindly inside systems that should be measurable. The problem isn&apos;t weak activity - it&apos;s weak measurement. Weak measurement creates weak decisions, wasted resources, and repeated mistakes.</p>
+              <h3>Fragmentation hides causality</h3>
+              <p>Commercial, financial, people, document and customer work often live in different systems. The handoffs between them are where context disappears, accountability weakens and operating truth has to be reconstructed manually.</p>
             </div>
             <div className="why-block">
-              <h3>The Core Insight</h3>
-              <p>Behavior is not random. Human systems contain patterns, incentives, triggers, environmental responses, and repeatable structures. Most organizations never build the infrastructure required to capture, structure, interpret, and operationalize those patterns. This exposes blindness where clarity should exist.</p>
+              <h3>Operational systems can preserve evidence</h3>
+              <p>Human and organisational environments generate observable signals around state, decisions, interventions and outcomes. Well-designed systems can preserve that context instead of recording only the final transaction.</p>
             </div>
             <div className="why-block">
-              <h3>What Hospitality taught us</h3>
-              <p>Hospitality became our first proving ground because behavioral response becomes visible quickly, spend decisions happen in real time, and feedback loops close fast. That work produced data, engineering, and intervention history we carry forward into its architectural rebuild - while Infrakinetic, the Workplace domain&apos;s product, now carries the model into commercialisation as Polynovea&apos;s current lead product for revenue.</p>
+              <h3>Hospitality was the first empirical domain</h3>
+              <p>Hospitality produced Polynovea&apos;s first substantial behavioural corpus and experimental lineage. That work remains research evidence and historical product lineage while the next Hospitality product is rebuilt from first principles.</p>
             </div>
             <div className="why-block">
-              <h3>The Long-Term Purpose</h3>
-              <p>The ecosystem exists to build behavioral intelligence and operational decision systems capable of improving execution quality, pattern recognition, and strategic decision-making across every domain we operate in. Each domain&apos;s product matters on its own - but underneath all of them is the same foundational pursuit: understanding behavior well enough to build systems that become more intelligent over time.</p>
+              <h3>Research must remain falsifiable</h3>
+              <p>Polynovea is deliberately designed so its commercial products can succeed even if no universal model of human behaviour emerges. The deeper research objective is valuable only if candidate structures survive independent domains and explicit failure tests.</p>
             </div>
           </div>
         </div>
 
-        {/* CORE PHILOSOPHY */}
         <div className="philosophy-section">
-          <h2 className="section-title">What principles guide Polynovea&apos;s behavioral intelligence approach?</h2>
-          <p className="section-subtitle">Six operating principles that govern how Polynovea observes, measures, and converts human behavior into compounding intelligence infrastructure.</p>
+          <h2 className="section-title">What principles guide the company?</h2>
+          <p className="section-subtitle">Six public principles keep product, AI, data and research from collapsing into one undifferentiated claim.</p>
           <div className="philosophy-grid">
             <div className="phil-item">
-              <h4>Measurement First</h4>
-              <p>If behavior cannot be measured, it cannot be reliably optimized. This applies to everything from audience response to venue behavior to retention and engagement.</p>
+              <h4>Customer Value First</h4>
+              <p>A product must solve a real operating problem on its own. Research participation is optional and separately governed.</p>
             </div>
             <div className="phil-item">
-              <h4>Systems Over Intuition</h4>
-              <p>Creativity becomes more powerful when patterns are visible, feedback loops are active, variables are isolated, and outcomes are measurable. We don&apos;t reject creativity - we reject unmeasured execution.</p>
+              <h4>Evidence Before Claims</h4>
+              <p>Implemented, deployed, certified, customer-ready and generally available are different states. Public language should preserve those distinctions.</p>
             </div>
             <div className="phil-item">
-              <h4>Baseline Before Intervention</h4>
-              <p>No optimization occurs before observing reality. Understanding the current state is the prerequisite for any meaningful change. Intervention without baseline is guessing.</p>
+              <h4>Domain Specificity</h4>
+              <p>Every Layer 1 domain earns its own ontology, state model, workflows, interfaces and validation programme. One successful domain does not prove another.</p>
             </div>
             <div className="phil-item">
-              <h4>Pattern Before Scaling</h4>
-              <p>One good result is not a pattern. Repeatable data precedes growth. We scale what works repeatedly, not what works once.</p>
+              <h4>Governed Intelligence</h4>
+              <p>Permissions, approvals, provenance and deterministic safety remain part of the operating architecture rather than optional wrappers around intelligence.</p>
             </div>
             <div className="phil-item">
-              <h4>Responsible Intelligence</h4>
-              <p>Understand behavior responsibly. Reduce friction intelligently. Improve experiences intentionally. Create alignment between customer, operator, and business. The goal is better systems and clearer decisions, not exploitation.</p>
+              <h4>Bounded AI</h4>
+              <p>AI may assist interpretation, extraction and recommendation. It does not automatically become the authority for consequential business state.</p>
             </div>
             <div className="phil-item">
-              <h4>Infrastructure Over Personality</h4>
-              <p>Build systems that scale without founder dependency. Operational intelligence should be repeatable, documented, and transferable. Long-term value comes from infrastructure, not individual intuition.</p>
+              <h4>Permissioned Research</h4>
+              <p>Product usage does not make customer data unrestricted research property. Research use must be separately permitted, purpose-bound and privacy-aware.</p>
             </div>
           </div>
         </div>
 
-        {/* FAQ */}
+        <div className="philosophy-section">
+          <h2 className="section-title">Founding team</h2>
+          <p className="section-subtitle">The current five-founder executive structure spans company strategy, engineering, operations, marketing and customer experience.</p>
+          <div className="philosophy-grid">
+            <div className="phil-item"><h4>Subrojit Roy</h4><p>Co-Founder · CEO</p></div>
+            <div className="phil-item"><h4>Rahul</h4><p>Co-Founder · CTO</p></div>
+            <div className="phil-item"><h4>Roopa</h4><p>Co-Founder · COO</p></div>
+            <div className="phil-item"><h4>Rupali</h4><p>Co-Founder · CMO</p></div>
+            <div className="phil-item"><h4>Partia</h4><p>Co-Founder · CXO (Chief Experience Officer)</p></div>
+          </div>
+        </div>
+
         <div className="faq-section">
           <h2 className="section-title" style={{ textAlign: 'left', fontSize: '32px' }}>Frequently asked questions about Polynovea</h2>
           <div className="faq-list">
             {[
               {
-                q: "What is behavioral intelligence?",
-                a: "Behavioral intelligence is the systematic process of observing human decision-making patterns in real commercial environments, extracting repeatable structures, and converting those structures into operational systems. Unlike survey data or stated preferences, it works from what people actually do.",
-              },
-              {
                 q: "What does Polynovea do?",
-                a: "Polynovea is a deep-tech AI, behavioral-intelligence and decision-infrastructure company building the Human Behavioral Intelligence Framework (HBIF) - infrastructure that observes human decision-making, identifies repeatable behavioral patterns, and converts them into operational systems. Each domain we enter gets its own purpose-built product. Infrakinetic (Workplace) is the current lead product for commercialisation; Hospitality is undergoing an architectural rebuild; Education is in design.",
+                a: "Polynovea is a deep-tech AI, data, behavioural-intelligence and decision-infrastructure company. It builds commercially independent products and open infrastructure alongside HBIF, a longer-horizon research architecture for studying behavioural state, dynamics and decision mechanisms.",
               },
               {
-                q: "What is the Human Behavioral Intelligence Framework (HBIF)?",
-                a: "HBIF is domain, product, and shared intelligence. Every domain gets its own product - Infrakinetic for Workplace, the Acquisition System for Hospitality (currently being rebuilt). Underneath every domain's product sits a deeper, shared layer of the infrastructure that reads behavioral state and decision-making directly, independent of industry - and gets sharper with every domain it operates across.",
+                q: "What is HBIF?",
+                a: "HBIF is the Human Behavioural Intelligence Framework. Layer 1 is domain-specific product and domain intelligence. Layer 2 is shared behavioural state and dynamics, with BPM as the current technical reference. Layer 3 is evidence-gated frontier research. HBIF is not presented as a finished universal theory of human behaviour.",
               },
               {
-                q: "Where is Polynovea based and when was it founded?",
-                a: "Polynovea was founded in April 2026 by Subrojit Roy and is based in Navi Mumbai, Maharashtra, India.",
+                q: "What is Polynovea's current commercial priority?",
+                a: "Infrakinetic-first commercialisation and revenue. Infrakinetic is the Workplace Layer 1 operating system and its Phase 1 programme milestone is complete.",
               },
               {
-                q: "What industries does Polynovea's behavioral intelligence serve?",
-                a: "Infrakinetic, the Workplace domain's product, is Polynovea's current lead product for commercialisation and revenue. Hospitality's Acquisition System is undergoing an architectural rebuild. Education is in the design phase.",
+                q: "What is the Content Operations Platform?",
+                a: "It is Polynovea's upcoming open-source/self-hostable content-operations platform. A managed Polynovea Cloud SaaS is planned alongside the OSS edition, subject to release and adoption milestones.",
+              },
+              {
+                q: "Does product usage automatically feed HBIF research?",
+                a: "No. Standard product use does not automatically grant unrestricted research rights. Research participation and permitted evidence use are separate, explicit and governed.",
               },
             ].map(({ q, a }) => (
               <div key={q} className="faq-item">
@@ -180,16 +186,15 @@ export default function About() {
             ))}
           </div>
           <div className="faq-links">
-            <Link href="/architecture">Explore the system architecture</Link>
-            <Link href="/projects">View active behavioral intelligence projects</Link>
-            <a href="/#contact">Contact the team</a>
+            <Link href="/architecture">Explore the HBIF architecture</Link>
+            <Link href="/projects">View Polynovea products</Link>
+            <Link href="/research">Explore the research programme</Link>
           </div>
         </div>
 
-        {/* CTA */}
         <div className="about-cta">
           <a href="/architecture" className="btn btn-primary">
-            Explore Architecture
+            Explore HBIF Architecture
           </a>
         </div>
       </div>

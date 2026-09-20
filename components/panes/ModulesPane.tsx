@@ -2,90 +2,80 @@
 
 import { useState } from "react";
 
-type DomainKey = "hospitality" | "workplace" | "education";
+type PortfolioKey = "infrakinetic" | "cms" | "hospitality";
 
-const domains: Record<
-  DomainKey,
+const portfolio: Record<
+  PortfolioKey,
   {
     label: string;
-    status: "architectural rebuild" | "commercial lead" | "in design";
+    status: "architectural rebuild" | "commercial lead" | "upcoming OSS";
     modules: { tag: string; title: string; desc: string }[];
   }
 > = {
+  infrakinetic: {
+    label: "Infrakinetic",
+    status: "commercial lead",
+    modules: [
+      {
+        tag: "Commercial Lead · Phase 1 Complete",
+        title: "Where Business Operates as One",
+        desc: "A unified business operating environment connecting commercial work, sales, documents, operations, billing, payments, finance, recruitment, HR, payroll, Customer Success, approvals, governance, migration and bounded AI while preserving clear ownership across each function.",
+      },
+    ],
+  },
+  cms: {
+    label: "Open Source",
+    status: "upcoming OSS",
+    modules: [
+      {
+        tag: "Upcoming Open Source",
+        title: "Content Operations Platform",
+        desc: "Polynovea's first open-source project is a self-hostable platform spanning structured data, content creation, collaboration, review, releases, delivery operations, schema control, developer APIs, governed agents and extensions. The open-source edition comes first; a managed Polynovea Cloud SaaS is planned without removing the self-hosted path.",
+      },
+    ],
+  },
   hospitality: {
     label: "Hospitality",
     status: "architectural rebuild",
     modules: [
       {
-        tag: "Module 01",
-        title: "Decision Framework",
-        desc: "Determines whether an opportunity is viable. Evaluates engagement fit, pricing logic, and expected outcomes before any resource is committed.",
-      },
-      {
-        tag: "Module 02",
-        title: "Acquisition System",
-        desc: "Multi-source behavioural signal extraction, structured through an ontology layer that maps how human behaviour operates inside commercial environments. Feeds a live acquisition playbook that tells you who to target, how to reach them, and what they respond to before they walk in.",
-      },
-      {
-        tag: "Module 03",
-        title: "Optimisation System",
-        desc: "Two-part system. Part 1 instruments the live environment - POS, venue data, audience behaviour. Part 2 converts that intelligence into measurable revenue optimisation for venues.",
-      },
-    ],
-  },
-  workplace: {
-    label: "Workplace",
-    status: "commercial lead",
-    modules: [
-      {
-        tag: "Infrakinetic",
-        title: "Infrakinetic",
-        desc: "The Workplace domain's product and Polynovea's current lead product for commercialisation and revenue. A full enterprise operating system - commercial/CRM, finance with an immutable cryptographic ledger, HR & payroll, workflow automation, governance, marketing - that runs the business and, underneath, generates the behavioral signal this domain's intelligence is built on.",
-      },
-    ],
-  },
-  education: {
-    label: "Education",
-    status: "in design",
-    modules: [
-      {
-        tag: "In Design",
-        title: "Education Intelligence",
-        desc: "The Education domain's product is still in design. Same underlying pattern as Hospitality and Workplace - a purpose-built product on top, sharpening the shared intelligence layer underneath.",
+        tag: "Layer 1 · Rebuild",
+        title: "Hospitality Product",
+        desc: "Polynovea's first behavioural-intelligence proving ground created a substantial historical research and product lineage. That earlier Decision Framework / Acquisition System / Optimisation System stack is reference material, while the next Hospitality product is being rebuilt rather than copied forward as the future specification.",
       },
     ],
   },
 };
 
 export default function ModulesPane() {
-  const [selected, setSelected] = useState<DomainKey>("workplace");
-  const domain = domains[selected];
+  const [selected, setSelected] = useState<PortfolioKey>("infrakinetic");
+  const product = portfolio[selected];
 
   return (
     <section className="section pane-section">
       <div className="container">
         <div className="mod-header">
           <span className="t-label" style={{ color: "var(--accent-authority-muted)" }}>
-            Infrastructure
+            Current Work
           </span>
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
-            How is Polynovea&apos;s infrastructure organized?
+            What is Polynovea building now?
           </h2>
           <p className="t-body" style={{ marginTop: "var(--space-sm)", maxWidth: 640, marginInline: "auto" }}>
-            Every domain gets its own product. Every one of them runs on something deeper, shared, and still growing underneath.
+            Domain products, open-source infrastructure and research have different jobs - and different evidence boundaries.
           </p>
 
           <div className="mod-domain-select">
-            <label htmlFor="mod-domain" className="mod-domain-label">Domain</label>
+            <label htmlFor="mod-domain" className="mod-domain-label">Area</label>
             <select
               id="mod-domain"
               className="mod-domain-dropdown"
               value={selected}
-              onChange={(e) => setSelected(e.target.value as DomainKey)}
+              onChange={(e) => setSelected(e.target.value as PortfolioKey)}
             >
-              {(Object.keys(domains) as DomainKey[]).map((key) => (
+              {(Object.keys(portfolio) as PortfolioKey[]).map((key) => (
                 <option key={key} value={key}>
-                  {domains[key].label} - {domains[key].status === "architectural rebuild" ? "Architectural rebuild" : domains[key].status === "commercial lead" ? "Commercial lead" : "In design"}
+                  {portfolio[key].label} - {portfolio[key].status === "architectural rebuild" ? "Architectural rebuild" : portfolio[key].status === "commercial lead" ? "Commercial lead" : "Upcoming OSS"}
                 </option>
               ))}
             </select>
@@ -93,7 +83,7 @@ export default function ModulesPane() {
         </div>
 
         <div className="mod-grid">
-          {domain.modules.map((m) => (
+          {product.modules.map((m) => (
             <div key={m.tag} className="module-card mod-card">
               <span className="mod-tag">{m.tag}</span>
               <h3 className="mod-title">{m.title}</h3>

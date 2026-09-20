@@ -19,19 +19,19 @@ async function getPublishedPosts(): Promise<BlogPost[]> {
 const blogFaqs = [
   {
     q: "What topics does the Polynovea blog cover?",
-    a: "The blog covers behavioral intelligence as a discipline - how it differs from sentiment analysis and traditional analytics, systems thinking, decision frameworks, and operational patterns from building the Human Behavioral Intelligence Framework.",
+    a: "The blog covers Polynovea's product, engineering and research work: Infrakinetic, open-source content operations, HBIF research, decision infrastructure, governance, systems thinking and lessons from building real operating software.",
   },
   {
     q: "How often does Polynovea publish new content?",
-    a: "New posts are published as the team develops real findings from operating Infrakinetic, rebuilding Hospitality's Acquisition System, and building HBIF - not on a fixed weekly schedule, so each post reflects genuine progress rather than filler content.",
+    a: "New posts are published around meaningful product, engineering and research developments across Infrakinetic, the Content Operations Platform, Hospitality and HBIF rather than on a fixed filler-driven schedule.",
   },
   {
     q: "Who writes the Polynovea blog?",
-    a: "Posts are written by the Polynovea Intelligence Team, the same group building and operating the Human Behavioral Intelligence Framework and the Acquisition System.",
+    a: "Posts are written by the Polynovea team working across products, engineering and HBIF research. Individual articles should preserve the evidence state of the work they discuss rather than turning research hypotheses into product claims.",
   },
   {
     q: "Is the Polynovea blog only about Hospitality?",
-    a: "No. The blog covers enterprise systems and decision infrastructure alongside behavioral intelligence - reflecting work across Infrakinetic, the Workplace domain's current commercial lead, and Hospitality's architectural rebuild.",
+    a: "No. The blog covers enterprise systems, open-source infrastructure and decision architecture alongside behavioural-intelligence research - reflecting work across Infrakinetic, the Content Operations Platform, Hospitality and HBIF.",
   },
   {
     q: "Can I get notified about new Polynovea blog posts?",

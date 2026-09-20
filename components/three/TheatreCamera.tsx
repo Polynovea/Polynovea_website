@@ -3,20 +3,17 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { depthState, REVEAL_OPEN_EVENT, SECTION_COUNT } from "@/lib/depthStore";
+import { depthState, SECTION_COUNT } from "@/lib/depthStore";
 import { clusterCenter } from "./networkData";
 import { boundaryTakeover } from "@/lib/clusterFocus";
 
 const CAMERA_BACKOFF = 11;
-const INTRO_EXTRA_DISTANCE = 14;
 
 export default function TheatreCamera({
   lightRef,
 }: {
   lightRef: React.RefObject<THREE.PointLight | null>;
 }) {
-  const introT = useRef(0);
-  const revealOpen = useRef(false);
   const mouse = useRef({ x: 0, y: 0 });
 
   const keyframes = useMemo(() => {
@@ -43,16 +40,12 @@ export default function TheatreCamera({
   );
 
   useEffect(() => {
-    const onReveal = () => { revealOpen.current = true; };
     const onMove = (e: PointerEvent) => {
       mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
       mouse.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
     };
-    window.addEventListener(REVEAL_OPEN_EVENT, onReveal);
     window.addEventListener("pointermove", onMove, { passive: true });
-    if (depthState.revealOpen) revealOpen.current = true;
     return () => {
-      window.removeEventListener(REVEAL_OPEN_EVENT, onReveal);
       window.removeEventListener("pointermove", onMove);
     };
   }, []);
@@ -76,13 +69,6 @@ export default function TheatreCamera({
       posCurve.getPoint(p, tmpPos);
       lookCurve.getPoint(p, tmpLook);
     }
-
-    // Intro dolly
-    if (revealOpen.current && introT.current < 1) {
-      introT.current = Math.min(1, introT.current + delta * 0.55);
-    }
-    const introEase = 1 - Math.pow(1 - introT.current, 4);
-    tmpPos.z += INTRO_EXTRA_DISTANCE * (1 - introEase);
 
     // Idle drift + mouse parallax
     tmpPos.x += Math.sin(time * 0.23) * 0.35 + mouse.current.x * 0.7;

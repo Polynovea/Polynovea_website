@@ -72,12 +72,10 @@ export default function ContactPage() {
                 <span className="gradient-text">operating environment.</span>
               </h1>
               <p className="t-body" style={{ marginTop: "var(--space-md)" }}>
-                Tell us where your systems are fragmented, what workflows are difficult
-                to govern, and what you&apos;re trying to improve - we&apos;ll tell you directly
-                whether Infrakinetic is relevant.
+                Tell us what you&apos;re trying to evaluate - Infrakinetic, the upcoming Content Operations Platform, a research collaboration, or a broader partnership - and we&apos;ll route it to the right part of the team.
               </p>
               <div className="contact-tags">
-                {["Venues & Institutions", "Businesses & Workplaces", "Brands & Orgs", "Partnerships"].map((tag) => (
+                {["Infrakinetic", "Open Source / CMS", "HBIF Research", "Partnerships"].map((tag) => (
                   <span key={tag} className="contact-tag">{tag}</span>
                 ))}
               </div>
@@ -126,17 +124,16 @@ export default function ContactPage() {
                     <label className="form-label" htmlFor="interest">I&apos;m interested in</label>
                     <select className="form-select" id="interest" name="interest" required defaultValue="">
                       <option value="" disabled>Select what you&apos;re looking for</option>
-                      <optgroup label="For Venues & Institutions">
-                        <option value="optimisation">Revenue optimisation services</option>
-                        <option value="intelligence">Behavioral intelligence reports</option>
-                      </optgroup>
-                      <optgroup label="For Businesses & Workplaces">
+                      <optgroup label="Products">
                         <option value="infrakinetic">Infrakinetic product evaluation</option>
-                        <option value="operations">Operational intelligence</option>
+                        <option value="cms">Content Operations Platform / OSS</option>
+                        <option value="hospitality">Hospitality product / domain enquiry</option>
                       </optgroup>
-                      <optgroup label="General">
+                      <optgroup label="Research & Company">
+                        <option value="research">HBIF research or academic collaboration</option>
+                        <option value="research-partner">Research-partner programme enquiry</option>
                         <option value="partnership">Partnership or collaboration</option>
-                        <option value="learn">Learning more about the ecosystem</option>
+                        <option value="learn">Learning more about Polynovea</option>
                         <option value="other">Something else</option>
                       </optgroup>
                     </select>
@@ -159,7 +156,7 @@ export default function ContactPage() {
 
           <div className="contact-faq" data-reveal>
             <h2 className="t-display-sm contact-faq-title">Frequently asked questions</h2>
-            <p className="contact-faq-updated">Last updated: August 20, 2026</p>
+            <p className="contact-faq-updated">Last updated: September 19, 2026</p>
             <div className="contact-faq-list">
               {[
                 {
@@ -168,7 +165,7 @@ export default function ContactPage() {
                 },
                 {
                   q: "Does Polynovea only work with hospitality venues?",
-                  a: "No - Infrakinetic, the Workplace domain's product, is Polynovea's current lead product for commercialisation and revenue. Hospitality's Acquisition System is undergoing an architectural rebuild. Reach out if you're operating a venue, running a business, or managing a workforce.",
+                  a: "No. Infrakinetic is the current commercial lead; Polynovea is also preparing the Content Operations Platform for open-source distribution, rebuilding its Hospitality product, and running the HBIF research programme.",
                 },
                 {
                   q: "Is there a cost to reach out?",
@@ -176,7 +173,7 @@ export default function ContactPage() {
                 },
                 {
                   q: "What should I include in my message?",
-                  a: "Tell Polynovea what you're building and what problem you're trying to solve. Specifics about your venue, business, or workforce help the team evaluate fit faster and respond with a direct answer.",
+                  a: "Tell Polynovea what you're evaluating, the problem or collaboration you have in mind, and any constraints that matter. Product, research and partnership enquiries are routed differently, so context helps the team respond directly.",
                 },
                 {
                   q: "What happens after I request an Infrakinetic product evaluation?",

@@ -1,11 +1,11 @@
 "use client";
 
 const flowSteps = [
-  "Raw Behaviour Input",
-  "Pattern Recognition Layer",
-  "Intelligence Framework",
-  "Decision Engine",
-  "Scalable Output",
+  "Domain Product",
+  "Operational Evidence",
+  "Domain Learning",
+  "Cross-Domain Testing",
+  "Research-to-Product Transfer",
 ];
 
 export default function SystemPane() {
@@ -17,16 +17,16 @@ export default function SystemPane() {
             The Architecture
           </span>
           <h2 className="t-display-md" style={{ marginTop: "var(--space-md)", color: "var(--text-primary)" }}>
-            What is Polynovea&apos;s behavioral intelligence system?
+            How do product and research compound at Polynovea?
           </h2>
           <p className="t-body-lg" style={{ marginTop: "var(--space-md)" }}>
-            Polynovea is not a creative agency or a tech startup. It is a
-            behavioral intelligence operation - a closed loop that observes
-            human decision-making, extracts patterns, and converts them into
-            repeatable frameworks, products, and automated systems.
+            Polynovea combines commercially independent products with a longer-horizon
+            behavioural-intelligence research programme. Products must solve real problems
+            on their own. Where lawful, permissioned and scientifically suitable, their
+            operation can also create governed evidence for deeper research.
           </p>
           <p className="t-body-sm" style={{ marginTop: "var(--space-md)", color: "var(--text-disabled)" }}>
-            Every output feeds the next input. Nothing is wasted.
+            Cross-domain transfer is tested, not assumed. Evidence has to earn the connection.
           </p>
         </div>
 

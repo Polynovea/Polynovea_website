@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Discuss Your Infrakinetic Deployment - Contact Polynovea",
+  title: "Contact Polynovea - Products, Research & Partnerships",
   description:
-    "Contact Polynovea to discuss behavioral intelligence partnerships, venue optimisation, or workplace intelligence. We reply within 48 hours to every message.",
+    "Contact Polynovea about Infrakinetic, the upcoming open-source Content Operations Platform, HBIF research collaborations, research-partner enquiries or broader partnerships.",
   alternates: { canonical: "https://www.polynovea.in/contact" },
   openGraph: {
-    title: "Discuss Your Infrakinetic Deployment - Contact Polynovea",
+    title: "Contact Polynovea",
     description:
-      "Work with Polynovea - behavioral intelligence infrastructure for commercial environments. Based in Navi Mumbai, India.",
+      "Product, open-source, research and partnership enquiries for Polynovea.",
     url: "https://www.polynovea.in/contact",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Discuss Your Infrakinetic Deployment - Contact Polynovea",
+    title: "Contact Polynovea",
     description:
-      "Work with Polynovea - behavioral intelligence infrastructure for commercial environments. Based in Navi Mumbai, India.",
+      "Talk to Polynovea about Infrakinetic, open-source infrastructure, HBIF research or partnerships.",
   },
 };
 
@@ -28,31 +28,31 @@ const faqSchema = {
       name: "How long does Polynovea take to reply?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Polynovea reads every submission and evaluates fit based on what you're building. If there's a match, you'll hear back within 48 hours - no automated sequences, no discovery-call theatre.",
+        text: "Polynovea reads every submission and routes product, research and partnership enquiries to the appropriate part of the team. If there is a fit, the team aims to reply within 48 hours.",
       },
     },
     {
       "@type": "Question",
-      name: "Does Polynovea only work with hospitality venues?",
+      name: "Does Polynovea only work on Infrakinetic?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "No - Infrakinetic, the Workplace domain's product, is Polynovea's current lead product for commercialisation and revenue. Hospitality's Acquisition System is undergoing an architectural rebuild. Reach out if you're operating a venue, running a business, or managing a workforce.",
+        text: "No. Infrakinetic is the current commercial lead; Polynovea is also preparing the Content Operations Platform for open-source distribution, rebuilding its Hospitality product, and running the HBIF research programme.",
       },
     },
     {
       "@type": "Question",
-      name: "Is there a cost to reach out?",
+      name: "Can I contact Polynovea about the Content Operations Platform?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "No. Sending a message costs nothing. Polynovea evaluates fit before any engagement begins and will tell you directly whether there's a match - no obligation either way.",
+        text: "Yes. The contact form includes a Content Operations Platform and open-source enquiry option. The platform is upcoming rather than presented as generally available today.",
       },
     },
     {
       "@type": "Question",
-      name: "What should I include in my message?",
+      name: "Can I contact Polynovea about HBIF research?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Tell Polynovea what you're building and what problem you're trying to solve. Specifics about your venue, business, or workforce help the team evaluate fit faster and respond with a direct answer.",
+        text: "Yes. Academic, research and research-partner enquiries can be submitted through the contact form. Research participation and data permissions are separately governed from ordinary product access.",
       },
     },
     {
@@ -60,7 +60,7 @@ const faqSchema = {
       name: "What happens after I request an Infrakinetic product evaluation?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The team reviews what you've shared about your current systems and operating problem, then replies directly with whether Infrakinetic is a fit and what a product review or deployment discussion would look like next.",
+        text: "The team reviews your current systems and operating problem, then responds with whether Infrakinetic is a fit and what a product review or deployment discussion would look like next.",
       },
     },
   ],
@@ -68,21 +68,12 @@ const faqSchema = {
 
 const articleSchema = {
   "@context": "https://schema.org",
-  "@type": "Article",
-  headline: "Contact Polynovea - Discuss Your Infrakinetic Deployment",
+  "@type": "ContactPage",
+  name: "Contact Polynovea",
   description:
-    "Reach Polynovea to discuss whether Infrakinetic, our enterprise operating system, is a fit for your organisation's operating environment.",
-  author: { "@type": "Organization", name: "Polynovea" },
-  publisher: {
-    "@type": "Organization",
-    name: "Polynovea",
-    url: "https://www.polynovea.in",
-    logo: { "@type": "ImageObject", url: "https://www.polynovea.in/logo.png" },
-  },
-  datePublished: "2026-01-01",
-  dateModified: "2026-08-20",
+    "Contact Polynovea about products, open-source infrastructure, behavioural-intelligence research or partnerships.",
   url: "https://www.polynovea.in/contact",
-  mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.polynovea.in/contact" },
+  dateModified: "2026-09-19",
 };
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {

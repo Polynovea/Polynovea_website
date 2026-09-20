@@ -1,65 +1,25 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Behavioral Study - Nightlife Research India",
+  title: "HBIF Research - Behavioural Intelligence Research Programme",
   description:
-    "Help Polynovea understand what drives nightlife and venue decisions in India. A short behavioral study feeding the Human Behavioral Intelligence Framework.",
+    "Polynovea's HBIF research programme: executable behavioural experiments, the Behavioral Phase Model, cross-domain testing and explicit evidence boundaries around what is implemented, hypothesised and unproven.",
   alternates: { canonical: "https://www.polynovea.in/research" },
   openGraph: {
-    title: "Research | Polynovea",
+    title: "HBIF Research | Polynovea",
     description:
-      "16 questions about what makes a great night out - shaping how we build behavioral intelligence from live environments.",
+      "A public overview of Polynovea's behavioural-intelligence research programme, current evidence state and cross-domain validation boundaries.",
     url: "https://www.polynovea.in/research",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "HBIF Research" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HBIF Research | Polynovea",
+    description:
+      "Implemented experiments, research engineering and the questions Polynovea has not yet proved.",
   },
 };
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "How long does the behavioral study take?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The study is 16 short questions about what makes a great night out - most people complete it in under three minutes. There are no long-form answers required, just quick single-choice and multi-choice questions.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Is my data anonymous?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Yes. Responses feed the Human Behavioral Intelligence Framework in aggregate - no personally identifying information is required to participate or published in any research output.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Why does Polynovea run this study?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Polynovea's Acquisition System reads behavioral signals from reviews, but this study captures decision-making directly from people themselves - what triggers a night out, what keeps them at a venue, and what makes them leave.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Who can participate in the study?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Anyone who goes out to restaurants, bars, or live venues in India can participate - the study is designed around real nightlife and dining decisions, not a specific city or demographic.",
-      },
-    },
-  ],
-};
-
 export default function ResearchLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
