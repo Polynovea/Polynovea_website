@@ -38,8 +38,8 @@ export default function PrivacyPolicy() {
             <p>
               Polynovea is based in Navi Mumbai, Maharashtra, India. You can
               reach us at{" "}
-              <a href="mailto:subrojitroy@polynovea.in">
-                subrojitroy@polynovea.in
+              <a href="mailto:admin@polynovea.in">
+                admin@polynovea.in
               </a>
               . Our designated Grievance Officer under the DPDPA is Subrojit
               Roy, reachable at the same address.
@@ -145,8 +145,8 @@ export default function PrivacyPolicy() {
             <p>
               To exercise any of these rights, or to withdraw consent for us to
               process your data, email{" "}
-              <a href="mailto:subrojitroy@polynovea.in">
-                subrojitroy@polynovea.in
+              <a href="mailto:admin@polynovea.in">
+                admin@polynovea.in
               </a>{" "}
               with the subject line &quot;Data request.&quot; Withdrawing
               consent does not affect the lawfulness of processing carried out

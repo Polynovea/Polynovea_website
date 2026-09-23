@@ -36,6 +36,7 @@ export default function Footer() {
                 {[
                   ["/", "Home"],
                   ["/projects", "Products"],
+                  ["/early-access/infrakinetic", "Infrakinetic Early Access"],
                   ["/open-source", "Open Source"],
                   ["/architecture", "HBIF Architecture"],
                   ["/research", "Research"],

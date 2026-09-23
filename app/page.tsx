@@ -1,5 +1,8 @@
 import Navbar from "@/components/Navbar";
 import HomeExperience from "@/components/HomeExperience";
+import { getPublicEarlyAccessCount } from "@/lib/earlyAccess";
+
+export const revalidate = 60;
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -48,15 +51,46 @@ const faqSchema = {
   ],
 };
 
-export default function Home() {
+export default async function Home() {
+  const earlyAccessCount = await getPublicEarlyAccessCount();
+
+  const earlyAccessSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "https://www.polynovea.in/#infrakinetic-early-access",
+    name: "Infrakinetic Controlled Early Access",
+    description:
+      "Infrakinetic is accepting explicit Early Access registrations for controlled onboarding cohorts. Briefing and general contact requests do not count as Early Access registrations.",
+    url: "https://www.polynovea.in/early-access/infrakinetic",
+    about: {
+      "@type": "SoftwareApplication",
+      name: "Infrakinetic",
+      applicationCategory: "BusinessApplication",
+      url: "https://www.infrakinetic.in/",
+      provider: { "@id": "https://www.polynovea.in/#organization" },
+    },
+    potentialAction: {
+      "@type": "RegisterAction",
+      name: "Join Infrakinetic Early Access",
+      target: "https://www.polynovea.in/early-access/infrakinetic",
+    },
+    ...(earlyAccessCount !== null
+      ? {
+          interactionStatistic: {
+            "@type": "InteractionCounter",
+            interactionType: { "@type": "RegisterAction" },
+            userInteractionCount: earlyAccessCount,
+          },
+        }
+      : {}),
+  };
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(earlyAccessSchema) }} />
       <Navbar />
-      <HomeExperience />
+      <HomeExperience earlyAccessCount={earlyAccessCount} />
     </>
   );
 }

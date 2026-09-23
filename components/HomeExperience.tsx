@@ -10,27 +10,25 @@ import ModulesPane from "@/components/panes/ModulesPane";
 import FAQ from "@/components/FAQ";
 import ContactPane from "@/components/panes/ContactPane";
 
-/**
- * The home page journey. Order here MUST stay in sync with SECTION_COUNT
- * in lib/depthStore.ts — one pane per neural cluster the camera visits.
- */
-const panes: DepthPaneDef[] = [
-  { id: "home", node: <Hero /> },
-  { id: "architecture", node: <SystemPane /> },
-  { node: <MilestonesPane /> },
-  { node: <WhyDifferent /> },
-  { node: <WhoPane /> },
-  { node: <ModulesPane /> },
-  { id: "faq", node: <FAQ /> },
-  { id: "contact", node: <ContactPane /> },
-];
+interface HomeExperienceProps {
+  earlyAccessCount: number | null;
+}
 
-export default function HomeExperience() {
+export default function HomeExperience({ earlyAccessCount }: HomeExperienceProps) {
+  const panes: DepthPaneDef[] = [
+    { id: "home", node: <Hero earlyAccessCount={earlyAccessCount} /> },
+    { id: "architecture", node: <SystemPane /> },
+    { node: <MilestonesPane /> },
+    { node: <WhyDifferent /> },
+    { node: <WhoPane /> },
+    { node: <ModulesPane /> },
+    { id: "faq", node: <FAQ /> },
+    { id: "contact", node: <ContactPane /> },
+  ];
+
   return (
-    <>
-      <main id="main-content" className="home-main">
-        <DepthRoot panes={panes} />
-      </main>
-    </>
+    <main id="main-content" className="home-main">
+      <DepthRoot panes={panes} />
+    </main>
   );
 }

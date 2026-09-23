@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const CONTACT_EMAIL = "subrojitroy@polynovea.in";
+const CONTACT_EMAIL = "admin@polynovea.in";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [interestChoice, setInterestChoice] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,7 +83,7 @@ export default function ContactPage() {
               </div>
               <div className="direct-email">
                 <p>Or reach us directly:</p>
-                <p style={{ color: "var(--accent-intelligence)", margin: 0 }}>{CONTACT_EMAIL}</p>
+                <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
               </div>
             </div>
 
@@ -122,7 +124,14 @@ export default function ContactPage() {
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="interest">I&apos;m interested in</label>
-                    <select className="form-select" id="interest" name="interest" required defaultValue="">
+                    <select
+                      className="form-select"
+                      id="interest"
+                      name="interest"
+                      required
+                      defaultValue=""
+                      onChange={(event) => setInterestChoice(event.target.value)}
+                    >
                       <option value="" disabled>Select what you&apos;re looking for</option>
                       <optgroup label="Products">
                         <option value="infrakinetic">Infrakinetic product evaluation</option>
@@ -138,6 +147,25 @@ export default function ContactPage() {
                       </optgroup>
                     </select>
                   </div>
+
+                  {interestChoice === "infrakinetic" && (
+                    <div className="infrakinetic-paths">
+                      <div>
+                        <span className="form-label">Already ready to be considered for deployment?</span>
+                        <p>
+                          Join the controlled Early Access list. Only explicit Early Access signups are counted in the public waitlist total.
+                        </p>
+                      </div>
+                      <div className="infrakinetic-path-actions">
+                        <Link href="/early-access/infrakinetic" className="btn btn-primary">
+                          Join Early Access →
+                        </Link>
+                        <a href="https://www.infrakinetic.in/briefing" target="_blank" rel="noreferrer">
+                          Request a platform briefing ↗
+                        </a>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="message">Tell us more</label>
@@ -236,6 +264,34 @@ export default function ContactPage() {
         .contact-form { display: flex; flex-direction: column; gap: var(--space-lg); }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
         .form-group { display: flex; flex-direction: column; gap: var(--space-xs); }
+        .infrakinetic-paths {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: var(--space-lg);
+          align-items: center;
+          padding: 16px;
+          border: 1px solid rgba(230, 211, 163, 0.22);
+          border-radius: 12px;
+          background: linear-gradient(110deg, rgba(230, 211, 163, 0.055), rgba(124, 58, 237, 0.025));
+        }
+        .infrakinetic-paths p {
+          margin: 7px 0 0;
+          color: var(--text-secondary);
+          font-size: 12px;
+          line-height: 1.55;
+        }
+        .infrakinetic-path-actions {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+        .infrakinetic-path-actions .btn { white-space: nowrap; }
+        .infrakinetic-path-actions a:not(.btn) {
+          color: var(--accent-authority);
+          font-size: 11px;
+          text-decoration: none;
+        }
         .form-label {
           font-size: 11px;
           font-weight: 700;
@@ -324,6 +380,7 @@ export default function ContactPage() {
           margin: 0;
         }
         @media (max-width: 900px) { .contact-inner { grid-template-columns: 1fr; } }
+        @media (max-width: 720px) { .infrakinetic-paths { grid-template-columns: 1fr; } }
         @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
       `}</style>
     </>

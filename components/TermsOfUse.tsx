@@ -133,8 +133,8 @@ export default function TermsOfUse() {
             <h2>Contact</h2>
             <p>
               Questions about these Terms can be sent to{" "}
-              <a href="mailto:subrojitroy@polynovea.in">
-                subrojitroy@polynovea.in
+              <a href="mailto:admin@polynovea.in">
+                admin@polynovea.in
               </a>
               .
             </p>

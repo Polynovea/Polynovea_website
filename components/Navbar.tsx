@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/projects", label: "Products" },
+  { href: "/early-access/infrakinetic", label: "Early Access" },
   { href: "/open-source", label: "Open Source" },
   { href: "/architecture", label: "Architecture" },
   { href: "/research", label: "Research" },

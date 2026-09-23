@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import InfrakineticEarlyAccessRail from "@/components/InfrakineticEarlyAccessRail";
 
 const surfaces = [
   {
@@ -26,7 +27,11 @@ const surfaces = [
   },
 ];
 
-export default function Hero() {
+interface HeroProps {
+  earlyAccessCount: number | null;
+}
+
+export default function Hero({ earlyAccessCount }: HeroProps) {
   return (
     <section id="home" className="hero">
       <div className="hero-frame">
@@ -54,6 +59,8 @@ export default function Hero() {
               Read the research <span aria-hidden="true">↗</span>
             </Link>
           </div>
+
+          <InfrakineticEarlyAccessRail initialCount={earlyAccessCount} />
         </div>
 
         <aside className="hero-state" aria-label="Current Polynovea state">

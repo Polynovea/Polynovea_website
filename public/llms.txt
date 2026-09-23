@@ -22,6 +22,14 @@ Infrakinetic brings the systems a company uses to sell, operate, hire, govern, b
 Individual capability availability should be interpreted from current implementation, deployment, provider-certification and customer-readiness evidence rather than from one blanket GA statement.
 
 Learn more: https://www.infrakinetic.in
+## Infrakinetic Controlled Early Access
+
+Infrakinetic is accepting explicit Early Access registrations for controlled onboarding cohorts. The public waitlist count represents organisations that have specifically submitted the Early Access form; platform-briefing requests, general contact enquiries and ordinary outbound prospects do not increment it.
+
+The Early Access form asks for the organisation, work contact, company size, expected timeline, current software stack, the Infrakinetic engines or operating areas of interest, and the problem the organisation wants to solve. Polynovea reviews operating fit before assigning onboarding cohorts; the list is not represented as strict first-in-first-out queueing.
+
+Early Access: https://www.polynovea.in/early-access/infrakinetic
+Platform briefing: https://www.infrakinetic.in/briefing
 
 ## Content Operations Platform
 
@@ -87,6 +95,7 @@ https://www.polynovea.in/research/nightlife
 - Insights: https://www.polynovea.in/blog
 - Company: https://www.polynovea.in/about
 - Contact: https://www.polynovea.in/contact
+- Infrakinetic Early Access: https://www.polynovea.in/early-access/infrakinetic
 
 ## Company Details
 
@@ -97,7 +106,7 @@ https://www.polynovea.in/research/nightlife
 - **Research architecture:** HBIF
 - **Upcoming open-source platform:** Polynovea Content Operations Platform (final product name pending)
 - **Founding executive team:** Subrojit Roy (Co-Founder, CEO), Rahul (Co-Founder, CTO), Roopa (Co-Founder, COO), Rupali (Co-Founder, CMO), Partia (Co-Founder, CXO / Chief Experience Officer)
-- **Contact:** subrojitroy@polynovea.in
+- **Contact:** admin@polynovea.in
 - **Website:** https://www.polynovea.in
 - **LinkedIn:** https://www.linkedin.com/company/111494249/
 

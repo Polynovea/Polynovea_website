@@ -24,7 +24,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getPublishedBlogPosts();
   const postUrls: MetadataRoute.Sitemap = posts.map((p) => ({
     url: `${BASE}/blog/${p.slug}`,
-    lastModified: p.published_at && !isNaN(new Date(p.published_at).getTime()) ? new Date(p.published_at) : new Date(),
+    lastModified:
+      p.published_at && !isNaN(new Date(p.published_at).getTime())
+        ? new Date(p.published_at)
+        : new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
@@ -71,6 +74,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.6,
+    },
+    {
+      url: `${BASE}/early-access/infrakinetic`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.9,
     },
     {
       url: `${BASE}/research`,

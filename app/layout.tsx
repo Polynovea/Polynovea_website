@@ -97,7 +97,7 @@ const organizationSchema = {
   },
   contactPoint: {
     "@type": "ContactPoint",
-    email: "subrojitroy@polynovea.in",
+    email: "admin@polynovea.in",
     contactType: "customer service",
     areaServed: "IN",
   },
