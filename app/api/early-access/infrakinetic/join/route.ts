@@ -4,6 +4,7 @@ import {
   EARLY_ACCESS_TABLE,
   cleanText,
   getEarlyAccessSupabase,
+  isEarlyAccessConfigured,
   normalizeCompany,
   normalizeEmail,
 } from "@/lib/earlyAccess";
@@ -59,6 +60,13 @@ export async function POST(request: NextRequest) {
 
     if (engines.length === 0) {
       return NextResponse.json({ error: "Select at least one engine or operating area." }, { status: 400 });
+    }
+
+    if (!isEarlyAccessConfigured()) {
+      return NextResponse.json(
+        { error: "Early Access signups are being connected right now. Please try again shortly." },
+        { status: 503 }
+      );
     }
 
     const supabase = getEarlyAccessSupabase();

@@ -11,6 +11,10 @@ export const ACTIVE_WAITLIST_STATUSES = [
   "active",
 ] as const;
 
+export function isEarlyAccessConfigured() {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
+
 export function getEarlyAccessSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -28,6 +32,8 @@ export function getEarlyAccessSupabase() {
 }
 
 export async function getPublicEarlyAccessCount(): Promise<number | null> {
+  if (!isEarlyAccessConfigured()) return null;
+
   try {
     const supabase = getEarlyAccessSupabase();
     const { data, error } = await supabase
@@ -43,7 +49,7 @@ export async function getPublicEarlyAccessCount(): Promise<number | null> {
 
     return Number(data?.count ?? 0);
   } catch (error) {
-    console.error("Early Access count configuration error:", error);
+    console.error("Early Access count query failed unexpectedly:", error);
     return null;
   }
 }
